@@ -2,11 +2,13 @@
   "name": "agro-shield",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "dev:test-poc": "turbo run dev --filter=test-poc"
   },
   "keywords": [],
   "author": "",
