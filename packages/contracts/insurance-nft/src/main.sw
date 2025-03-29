@@ -4,7 +4,7 @@ mod errors;
 mod interface;
 
 use errors::{MintError, SetError};
-use interface::Constructor;
+use interface::{Constructor, Admin};
 use standards::{src20::SRC20, src3::SRC3, src5::{SRC5, State}, src7::{Metadata, SRC7}};
 use sway_libs::{
     asset::{
@@ -33,6 +33,10 @@ use sway_libs::{
         Pausable,
         require_not_paused,
     },
+    admin::{
+        only_admin,
+        add_admin,
+    }
 };
 use std::{hash::Hash, storage::storage_string::*, string::String};
 
@@ -73,10 +77,12 @@ impl SRC20 for Contract {
         Some(DECIMALS)
     }
 }
+
 impl SRC3 for Contract {
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
         require_not_paused();
+        only_admin();
         require(sub_id.is_some(), MintError::SubIdCannotBeNone);
         let sub_id = sub_id.unwrap();
         let asset = AssetId::new(ContractId::this(), sub_id);
@@ -103,6 +109,7 @@ impl SRC3 for Contract {
     #[storage(read, write)]
     fn burn(sub_id: SubId, amount: u64) {
         require_not_paused();
+        only_admin();
         _burn(storage.total_supply, sub_id, amount);
     }
 }
@@ -112,15 +119,18 @@ impl SRC7 for Contract {
         storage.metadata.get(asset_id, key)
     }
 }
+
 impl SRC5 for Contract {
     #[storage(read)]
     fn owner() -> State {
         _owner()
     }
 }
+
 impl SetAssetAttributes for Contract {
     #[storage(write)]
     fn set_name(asset_id: AssetId, name: String) {
+        only_owner();
         require(
             storage
                 .name
@@ -143,6 +153,7 @@ impl SetAssetAttributes for Contract {
 impl SetAssetMetadata for Contract {
     #[storage(read, write)]
     fn set_metadata(asset_id: AssetId, key: String, metadata: Metadata) {
+        only_owner();
         require(
             storage
                 .metadata
@@ -150,7 +161,6 @@ impl SetAssetMetadata for Contract {
                 .is_none(),
             SetError::ValueAlreadySet,
         );
-        only_owner();
         _set_metadata(storage.metadata, asset_id, key, metadata);
     }
 }
@@ -170,9 +180,24 @@ impl Pausable for Contract {
         _unpause();
     }
 }
+
 impl Constructor for Contract {
     #[storage(read, write)]
-    fn constructor(owner: Identity) {
+    fn constructor(owner: Identity, admin: Identity) {
         initialize_ownership(owner);
+        add_admin(admin);
+    }
+}
+
+impl Admin for Contract {
+    #[storage(write)]
+    fn add_admin(admin: Identity) {
+        only_owner();
+        add_admin(admin);
+    }
+    #[storage(write)]
+    fn revoke_admin(admin: Identity) {
+        only_owner();
+        revoke_admin(admin);
     }
 }
