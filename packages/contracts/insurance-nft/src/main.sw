@@ -4,9 +4,14 @@ mod errors;
 mod interface;
 
 use errors::{MintError, SetError};
-use interface::{Constructor, Admin};
+use interface::{Admin, Constructor};
 use standards::{src20::SRC20, src3::SRC3, src5::{SRC5, State}, src7::{Metadata, SRC7}};
 use sway_libs::{
+    admin::{
+        add_admin,
+        only_admin,
+        revoke_admin
+    },
     asset::{
         base::{
             _name,
@@ -33,10 +38,6 @@ use sway_libs::{
         Pausable,
         require_not_paused,
     },
-    admin::{
-        only_admin,
-        add_admin,
-    }
 };
 use std::{hash::Hash, storage::storage_string::*, string::String};
 
@@ -190,12 +191,12 @@ impl Constructor for Contract {
 }
 
 impl Admin for Contract {
-    #[storage(write)]
+    #[storage(read, write)]
     fn add_admin(admin: Identity) {
         only_owner();
         add_admin(admin);
     }
-    #[storage(write)]
+    #[storage(read, write)]
     fn revoke_admin(admin: Identity) {
         only_owner();
         revoke_admin(admin);
