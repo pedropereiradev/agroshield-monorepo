@@ -10,7 +10,7 @@ use sway_libs::{
     admin::{
         add_admin,
         only_admin,
-        revoke_admin
+        revoke_admin,
     },
     asset::{
         base::{
