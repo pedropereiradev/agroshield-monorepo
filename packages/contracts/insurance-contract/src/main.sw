@@ -2,18 +2,166 @@ contract;
 
 mod interface;
 mod errors;
+mod lib;
 
-use interface::{Constructor, OwnersContract};
+use interface::{Constructor, Insurance, OwnersContract};
 use errors::InsuranceContractError;
+use lib::{generate_name, generate_sub_id};
 use standards::src5::{SRC5, State};
 use sway_libs::ownership::{_owner, initialize_ownership, only_owner, transfer_ownership};
 use sway_libs::pausable::*;
 use std::context::this_balance;
 use std::asset::transfer;
+// use sway_libs::signed_integers::u64::I64;
+use std::string::String;
+use standards::src3::SRC3;
+use standards::src7::Metadata;
+use sway_libs::asset::base::SetAssetAttributes;
+use sway_libs::asset::metadata::SetAssetMetadata;
+use std::hash::sha256;
 storage {
     nft_id: ContractId = ContractId::zero(),
 }
+#[storage(read, write)]
+fn mint_token(
+    crop: String,
+    season: String,
+    start_date: String,
+    duration_days: u64,
+    region_x: u64,
+    region_y: u64,
+    insured_value: u64,
+    premium: u64,
+    policy_type: String,
+    expiry_date: String,
+    insured_area: u64,
+    insured_area_unit: String,
+    receiver: Identity,
+) -> AssetId {
+    // @TODO: Implement the logic to generate a unique sub_id based on the provided parameters
+    let sub_id = generate_sub_id(
+        crop,
+        season,
+        start_date,
+        duration_days,
+        region_x,
+        region_y,
+        policy_type,
+    );
 
+    let nft_id = storage.nft_id.read();
+    let asset_id = AssetId::new(nft_id, sub_id);
+    let src3_contract = abi(SRC3, nft_id.into());
+    src3_contract.mint(receiver, Some(sub_id), 1);
+    let nft_contract = abi(SetAssetMetadata, nft_id.into());
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("crop"),
+        Metadata::String(crop),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("season"),
+        Metadata::String(season),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("start_date"),
+        Metadata::String(start_date),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("duration_days"),
+        Metadata::Int(duration_days),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("region_x"),
+        Metadata::Int(region_x),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("region_y"),
+        Metadata::Int(region_y),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("insured_value"),
+        Metadata::Int(insured_value),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("premium"),
+        Metadata::Int(premium),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("policy_type"),
+        Metadata::String(policy_type),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("expiry_date"),
+        Metadata::String(expiry_date),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("insured_area"),
+        Metadata::Int(insured_area),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("insured_area_unit"),
+        Metadata::String(insured_area_unit),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("image"),
+        Metadata::String(String::from_ascii_str("bafybeia5kl72ixc2bvb7ykqyf7mqmy2iso7ghm4ajfccvidincpm2lxfny")),
+    );
+    let nft_contract = abi(SetAssetAttributes, nft_id.into());
+    let name = generate_name(crop, season, policy_type);
+    nft_contract.set_name(asset_id, name);
+    asset_id
+}
+
+impl Insurance for Contract {
+    #[storage(read, write), payable]
+    fn create_insurance(
+        crop: String,
+        season: String,
+        start_date: String,
+        duration_days: u64,
+        region_x: u64,
+        region_y: u64,
+        insured_value: u64,
+        premium: u64,
+        policy_type: String,
+        expiry_date: String,
+        insured_area: u64,
+        insured_area_unit: String,
+    ) {
+        require_not_paused();
+
+        let owner = msg_sender().unwrap();
+
+        let asset_id = mint_token(
+            crop,
+            season,
+            start_date,
+            duration_days,
+            region_x,
+            region_y,
+            insured_value,
+            premium,
+            policy_type,
+            expiry_date,
+            insured_area,
+            insured_area_unit,
+            owner,
+        );
+    }
+}
 impl Constructor for Contract {
     #[storage(read, write)]
     fn constructor(owner: Address, nft_id: ContractId) {
