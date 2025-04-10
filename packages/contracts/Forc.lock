@@ -1,4 +1,13 @@
 [[package]]
+name = "insurance-contract"
+source = "member"
+dependencies = [
+    "standards",
+    "std",
+    "sway_libs",
+]
+
+[[package]]
 name = "insurance-nft"
 source = "member"
 dependencies = [
