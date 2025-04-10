@@ -7,7 +7,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "forc:fmt": "forc fmt --path packages/contracts"
+    "forc:fmt": "forc fmt --path packages/contracts",
+    "forc:build": "forc build --path packages/contracts"
   },
   "keywords": [],
   "author": "",
