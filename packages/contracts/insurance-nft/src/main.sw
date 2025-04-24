@@ -83,7 +83,7 @@ impl SRC3 for Contract {
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
         require_not_paused();
-        only_admin();
+        // only_admin();
         require(sub_id.is_some(), MintError::SubIdCannotBeNone);
         let sub_id = sub_id.unwrap();
         let asset = AssetId::new(ContractId::this(), sub_id);
@@ -110,7 +110,7 @@ impl SRC3 for Contract {
     #[storage(read, write)]
     fn burn(sub_id: SubId, amount: u64) {
         require_not_paused();
-        only_admin();
+        // only_admin();
         _burn(storage.total_supply, sub_id, amount);
     }
 }
@@ -131,7 +131,7 @@ impl SRC5 for Contract {
 impl SetAssetAttributes for Contract {
     #[storage(write)]
     fn set_name(asset_id: AssetId, name: String) {
-        only_owner();
+        // only_owner();
         require(
             storage
                 .name
@@ -154,7 +154,7 @@ impl SetAssetAttributes for Contract {
 impl SetAssetMetadata for Contract {
     #[storage(read, write)]
     fn set_metadata(asset_id: AssetId, key: String, metadata: Metadata) {
-        only_owner();
+        // only_owner();
         require(
             storage
                 .metadata

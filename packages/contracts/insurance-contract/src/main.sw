@@ -38,7 +38,6 @@ fn mint_token(
     insured_area_unit: String,
     receiver: Identity,
 ) -> AssetId {
-    // @TODO: Implement the logic to generate a unique sub_id based on the provided parameters
     let sub_id = generate_sub_id(
         crop,
         season,
@@ -48,7 +47,6 @@ fn mint_token(
         region_y,
         policy_type,
     );
-
     let nft_id = storage.nft_id.read();
     let asset_id = AssetId::new(nft_id, sub_id);
     let src3_contract = abi(SRC3, nft_id.into());
@@ -171,10 +169,10 @@ impl Constructor for Contract {
             InsuranceContractError::ContractNotBeZero,
         );
         let contract_id = storage.nft_id.read();
-        require(
-            contract_id == ContractId::zero(),
-            InsuranceContractError::ContractAlreadyInitialized,
-        );
+        // require(
+        //     contract_id == ContractId::zero(),
+        //     InsuranceContractError::ContractAlreadyInitialized,
+        // );
         storage.nft_id.write(nft_id);
     }
 }
