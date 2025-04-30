@@ -15,7 +15,7 @@ export default function PrivateRoute({ children }: PrivateRouteProps) {
   }
 
   return (
-    <section>
+    <section className="bg-background">
       <Header />
       {children}
     </section>
