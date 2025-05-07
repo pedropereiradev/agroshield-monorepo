@@ -1,10 +1,13 @@
-import { FuelWalletConnector } from '@fuels/connectors';
+import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CHAIN_IDS } from 'fuels';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
+import './index.css';
+import { Toaster } from '@/components/ui/sonner';
 
 const query = new QueryClient();
 
@@ -15,24 +18,20 @@ createRoot(document.getElementById('root')!).render(
       <FuelProvider
         theme="light"
         fuelConfig={{
-          //   connectors: defaultConnectors({
-          //     fuelProvider: new Provider(
-          //       'https://testnet.fuel.network/v1/graphql'
-          //     ),
-          //     chainId: CHAIN_IDS.fuel.testnet,
-          //   }),
-          connectors: [new FuelWalletConnector()],
+          connectors: defaultConnectors(),
         }}
         networks={[
           {
-            // url: 'https://testnet.fuel.network/v1/graphql',
             url: 'http://127.0.0.1:4000/v1/graphql',
             chainId: CHAIN_IDS.fuel.testnet,
           },
         ]}
         uiConfig={{ suggestBridge: false }}
       >
-        <App />
+        <BrowserRouter>
+          <App />
+          <Toaster />
+        </BrowserRouter>
       </FuelProvider>
     </QueryClientProvider>
   </StrictMode>
