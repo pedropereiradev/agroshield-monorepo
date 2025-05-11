@@ -3,15 +3,13 @@ import { useInsuranceContracts } from './useInsuranceContracts';
 
 export interface PolicyDetails {
   crop: string;
-  season: string;
   startDate: string;
-  durationDays: number;
+  endDate: string;
   regionX: number;
   regionY: number;
   insuredValue: number;
   premium: number;
   policyType: string;
-  expirationDate: string;
   insuredArea: number;
   insuredAreaUnit: string;
 }
@@ -40,15 +38,13 @@ export function usePolicyCreation() {
       const { waitForResult } = await insuranceContract.functions
         .create_insurance(
           policyDetails.crop,
-          policyDetails.season,
           policyDetails.startDate,
-          policyDetails.durationDays,
+          policyDetails.endDate,
           policyDetails.regionX,
           policyDetails.regionY,
           policyDetails.insuredValue,
           policyDetails.premium,
           policyDetails.policyType,
-          policyDetails.expirationDate,
           policyDetails.insuredArea,
           policyDetails.insuredAreaUnit
         )

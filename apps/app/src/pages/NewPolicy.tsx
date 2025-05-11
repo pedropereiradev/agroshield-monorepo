@@ -25,22 +25,18 @@ export default function NewPolicy() {
   const navigate = useNavigate();
   const { createPolicy, isCreating, error, isReady } = usePolicyCreation();
 
-  // Policy type selection
   const [policyType, setPolicyType] = useState<PolicyType>('rainfall');
 
-  // Coverage details
   const [coverageAmount, setCoverageAmount] = useState(3);
   const [premiumAmount, setPremiumAmount] = useState(0.15);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  // Farm details
   const [cropType, setCropType] = useState('rice');
   const [farmArea, setFarmArea] = useState('10');
   const [location, setLocation] = useState('Dom Pedrito');
   const [season, setSeason] = useState('spring');
 
-  // Update premium when coverage changes
   const handleCoverageChange = (value: number[]) => {
     const coverage = value[0];
     setCoverageAmount(coverage);
@@ -63,34 +59,17 @@ export default function NewPolicy() {
       return;
     }
 
-    // Calculate duration days based on start and end date
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const durationDays = Math.ceil(
-      (end.getTime() - start.getTime()) / (1000 * 3600 * 24)
-    );
-
-    if (durationDays <= 0) {
-      toast('Datas inválidas', {
-        description: 'A data de término deve ser posterior à data de início.',
-      });
-      return;
-    }
-
-    // Parse location to get coordinates (mock implementation)
     const [regionX, regionY] = [123, 456]; // In a real app, you would get these from a map API
 
     const policyDetails: PolicyDetails = {
       crop: cropType,
-      season,
       startDate,
-      durationDays,
+      endDate,
       regionX,
       regionY,
       insuredValue: Math.floor(coverageAmount * 1000), // Convert to contract units
       premium: Math.floor(premiumAmount * 1000), // Convert to contract units
       policyType,
-      expirationDate: endDate,
       insuredArea: Number.parseInt(farmArea, 10),
       insuredAreaUnit: 'Ha',
     };

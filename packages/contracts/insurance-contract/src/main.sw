@@ -8,6 +8,8 @@ use interface::{Constructor, Insurance, OwnersContract};
 use errors::InsuranceContractError;
 use lib::{generate_name, generate_sub_id};
 use standards::src5::{SRC5, State};
+use standards::src7::SRC7;
+use standards::src20::SRC20;
 use sway_libs::ownership::{_owner, initialize_ownership, only_owner, transfer_ownership};
 use sway_libs::pausable::*;
 use std::context::this_balance;
@@ -25,28 +27,18 @@ storage {
 #[storage(read, write)]
 fn mint_token(
     crop: String,
-    season: String,
     start_date: String,
-    duration_days: u64,
+    end_date: String,
     region_x: u64,
     region_y: u64,
     insured_value: u64,
     premium: u64,
     policy_type: String,
-    expiry_date: String,
     insured_area: u64,
     insured_area_unit: String,
     receiver: Identity,
 ) -> AssetId {
-    let sub_id = generate_sub_id(
-        crop,
-        season,
-        start_date,
-        duration_days,
-        region_x,
-        region_y,
-        policy_type,
-    );
+    let sub_id = generate_sub_id(crop, start_date, end_date, region_x, region_y, policy_type);
     let nft_id = storage.nft_id.read();
     let asset_id = AssetId::new(nft_id, sub_id);
     let src3_contract = abi(SRC3, nft_id.into());
@@ -59,18 +51,13 @@ fn mint_token(
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("season"),
-        Metadata::String(season),
-    );
-    nft_contract.set_metadata(
-        asset_id,
         String::from_ascii_str("start_date"),
         Metadata::String(start_date),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("duration_days"),
-        Metadata::Int(duration_days),
+        String::from_ascii_str("end_date"),
+        Metadata::String(end_date),
     );
     nft_contract.set_metadata(
         asset_id,
@@ -99,11 +86,6 @@ fn mint_token(
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("expiry_date"),
-        Metadata::String(expiry_date),
-    );
-    nft_contract.set_metadata(
-        asset_id,
         String::from_ascii_str("insured_area"),
         Metadata::Int(insured_area),
     );
@@ -118,8 +100,9 @@ fn mint_token(
         Metadata::String(String::from_ascii_str("bafybeia5kl72ixc2bvb7ykqyf7mqmy2iso7ghm4ajfccvidincpm2lxfny")),
     );
     let nft_contract = abi(SetAssetAttributes, nft_id.into());
-    let name = generate_name(crop, season, policy_type);
+    let name = generate_name(crop, policy_type);
     nft_contract.set_name(asset_id, name);
+
     asset_id
 }
 
@@ -127,15 +110,13 @@ impl Insurance for Contract {
     #[storage(read, write), payable]
     fn create_insurance(
         crop: String,
-        season: String,
         start_date: String,
-        duration_days: u64,
+        end_date: String,
         region_x: u64,
         region_y: u64,
         insured_value: u64,
         premium: u64,
         policy_type: String,
-        expiry_date: String,
         insured_area: u64,
         insured_area_unit: String,
     ) {
@@ -145,15 +126,13 @@ impl Insurance for Contract {
 
         let asset_id = mint_token(
             crop,
-            season,
             start_date,
-            duration_days,
+            end_date,
             region_x,
             region_y,
             insured_value,
             premium,
             policy_type,
-            expiry_date,
             insured_area,
             insured_area_unit,
             owner,

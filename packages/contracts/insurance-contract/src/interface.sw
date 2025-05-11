@@ -19,15 +19,13 @@ abi Insurance {
     #[storage(read, write), payable]
     fn create_insurance(
         crop: String,
-        season: String,
         start_date: String,
-        duration_days: u64,
+        end_date: String,
         region_x: u64,
         region_y: u64,
         insured_value: u64,
         premium: u64,
         policy_type: String,
-        expiry_date: String,
         insured_area: u64,
         insured_area_unit: String,
     );
