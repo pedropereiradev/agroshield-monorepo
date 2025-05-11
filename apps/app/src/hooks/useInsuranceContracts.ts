@@ -1,9 +1,13 @@
 import { InsuranceContract, InsuranceNft } from '@/sway-contracts-api';
 import { useWallet } from '@fuels/react';
 import { useEffect, useState } from 'react';
+import {
+  insuranceContract,
+  insuranceNft,
+} from '../sway-contracts-api/contract-ids.json';
 
-const INSURANCE_MANAGER_CONTRACT_ID = process.env.VITE_INSURANCE_CONTRACT_ID;
-const INSURANCE_NFT_CONTRACT_ID = process.env.VITE_INSURANCE_NFT_CONTRACT_ID;
+const INSURANCE_MANAGER_CONTRACT_ID = insuranceContract;
+const INSURANCE_NFT_CONTRACT_ID = insuranceNft;
 
 if (!INSURANCE_MANAGER_CONTRACT_ID || !INSURANCE_NFT_CONTRACT_ID) {
   throw new Error(

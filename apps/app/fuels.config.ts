@@ -15,13 +15,12 @@ export default createConfig({
     '0x875d16e8753c9fe4e03887fe7258832ff4771995df84f7e6bfd0064dc13dc1b1',
   autoStartFuelCore: true,
   snapshotDir: './snapshot',
-  onDeploy: async (config, data) => {
+  onDeploy: async (_config, data) => {
     const contracts = data.contracts;
 
     console.log('contracts', contracts);
 
     const insuranceNft = contracts?.find((contract) => {
-      console.log('insuranceNft', contract);
       return contract.name === 'insuranceNft';
     });
 
@@ -30,7 +29,6 @@ export default createConfig({
     }
 
     const insuranceContract = contracts?.find((contract) => {
-      console.log('insuranceContract', contract);
       return contract.name === 'insuranceContract';
     });
 
@@ -42,9 +40,6 @@ export default createConfig({
     const privateKey = process.env.OWNER_WALLET_SECRET as string;
 
     const wallet = Wallet.fromPrivateKey(privateKey, provider);
-
-    console.log('Wallet address:', wallet.address.toB256());
-    console.log('Wallet balance:', await wallet.getBalance());
 
     const insuranceManagerContract = new InsuranceContract(
       insuranceContract.contractId,
@@ -63,7 +58,7 @@ export default createConfig({
         )
         .call();
 
-      await insuranceNftContract.functions.constructor(
+      insuranceNftContract.functions.constructor(
         { Address: { bits: wallet.address.toB256() } },
         { ContractId: { bits: insuranceContract.contractId } }
       );
