@@ -1,0 +1,32 @@
+{
+  "name": "@agroshield/data-access",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "test": "vitest",
+    "migrate:generate": "drizzle-kit generate",
+    "migrate:push": "drizzle-kit push"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.3",
+  "dependencies": {
+    "axios": "^1.9.0",
+    "bottleneck": "^2.19.5",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "pg": "^8.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/pg": "^8.15.1",
+    "drizzle-kit": "^0.31.1",
+    "tsup": "^8.4.0",
+    "typescript": "~5.7.2",
+    "vitest": "^3.1.3"
+  }
+}
