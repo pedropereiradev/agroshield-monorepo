@@ -12,7 +12,6 @@
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "devDependencies": {
-    "@agroshield/data-access": "workspace:*",
     "@types/node": "^22.15.3",
     "typescript": "~5.7.2",
     "vitest": "^3.1.3"
