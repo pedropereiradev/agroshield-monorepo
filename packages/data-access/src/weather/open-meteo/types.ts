@@ -74,6 +74,7 @@ export interface HistoricalResponse {
 
   hourly?: {
     time: string[];
+  } & {
     [key in HourlyVariable]?: number[];
   };
   hourly_units?: {
@@ -81,6 +82,7 @@ export interface HistoricalResponse {
   };
   daily?: {
     time: string[];
+  } & {
     [key in DailyVariable]?: number[] | string[];
   };
   daily_units?: {
@@ -140,6 +142,7 @@ export interface ForecastResponse {
 
   hourly?: {
     time: string[];
+  } & {
     [key in HourlyVariable]?: number[];
   };
   hourly_units?: {
@@ -148,6 +151,7 @@ export interface ForecastResponse {
 
   daily?: {
     time: string[];
+  } & {
     [key in DailyVariable]?: number[] | string[];
   };
   daily_units?: {
