@@ -3,7 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build:all": "turbo run build",
+    "build:apps": "turbo run build --filter='./apps/*'",
+    "build:packages": "turbo run build --filter='./packages/data-access' --filter='./packages/core-domain'",
+    "dev": "turbo run dev --filter='!contracts' --filter='!docs'",
     "lint": "turbo run lint",
     "forc:fmt": "forc fmt --path packages/contracts",
     "forc:build": "forc build --path packages/contracts",
