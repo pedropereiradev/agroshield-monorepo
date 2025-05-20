@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@agroshield/core-domain':
+        specifier: workspace:*
+        version: link:../../packages/core-domain
+      '@agroshield/data-access':
+        specifier: workspace:*
+        version: link:../../packages/data-access
       '@fastify/cors':
         specifier: ^11.0.1
         version: 11.0.1
