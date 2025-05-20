@@ -1,14 +1,4 @@
-import type { WeatherDay } from './types';
-
-export type EventId =
-  | 'soy_drought'
-  | 'soy_flood'
-  | 'soy_heat'
-  | 'soy_cold'
-  | 'rice_drought'
-  | 'rice_flood'
-  | 'rice_heat'
-  | 'rice_cold';
+import type { EventId, WeatherDay } from './types';
 
 interface TriggerSpec {
   /** Sliding-window length in days that must satisfy the predicate. */

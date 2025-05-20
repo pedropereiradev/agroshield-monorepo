@@ -1,3 +1,13 @@
+export type EventId =
+  | 'soy_drought'
+  | 'soy_flood'
+  | 'soy_heat'
+  | 'soy_cold'
+  | 'rice_drought'
+  | 'rice_flood'
+  | 'rice_heat'
+  | 'rice_cold';
+
 export interface WeatherDay {
   date: Date;
   precip: number;

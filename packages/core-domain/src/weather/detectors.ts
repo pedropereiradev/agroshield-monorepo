@@ -1,5 +1,5 @@
-import { type EventId, TRIGGERS } from './triggers';
-import type { WeatherDay } from './types';
+import { TRIGGERS } from './triggers';
+import type { EventId, WeatherDay } from './types';
 
 /** True if event E happened inside the supplied window (dates inclusive). */
 export function detect(event: EventId, days: WeatherDay[]): boolean {

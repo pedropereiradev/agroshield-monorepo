@@ -1,6 +1,5 @@
 import { detect } from './detectors';
-import type { EventId } from './triggers';
-import type { Probability, SeasonWindow, WeatherDay } from './types';
+import type { EventId, Probability, SeasonWindow, WeatherDay } from './types';
 
 /** Return empirical probability and Wilson CI (95 %). */
 export function probability(
