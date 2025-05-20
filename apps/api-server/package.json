@@ -1,8 +1,8 @@
 {
-  "name": "api-server",
-  "version": "1.0.0",
+  "name": "@agroshield/api-server",
+  "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
@@ -13,6 +13,8 @@
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "dependencies": {
+    "@agroshield/core-domain": "workspace:*",
+    "@agroshield/data-access": "workspace:*",
     "@fastify/cors": "^11.0.1",
     "fastify": "^5.3.3"
   },
