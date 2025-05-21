@@ -28,5 +28,7 @@ abi Insurance {
         policy_type: String,
         insured_area: u64,
         insured_area_unit: String,
+        planting_month: u64,
+        harvest_month: u64,
     );
 }

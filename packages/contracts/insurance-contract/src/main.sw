@@ -36,6 +36,8 @@ fn mint_token(
     policy_type: String,
     insured_area: u64,
     insured_area_unit: String,
+    planting_month: u64,
+    harvest_month: u64,
     receiver: Identity,
 ) -> AssetId {
     let sub_id = generate_sub_id(crop, start_date, end_date, region_x, region_y, policy_type);
@@ -96,6 +98,16 @@ fn mint_token(
     );
     nft_contract.set_metadata(
         asset_id,
+        String::from_ascii_str("planting_month"),
+        Metadata::Int(planting_month),
+    );
+    nft_contract.set_metadata(
+        asset_id,
+        String::from_ascii_str("harvest_month"),
+        Metadata::Int(harvest_month),
+    );
+    nft_contract.set_metadata(
+        asset_id,
         String::from_ascii_str("image"),
         Metadata::String(String::from_ascii_str("bafybeia5kl72ixc2bvb7ykqyf7mqmy2iso7ghm4ajfccvidincpm2lxfny")),
     );
@@ -119,6 +131,8 @@ impl Insurance for Contract {
         policy_type: String,
         insured_area: u64,
         insured_area_unit: String,
+        planting_month: u64,
+        harvest_month: u64,
     ) {
         require_not_paused();
 
@@ -135,6 +149,8 @@ impl Insurance for Contract {
             policy_type,
             insured_area,
             insured_area_unit,
+            planting_month,
+            harvest_month,
             owner,
         );
     }
