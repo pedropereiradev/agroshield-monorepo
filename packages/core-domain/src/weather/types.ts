@@ -28,3 +28,11 @@ export interface Probability {
   lower: number;
   upper: number;
 }
+
+export interface CustomSeasonGenerationPayload {
+  crop: 'soy' | 'rice';
+  yearsBack: number;
+  plantingMonth: number;
+  harvestMonth: number;
+  referenceDate?: Date;
+}

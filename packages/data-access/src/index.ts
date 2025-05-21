@@ -1,3 +1,2 @@
-export * from './weather/open-meteo';
-export * from './db/client';
+export * from './weather';
 export * from './entities';
