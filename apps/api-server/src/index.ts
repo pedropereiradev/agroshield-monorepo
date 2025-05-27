@@ -1,19 +1,79 @@
-import Fastify from 'fastify';
+import 'dotenv/config';
+import fastify, { type FastifyInstance } from 'fastify';
+import { RouteManager } from './routes';
 
-const app = Fastify({ logger: true });
+class Application {
+  private app: FastifyInstance;
+  private routeManager: RouteManager;
+  private port: number;
+  private host: string;
 
-app.get('/', async () => {
-  return { hello: 'world' };
+  constructor() {
+    this.app = fastify({ logger: true });
+    this.routeManager = new RouteManager(this.app);
+    this.port = Number(process.env.PORT) || 3000;
+    this.host = process.env.HOST || '0.0.0.0';
+
+    this.setupServer();
+  }
+
+  private setupServer(): void {
+    this.routeManager.registerRoutes();
+
+    this.app.setErrorHandler((error, _request, reply) => {
+      this.app.log.error(error);
+
+      const statusCode = error.statusCode || 500;
+
+      reply.status(statusCode).send({
+        error: true,
+        message: error.message || 'Internal Server Error',
+        statusCode,
+      });
+    });
+  }
+
+  public async start(): Promise<void> {
+    try {
+      await this.app.listen({ port: this.port, host: this.host });
+      this.app.log.info(`Server listening on http://localhost:${this.port}`);
+    } catch (err) {
+      this.app.log.error(err);
+      process.exit(1);
+    }
+  }
+
+  public async stop(): Promise<void> {
+    try {
+      await this.app.close();
+      this.app.log.info('Application shut down');
+    } catch (err) {
+      this.app.log.error('Error during shutdown:', err);
+      process.exit(1);
+    }
+  }
+}
+
+const application = new Application();
+application.start();
+
+process.on('SIGINT', async () => {
+  console.log('SIGINT signal received. Shutting down...');
+  await application.stop();
+  process.exit(0);
 });
 
-const start = async () => {
-  try {
-    await app.listen({ port: 3000, host: '0.0.0.0' });
-    app.log.info('Server listening on http://localhost:3000');
-  } catch (err) {
-    app.log.error(err);
-    process.exit(1);
-  }
-};
+process.on('SIGTERM', async () => {
+  console.log('SIGTERM signal received. Shutting down...');
+  await application.stop();
+  process.exit(0);
+});
 
-start();
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  process.exit(1);
+});
