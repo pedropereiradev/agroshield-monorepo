@@ -1,15 +1,13 @@
-import axios, { type AxiosInstance, type AxiosError } from 'axios';
+import axios, { type AxiosError, type AxiosInstance } from 'axios';
 import type {
-  CellSelection,
-  CurrentVariable,
   DailyVariable,
+  DailyWeatherData,
   ForecastParams,
   ForecastResponse,
+  GetDailyForecastParams,
+  GetHourlyForecastParams,
   HourlyVariable,
-  PrecipitationUnit,
-  TemperatureUnit,
-  TimeFormat,
-  WindSpeedUnit,
+  HourlyWeatherData,
 } from './types';
 
 export class OpenMeteoForecastClient {
@@ -30,9 +28,6 @@ export class OpenMeteoForecastClient {
     }
   }
 
-  /**
-   * Low-level call to /v1/forecast
-   */
   async getForecast(params: ForecastParams): Promise<ForecastResponse> {
     try {
       const serial: Record<string, any> = { ...params };
@@ -60,117 +55,141 @@ export class OpenMeteoForecastClient {
     }
   }
 
-  /**
-   * Fetch “current” conditions only
-   */
-  async getCurrent(
-    latitude: number,
-    longitude: number,
-    opts?: {
-      elevation?: number;
-      timezone?: string;
-      temperature_unit?: TemperatureUnit;
-      wind_speed_unit?: WindSpeedUnit;
-      precipitation_unit?: PrecipitationUnit;
-      timeformat?: TimeFormat;
-      cell_selection?: CellSelection;
-      models?: string[];
+  private processDailyResponse(response: ForecastResponse): DailyWeatherData[] {
+    if (
+      !response.daily ||
+      !response.daily.time ||
+      response.daily.time.length === 0
+    ) {
+      return [];
     }
-  ) {
-    return this.getForecast({
-      latitude,
-      longitude,
-      current:
-        (opts?.models as CurrentVariable[]) ??
-        ([
-          'temperature_2m',
-          'windspeed_10m',
-          'precipitation',
-        ] as CurrentVariable[]),
-      timezone: opts?.timezone ?? 'auto',
-      elevation: opts?.elevation,
-      temperature_unit: opts?.temperature_unit,
-      wind_speed_unit: opts?.wind_speed_unit,
-      precipitation_unit: opts?.precipitation_unit,
-      timeformat: opts?.timeformat,
-      cell_selection: opts?.cell_selection,
-      models: opts?.models,
-    });
+
+    const result: DailyWeatherData[] = [];
+    const days = response.daily.time.length;
+
+    const variableMap: Partial<Record<DailyVariable, string>> = {
+      temperature_2m_max: 'tMax',
+      temperature_2m_min: 'tMin',
+      precipitation_sum: 'precip',
+      wind_speed_10m_max: 'windMax',
+      weather_code: 'weatherCode',
+    };
+
+    for (let i = 0; i < days; i++) {
+      const dayData: DailyWeatherData = {
+        date: response.daily.time[i],
+      };
+
+      for (const [key, values] of Object.entries(response.daily)) {
+        if (key !== 'time' && Array.isArray(values) && values.length > i) {
+          const mappedKey = variableMap[key as DailyVariable] || key;
+          dayData[mappedKey] = values[i];
+        }
+      }
+
+      result.push(dayData);
+    }
+
+    return result;
   }
 
-  /**
-   * Fetch hourly forecast (default: next 7 days → 168 hours)
-   */
-  async getHourlyForecast(
-    latitude: number,
-    longitude: number,
-    vars: HourlyVariable[] = ['temperature_2m', 'precipitation'],
-    opts?: {
-      elevation?: number;
-      timezone?: string;
-      temperature_unit?: TemperatureUnit;
-      wind_speed_unit?: WindSpeedUnit;
-      precipitation_unit?: PrecipitationUnit;
-      timeformat?: TimeFormat;
-      cell_selection?: CellSelection;
-      forecast_days?: number;
-      past_days?: number;
-      models?: string[];
+  private processHourlyResponse(
+    response: ForecastResponse
+  ): HourlyWeatherData[] {
+    if (
+      !response.hourly ||
+      !response.hourly.time ||
+      response.hourly.time.length === 0
+    ) {
+      return [];
     }
-  ) {
-    return this.getForecast({
-      latitude,
-      longitude,
-      hourly: vars,
-      timezone: opts?.timezone ?? 'auto',
-      elevation: opts?.elevation,
-      temperature_unit: opts?.temperature_unit,
-      wind_speed_unit: opts?.wind_speed_unit,
-      precipitation_unit: opts?.precipitation_unit,
-      timeformat: opts?.timeformat,
-      cell_selection: opts?.cell_selection,
-      forecast_days: opts?.forecast_days,
-      past_days: opts?.past_days,
-      models: opts?.models,
-    });
+
+    const result: HourlyWeatherData[] = [];
+    const hours = response.hourly.time.length;
+
+    const variableMap: Partial<Record<HourlyVariable, string>> = {
+      temperature_2m: 'temperature',
+      precipitation: 'precipitation',
+      relativehumidity_2m: 'humidity',
+      windspeed_10m: 'windSpeed',
+    };
+
+    for (let i = 0; i < hours; i++) {
+      const hourData: HourlyWeatherData = {
+        time: response.hourly.time[i],
+      };
+
+      for (const [key, values] of Object.entries(response.hourly)) {
+        if (key !== 'time' && Array.isArray(values) && values.length > i) {
+          const mappedKey = variableMap[key as HourlyVariable] || key;
+          hourData[mappedKey] = values[i];
+        }
+      }
+
+      result.push(hourData);
+    }
+
+    return result;
   }
 
-  /**
-   * Fetch daily aggregates (up to 16 days)
-   */
   async getDailyForecast(
-    latitude: number,
-    longitude: number,
-    vars: DailyVariable[] = [
-      'temperature_2m_max',
-      'temperature_2m_min',
-      'precipitation_sum',
-    ],
-    opts?: {
-      elevation?: number;
-      timezone?: string;
-      temperature_unit?: TemperatureUnit;
-      precipitation_unit?: PrecipitationUnit;
-      timeformat?: TimeFormat;
-      cell_selection?: CellSelection;
-      forecast_days?: number;
-      past_days?: number;
-      models?: string[];
-    }
-  ) {
-    return this.getForecast({
+    params: GetDailyForecastParams
+  ): Promise<DailyWeatherData[]> {
+    const {
       latitude,
       longitude,
-      daily: vars,
-      timezone: opts?.timezone ?? 'auto',
-      elevation: opts?.elevation,
-      temperature_unit: opts?.temperature_unit,
-      precipitation_unit: opts?.precipitation_unit,
-      timeformat: opts?.timeformat,
-      cell_selection: opts?.cell_selection,
-      forecast_days: opts?.forecast_days,
-      past_days: opts?.past_days,
-      models: opts?.models,
+      variables = [
+        'temperature_2m_max',
+        'temperature_2m_min',
+        'precipitation_sum',
+      ],
+      ...opts
+    } = params;
+
+    const response = await this.getForecast({
+      latitude,
+      longitude,
+      daily: variables,
+      timezone: opts.timezone ?? 'auto',
+      elevation: opts.elevation,
+      temperature_unit: opts.temperature_unit,
+      precipitation_unit: opts.precipitation_unit,
+      timeformat: opts.timeformat,
+      cell_selection: opts.cell_selection,
+      forecast_days: opts.forecast_days,
+      past_days: opts.past_days,
+      models: opts.models,
     });
+
+    return this.processDailyResponse(response);
+  }
+
+  async getHourlyForecast(
+    params: GetHourlyForecastParams
+  ): Promise<HourlyWeatherData[]> {
+    const {
+      latitude,
+      longitude,
+      variables = ['temperature_2m', 'precipitation'],
+      ...opts
+    } = params;
+
+    const response = await this.getForecast({
+      latitude,
+      longitude,
+      hourly: variables,
+      timezone: opts.timezone ?? 'auto',
+      elevation: opts.elevation,
+      temperature_unit: opts.temperature_unit,
+      wind_speed_unit: opts.wind_speed_unit,
+      precipitation_unit: opts.precipitation_unit,
+      timeformat: opts.timeformat,
+      cell_selection: opts.cell_selection,
+      forecast_days: opts.forecast_days,
+      past_days: opts.past_days,
+      models: opts.models,
+    });
+
+    return this.processHourlyResponse(response);
   }
 }
