@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import fastifyCors from '@fastify/cors';
 import fastify, { type FastifyInstance } from 'fastify';
 import { RouteManager } from './routes';
 
@@ -9,7 +10,16 @@ class Application {
   private host: string;
 
   constructor() {
-    this.app = fastify({ logger: true });
+    this.app = fastify({ logger: true }).register(fastifyCors, {
+      origin: (origin, cb) => {
+        const hostname = new URL(origin as string).hostname;
+        if (hostname === 'localhost') {
+          cb(null, true);
+          return;
+        }
+        cb(new Error('Not allowed'), false);
+      },
+    });
     this.routeManager = new RouteManager(this.app);
     this.port = Number(process.env.PORT) || 3000;
     this.host = process.env.HOST || '0.0.0.0';
