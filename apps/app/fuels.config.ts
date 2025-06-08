@@ -4,17 +4,12 @@ import { InsuranceContract, InsuranceNft } from './src/sway-contracts-api';
 
 dotenv.config();
 
-const NODE_URL = 'http://127.0.0.1:4000/v1/graphql';
-
 export default createConfig({
   workspace: './../../packages/contracts',
   output: './src/sway-contracts-api',
-  // providerUrl: process.env.VITE_FUELS_PROVIDER_URL,
-  providerUrl: NODE_URL,
-  privateKey:
-    '0x875d16e8753c9fe4e03887fe7258832ff4771995df84f7e6bfd0064dc13dc1b1',
-  autoStartFuelCore: true,
-  snapshotDir: './snapshot',
+  providerUrl: process.env.VITE_FUELS_PROVIDER_URL,
+  privateKey: process.env.VITE_FUELS_PRIVATE_KEY,
+  autoStartFuelCore: false,
   onDeploy: async (_config, data) => {
     const contracts = data.contracts;
 
@@ -36,7 +31,9 @@ export default createConfig({
       throw new Error('Insurance Contract not found');
     }
 
-    const provider = new Provider(NODE_URL);
+    const provider = new Provider(
+      process.env.VITE_FUELS_PROVIDER_URL as string
+    );
     const privateKey = process.env.OWNER_WALLET_SECRET as string;
 
     const wallet = Wallet.fromPrivateKey(privateKey, provider);

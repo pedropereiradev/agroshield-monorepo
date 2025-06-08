@@ -18,11 +18,13 @@ createRoot(document.getElementById('root')!).render(
       <FuelProvider
         theme="light"
         fuelConfig={{
-          connectors: defaultConnectors(),
+          connectors: defaultConnectors({
+            wcProjectId: import.meta.env.VITE_WC_PROJECT_ID,
+          }),
         }}
         networks={[
           {
-            url: 'http://127.0.0.1:4000/v1/graphql',
+            url: import.meta.env.VITE_FUELS_PROVIDER_URL,
             chainId: CHAIN_IDS.fuel.testnet,
           },
         ]}
