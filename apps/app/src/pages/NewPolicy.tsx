@@ -30,8 +30,8 @@ export default function NewPolicy() {
     coveragePct: 0.8,
     plantingMonth: 4,
     harvestMonth: 9,
-    latitude: -23.55052,
-    longitude: -46.633309,
+    latitude: -31.76997,
+    longitude: -52.34101,
   });
 
   const [isFormValid, setIsFormValid] = useState(true);

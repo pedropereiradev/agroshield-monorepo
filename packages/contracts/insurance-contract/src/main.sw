@@ -8,7 +8,6 @@ use interface::{Constructor, Insurance, OwnersContract};
 use errors::InsuranceContractError;
 use lib::{generate_name, generate_sub_id};
 use standards::src5::{SRC5, State};
-use standards::src7::SRC7;
 use standards::src20::SRC20;
 use sway_libs::ownership::{_owner, initialize_ownership, only_owner, transfer_ownership};
 use sway_libs::pausable::*;

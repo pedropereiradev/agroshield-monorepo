@@ -12,6 +12,8 @@ export interface PolicyDetails {
   policyType: string;
   insuredArea: number;
   insuredAreaUnit: string;
+  plantingMonth: number;
+  harvestMonth: number;
 }
 
 export function usePolicyCreation() {
@@ -40,13 +42,15 @@ export function usePolicyCreation() {
           policyDetails.crop,
           policyDetails.startDate,
           policyDetails.endDate,
-          policyDetails.regionX,
-          policyDetails.regionY,
+          policyDetails.regionX * -1,
+          policyDetails.regionY * -1,
           policyDetails.insuredValue,
           policyDetails.premium,
           policyDetails.policyType,
           policyDetails.insuredArea,
-          policyDetails.insuredAreaUnit
+          policyDetails.insuredAreaUnit,
+          policyDetails.plantingMonth,
+          policyDetails.harvestMonth
         )
         .addContracts([nftContract])
         .call();
