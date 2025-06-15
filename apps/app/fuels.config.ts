@@ -1,6 +1,10 @@
 import dotenv from 'dotenv';
 import { Provider, Wallet, createConfig } from 'fuels';
-import { InsuranceContract, InsuranceNft } from './src/sway-contracts-api';
+import {
+  InsuranceContract,
+  InsuranceManager,
+  InsuranceNft,
+} from './src/sway-contracts-api';
 
 dotenv.config();
 
@@ -31,6 +35,14 @@ export default createConfig({
       throw new Error('Insurance Contract not found');
     }
 
+    const insuranceManager = contracts?.find((contract) => {
+      return contract.name === 'insuranceManager';
+    });
+
+    if (!insuranceManager) {
+      throw new Error('Insurance Manager Contract not found');
+    }
+
     const provider = new Provider(
       process.env.VITE_FUELS_PROVIDER_URL as string
     );
@@ -38,24 +50,35 @@ export default createConfig({
 
     const wallet = Wallet.fromPrivateKey(privateKey, provider);
 
-    const insuranceManagerContract = new InsuranceContract(
+    const insuranceContractInstance = new InsuranceContract(
       insuranceContract.contractId,
       wallet
     );
-    const insuranceNftContract = new InsuranceNft(
+    const insuranceNftContractInstance = new InsuranceNft(
       insuranceNft.contractId,
       wallet
     );
 
+    const insuranceManagerContractInstance = new InsuranceManager(
+      insuranceManager.contractId,
+      wallet
+    );
+
     try {
-      await insuranceManagerContract.functions
+      await insuranceContractInstance.functions
         .constructor(
           { bits: wallet.address.toB256() },
-          { bits: insuranceNft.contractId }
+          { bits: insuranceNft.contractId },
+          { bits: insuranceManager.contractId }
         )
         .call();
 
-      insuranceNftContract.functions.constructor(
+      insuranceNftContractInstance.functions.constructor(
+        { Address: { bits: wallet.address.toB256() } },
+        { ContractId: { bits: insuranceContract.contractId } }
+      );
+
+      insuranceManagerContractInstance.functions.constructor(
         { Address: { bits: wallet.address.toB256() } },
         { ContractId: { bits: insuranceContract.contractId } }
       );

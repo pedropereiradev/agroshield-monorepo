@@ -18,13 +18,11 @@ import type {
   Address,
   BigNumberish,
   BN,
-  Bytes,
   FunctionFragment,
   InvokeFunction,
-  StdString,
 } from 'fuels';
 
-import type { Enum } from "./common";
+import type { Option, Enum, Vec } from "./common";
 
 export enum AccessErrorInput { NotOwner = 'NotOwner' };
 export enum AccessErrorOutput { NotOwner = 'NotOwner' };
@@ -32,14 +30,12 @@ export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractId
 export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
 export enum InitializationErrorInput { CannotReinitialized = 'CannotReinitialized' };
 export enum InitializationErrorOutput { CannotReinitialized = 'CannotReinitialized' };
-export enum InsuranceContractErrorInput { ContractNotBeZero = 'ContractNotBeZero', ContractAlreadyInitialized = 'ContractAlreadyInitialized', InvalidAmount = 'InvalidAmount' };
-export enum InsuranceContractErrorOutput { ContractNotBeZero = 'ContractNotBeZero', ContractAlreadyInitialized = 'ContractAlreadyInitialized', InvalidAmount = 'InvalidAmount' };
-export enum PauseErrorInput { Paused = 'Paused', NotPaused = 'NotPaused' };
-export enum PauseErrorOutput { Paused = 'Paused', NotPaused = 'NotPaused' };
 export enum PolicyTypeInput { Rainfall = 'Rainfall', Temperature = 'Temperature', Drought = 'Drought' };
 export enum PolicyTypeOutput { Rainfall = 'Rainfall', Temperature = 'Temperature', Drought = 'Drought' };
 export type StateInput = Enum<{ Uninitialized: undefined, Initialized: IdentityInput, Revoked: undefined }>;
 export type StateOutput = Enum<{ Uninitialized: void, Initialized: IdentityOutput, Revoked: void }>;
+export enum StatusInput { Active = 'Active', Inactive = 'Inactive', Claimed = 'Claimed', Expired = 'Expired', Pending = 'Pending', Approved = 'Approved', Rejected = 'Rejected', Suspended = 'Suspended', UnderReview = 'UnderReview' };
+export enum StatusOutput { Active = 'Active', Inactive = 'Inactive', Claimed = 'Claimed', Expired = 'Expired', Pending = 'Pending', Approved = 'Approved', Rejected = 'Rejected', Suspended = 'Suspended', UnderReview = 'UnderReview' };
 
 export type AddressInput = { bits: string };
 export type AddressOutput = AddressInput;
@@ -51,6 +47,8 @@ export type OwnershipSetInput = { new_owner: IdentityInput };
 export type OwnershipSetOutput = { new_owner: IdentityOutput };
 export type OwnershipTransferredInput = { new_owner: IdentityInput, previous_owner: IdentityInput };
 export type OwnershipTransferredOutput = { new_owner: IdentityOutput, previous_owner: IdentityOutput };
+export type PolicyDataInput = { owner: IdentityInput, insured_value: BigNumberish, premium: BigNumberish, start_date: BigNumberish, end_date: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput };
+export type PolicyDataOutput = { owner: IdentityOutput, insured_value: BN, premium: BN, start_date: BN, end_date: BN, policy_type: PolicyTypeOutput, status: StatusOutput };
 
 const abi = {
   "programType": "contract",
@@ -60,20 +58,6 @@ const abi = {
     {
       "type": "()",
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-    },
-    {
-      "type": "bool",
-      "concreteTypeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
-    },
-    {
-      "type": "enum errors::InsuranceContractError",
-      "concreteTypeId": "807383981d4c37c8f75fab945840c1ca8647ee5c102deea493c55063d08fa5ff",
-      "metadataTypeId": 1
-    },
-    {
-      "type": "enum interface::PolicyType",
-      "concreteTypeId": "23e55847b5d7547ecb8be2034f02a517df05f6604383a819d1cfe4a5ac07ea94",
-      "metadataTypeId": 2
     },
     {
       "type": "enum standards::src5::AccessError",
@@ -86,44 +70,50 @@ const abi = {
       "metadataTypeId": 4
     },
     {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
-      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
-      "metadataTypeId": 6
+      "type": "enum std::identity::Identity",
+      "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
+      "metadataTypeId": 5
     },
     {
-      "type": "enum sway_libs::pausable::errors::PauseError",
-      "concreteTypeId": "8b3afcadf894415a10b09fc3717487e33802c8ffbb030edafe84ca4a71b280bc",
+      "type": "enum std::option::Option<struct interface::PolicyData>",
+      "concreteTypeId": "75d00cbb3a4172a774d9ca244ba8ef8794b1f74d48a7d0844e1bd00dee830b24",
+      "metadataTypeId": 6,
+      "typeArguments": [
+        "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec"
+      ]
+    },
+    {
+      "type": "enum sway_libs::ownership::errors::InitializationError",
+      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
       "metadataTypeId": 7
     },
     {
-      "type": "struct std::address::Address",
-      "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308",
-      "metadataTypeId": 9
+      "type": "struct interface::PolicyData",
+      "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec",
+      "metadataTypeId": 10
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 10
+      "metadataTypeId": 12
     },
     {
-      "type": "struct std::contract_id::ContractId",
-      "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
-      "metadataTypeId": 13
-    },
-    {
-      "type": "struct std::string::String",
-      "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c",
-      "metadataTypeId": 14
+      "type": "struct std::vec::Vec<struct std::asset_id::AssetId>",
+      "concreteTypeId": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
+      "metadataTypeId": 15,
+      "typeArguments": [
+        "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+      ]
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 15
+      "metadataTypeId": 16
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
-      "metadataTypeId": 16
+      "metadataTypeId": 17
     },
     {
       "type": "u64",
@@ -136,26 +126,8 @@ const abi = {
       "metadataTypeId": 0
     },
     {
-      "type": "enum errors::InsuranceContractError",
-      "metadataTypeId": 1,
-      "components": [
-        {
-          "name": "ContractNotBeZero",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "ContractAlreadyInitialized",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "InvalidAmount",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        }
-      ]
-    },
-    {
       "type": "enum interface::PolicyType",
-      "metadataTypeId": 2,
+      "metadataTypeId": 1,
       "components": [
         {
           "name": "Rainfall",
@@ -167,6 +139,48 @@ const abi = {
         },
         {
           "name": "Drought",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum interface::Status",
+      "metadataTypeId": 2,
+      "components": [
+        {
+          "name": "Active",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Inactive",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Claimed",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Expired",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Pending",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Approved",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Rejected",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Suspended",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "UnderReview",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         }
       ]
@@ -205,7 +219,7 @@ const abi = {
       "components": [
         {
           "name": "Address",
-          "typeId": 9
+          "typeId": 11
         },
         {
           "name": "ContractId",
@@ -214,8 +228,25 @@ const abi = {
       ]
     },
     {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
+      "type": "enum std::option::Option",
       "metadataTypeId": 6,
+      "components": [
+        {
+          "name": "None",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Some",
+          "typeId": 8
+        }
+      ],
+      "typeParameters": [
+        8
+      ]
+    },
+    {
+      "type": "enum sway_libs::ownership::errors::InitializationError",
+      "metadataTypeId": 7,
       "components": [
         {
           "name": "CannotReinitialized",
@@ -224,26 +255,50 @@ const abi = {
       ]
     },
     {
-      "type": "enum sway_libs::pausable::errors::PauseError",
-      "metadataTypeId": 7,
+      "type": "generic T",
+      "metadataTypeId": 8
+    },
+    {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 9
+    },
+    {
+      "type": "struct interface::PolicyData",
+      "metadataTypeId": 10,
       "components": [
         {
-          "name": "Paused",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "name": "owner",
+          "typeId": 5
         },
         {
-          "name": "NotPaused",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "name": "insured_value",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "premium",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "start_date",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "end_date",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "policy_type",
+          "typeId": 1
+        },
+        {
+          "name": "status",
+          "typeId": 2
         }
       ]
     },
     {
-      "type": "raw untyped ptr",
-      "metadataTypeId": 8
-    },
-    {
       "type": "struct std::address::Address",
-      "metadataTypeId": 9,
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "bits",
@@ -253,39 +308,11 @@ const abi = {
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 10,
+      "metadataTypeId": 12,
       "components": [
         {
           "name": "bits",
           "typeId": 0
-        }
-      ]
-    },
-    {
-      "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 11,
-      "components": [
-        {
-          "name": "buf",
-          "typeId": 12
-        },
-        {
-          "name": "len",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        }
-      ]
-    },
-    {
-      "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 12,
-      "components": [
-        {
-          "name": "ptr",
-          "typeId": 8
-        },
-        {
-          "name": "cap",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ]
     },
@@ -300,18 +327,48 @@ const abi = {
       ]
     },
     {
-      "type": "struct std::string::String",
+      "type": "struct std::vec::RawVec",
       "metadataTypeId": 14,
       "components": [
         {
-          "name": "bytes",
-          "typeId": 11
+          "name": "ptr",
+          "typeId": 9
+        },
+        {
+          "name": "cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
+      ],
+      "typeParameters": [
+        8
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec",
+      "metadataTypeId": 15,
+      "components": [
+        {
+          "name": "buf",
+          "typeId": 14,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 8
+            }
+          ]
+        },
+        {
+          "name": "len",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "typeParameters": [
+        8
       ]
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 15,
+      "metadataTypeId": 16,
       "components": [
         {
           "name": "new_owner",
@@ -321,7 +378,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 16,
+      "metadataTypeId": 17,
       "components": [
         {
           "name": "new_owner",
@@ -338,83 +395,12 @@ const abi = {
     {
       "inputs": [
         {
-          "name": "crop",
-          "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
-        },
-        {
-          "name": "start_date",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "end_date",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "region_x",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "region_y",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "insured_value",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "premium",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "policy_type",
-          "concreteTypeId": "23e55847b5d7547ecb8be2034f02a517df05f6604383a819d1cfe4a5ac07ea94"
-        },
-        {
-          "name": "insured_area",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "insured_area_unit",
-          "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
-        },
-        {
-          "name": "planting_month",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "harvest_month",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        }
-      ],
-      "name": "create_insurance",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
           "name": "owner",
-          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         },
         {
-          "name": "nft_id",
-          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
-        },
-        {
-          "name": "manager_id",
-          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
+          "name": "admin",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
       "name": "constructor",
@@ -432,20 +418,92 @@ const abi = {
     {
       "inputs": [
         {
-          "name": "amount",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
+          "name": "admin",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "add_admin",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
         {
-          "name": "asset_id",
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "admin",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "revoke_admin",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "new_owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "transfer_ownership",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         },
         {
-          "name": "recipient",
-          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
+          "name": "data",
+          "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec"
         }
       ],
-      "name": "transfer_funds",
+      "name": "register_policy",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_owner_policy_count",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -458,18 +516,48 @@ const abi = {
     {
       "inputs": [
         {
-          "name": "new_owner",
-          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
+          "name": "owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "transfer_ownership",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "name": "get_policies_by_owner",
+      "output": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
       "attributes": [
         {
           "name": "storage",
           "arguments": [
-            "read",
-            "write"
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "get_policy",
+      "output": "75d00cbb3a4172a774d9ca244ba8ef8794b1f74d48a7d0844e1bd00dee830b24",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_policy_count",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
           ]
         }
       ]
@@ -486,52 +574,9 @@ const abi = {
           ]
         }
       ]
-    },
-    {
-      "inputs": [],
-      "name": "is_paused",
-      "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [],
-      "name": "pause",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [],
-      "name": "unpause",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "write"
-          ]
-        }
-      ]
     }
   ],
   "loggedTypes": [
-    {
-      "logId": "10032608944051208538",
-      "concreteTypeId": "8b3afcadf894415a10b09fc3717487e33802c8ffbb030edafe84ca4a71b280bc"
-    },
     {
       "logId": "2161305517876418151",
       "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893"
@@ -539,10 +584,6 @@ const abi = {
     {
       "logId": "16280289466020123285",
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5"
-    },
-    {
-      "logId": "9255886348526303176",
-      "concreteTypeId": "807383981d4c37c8f75fab945840c1ca8647ee5c102deea493c55063d08fa5ff"
     },
     {
       "logId": "4571204900286667806",
@@ -559,46 +600,46 @@ const abi = {
 
 const storageSlots: StorageSlot[] = [
   {
-    "key": "092bd1a67d53132ea97d8bef0532c2598552a4aefa5c9c3d051e3d9cfbb3de7d",
-    "value": "0000000000000000000000000000000000000000000000000000000000000000"
-  },
-  {
-    "key": "d012d30fa516d80fc26a2ca32c9adc5653ef5448441a1190f6eaf44942518fc8",
+    "key": "720c98c9779982600e72bfa67613afd900412ad7065746d85df3d0ee29952b94",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   }
 ];
 
-export class InsuranceContractInterface extends Interface {
+export class InsuranceManagerInterface extends Interface {
   constructor() {
     super(abi);
   }
 
   declare functions: {
-    create_insurance: FunctionFragment;
     constructor: FunctionFragment;
-    transfer_funds: FunctionFragment;
+    add_admin: FunctionFragment;
+    revoke_admin: FunctionFragment;
     transfer_ownership: FunctionFragment;
+    register_policy: FunctionFragment;
+    get_owner_policy_count: FunctionFragment;
+    get_policies_by_owner: FunctionFragment;
+    get_policy: FunctionFragment;
+    get_policy_count: FunctionFragment;
     owner: FunctionFragment;
-    is_paused: FunctionFragment;
-    pause: FunctionFragment;
-    unpause: FunctionFragment;
   };
 }
 
-export class InsuranceContract extends __Contract {
+export class InsuranceManager extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 
-  declare interface: InsuranceContractInterface;
+  declare interface: InsuranceManagerInterface;
   declare functions: {
-    create_insurance: InvokeFunction<[crop: StdString, start_date: BigNumberish, end_date: BigNumberish, region_x: BigNumberish, region_y: BigNumberish, insured_value: BigNumberish, premium: BigNumberish, policy_type: PolicyTypeInput, insured_area: BigNumberish, insured_area_unit: StdString, planting_month: BigNumberish, harvest_month: BigNumberish], void>;
-    constructor: InvokeFunction<[owner: AddressInput, nft_id: ContractIdInput, manager_id: ContractIdInput], void>;
-    transfer_funds: InvokeFunction<[amount: BigNumberish, asset_id: AssetIdInput, recipient: AddressInput], void>;
-    transfer_ownership: InvokeFunction<[new_owner: AddressInput], void>;
+    constructor: InvokeFunction<[owner: IdentityInput, admin: IdentityInput], void>;
+    add_admin: InvokeFunction<[admin: IdentityInput], void>;
+    revoke_admin: InvokeFunction<[admin: IdentityInput], void>;
+    transfer_ownership: InvokeFunction<[new_owner: IdentityInput], void>;
+    register_policy: InvokeFunction<[policy_id: AssetIdInput, data: PolicyDataInput], void>;
+    get_owner_policy_count: InvokeFunction<[owner: IdentityInput], BN>;
+    get_policies_by_owner: InvokeFunction<[owner: IdentityInput], Vec<AssetIdOutput>>;
+    get_policy: InvokeFunction<[policy_id: AssetIdInput], Option<PolicyDataOutput>>;
+    get_policy_count: InvokeFunction<[], BN>;
     owner: InvokeFunction<[], StateOutput>;
-    is_paused: InvokeFunction<[], boolean>;
-    pause: InvokeFunction<[], void>;
-    unpause: InvokeFunction<[], void>;
   };
 
   constructor(

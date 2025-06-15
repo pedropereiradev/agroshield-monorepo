@@ -1,4 +1,5 @@
 {
-  "insuranceNft": "0xb581b7ad070a9d3756335ae5fe98e08477847cd1649aec6ba1b86879ab53e762",
-  "insuranceContract": "0x1c8029ace6dfe4a2cf8614ecdaa22b84a056ab4b81e131cb43a1bb98e7b7af3a"
+  "insuranceNft": "0x298e7118c6c8bf6514d75e74fe5dcd692a16c41ba6594fed1c1f834a8e4e3bc2",
+  "insuranceContract": "0x652a4a699251fe77468f954bb048cb083718ba0ade0d5928314f34158ff4c8c4",
+  "insuranceManager": "0x45c04f6a42929443216c13ba06335cd91628879cb947e74defce3cbb5dea1d10"
 }
