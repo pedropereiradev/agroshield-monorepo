@@ -1,30 +1,4 @@
-import { CloudRain, Leaf, Sun, Thermometer } from 'lucide-react';
-
-export const policyTypes = [
-  {
-    id: 'rainfall',
-    name: 'Seguro contra chuvas',
-    description: 'Proteção contra chuvas excessivas',
-    icon: CloudRain,
-    color: 'text-blue-600',
-  },
-  {
-    id: 'temperature',
-    name: 'Seguro contra temperaturas',
-    description: 'Proteção contra temperaturas extremas',
-    icon: Thermometer,
-    color: 'text-orange-600',
-  },
-  {
-    id: 'drought',
-    name: 'Seguro contra secas',
-    description: 'Proteção contra secas severas',
-    icon: Sun,
-    color: 'text-yellow-600',
-  },
-];
-
-export type PolicyType = 'rainfall' | 'temperature' | 'drought';
+import { CloudRain, Leaf, Thermometer } from 'lucide-react';
 
 export const cropTypes = [
   { value: 'soybeans', label: 'Soja' },

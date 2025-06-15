@@ -1,15 +1,16 @@
+import type { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
 import { useState } from 'react';
 import { useInsuranceContracts } from './useInsuranceContracts';
 
 export interface PolicyDetails {
   crop: string;
-  startDate: string;
-  endDate: string;
+  startDate: number;
+  endDate: number;
   regionX: number;
   regionY: number;
   insuredValue: number;
   premium: number;
-  policyType: string;
+  policyType: PolicyTypeInput;
   insuredArea: number;
   insuredAreaUnit: string;
   plantingMonth: number;
@@ -59,9 +60,9 @@ export function usePolicyCreation() {
       setTransactionId(result.transactionId);
 
       return result;
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating policy:', err);
-      setError(err.message || 'Failed to create policy');
+      setError((err as Error).message || 'Failed to create policy');
       return null;
     } finally {
       setIsCreating(false);

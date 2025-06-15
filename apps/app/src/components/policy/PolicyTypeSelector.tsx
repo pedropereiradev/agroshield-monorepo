@@ -1,11 +1,11 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { type PolicyType, policyTypes } from '@/utils/mocks';
-import type { LucideIcon } from 'lucide-react';
+import { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
+import { CloudRain, type LucideIcon, Sun, Thermometer } from 'lucide-react';
 
 interface PolicyTypeSelectorProps {
-  value: PolicyType;
-  onChange: (value: PolicyType) => void;
+  value: PolicyTypeInput;
+  onChange: (value: PolicyTypeInput) => void;
 }
 
 export function PolicyTypeSelector({
@@ -16,24 +16,35 @@ export function PolicyTypeSelector({
     <RadioGroup
       value={value}
       className="grid grid-cols-1 md:grid-cols-3 gap-6"
-      onValueChange={(value) => onChange(value as PolicyType)}
+      onValueChange={(value) => onChange(value as PolicyTypeInput)}
     >
-      {policyTypes.map((type) => (
-        <PolicyTypeOption
-          key={type.id}
-          id={type.id as PolicyType}
-          name={type.name}
-          description={type.description}
-          Icon={type.icon}
-          colorClass={type.color}
-        />
-      ))}
+      <PolicyTypeOption
+        id={PolicyTypeInput.Rainfall}
+        name="Seguro contra chuvas"
+        description="Proteção contra chuvas excessivas"
+        Icon={CloudRain}
+        colorClass="text-blue-600"
+      />
+      <PolicyTypeOption
+        id={PolicyTypeInput.Temperature}
+        name="Seguro contra temperaturas"
+        description="Proteção contra temperaturas extremas."
+        Icon={Thermometer}
+        colorClass="text-orange-600"
+      />
+      <PolicyTypeOption
+        id={PolicyTypeInput.Drought}
+        name="Seguro contra secas"
+        description="Proteção contra secas severas"
+        Icon={Sun}
+        colorClass="text-yellow-600"
+      />
     </RadioGroup>
   );
 }
 
 interface PolicyTypeOptionProps {
-  id: PolicyType;
+  id: PolicyTypeInput;
   name: string;
   description: string;
   Icon: LucideIcon;

@@ -9,6 +9,7 @@ import { usePolicyCreation } from '@/hooks/usePolicyCreation';
 import type { PolicyDetails } from '@/hooks/usePolicyCreation';
 import { useQuote, validateQuoteRequest } from '@/hooks/useQuote';
 import type { QuoteRequest } from '@/services/quote';
+import { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -95,23 +96,21 @@ export default function NewPolicy() {
       return;
     }
 
-    const [regionX, regionY] = [policyData.longitude, policyData.latitude];
-
     try {
       const policyDetails: PolicyDetails = {
         crop: policyData.crop,
-        startDate: new Date().toISOString(),
-        endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(),
-        regionX,
-        regionY,
+        startDate: Math.floor(new Date().getTime() / 1000),
+        endDate: Math.floor((Date.now() + 90 * 24 * 60 * 60 * 1000) / 1000),
+        regionX: policyData.longitude,
+        regionY: policyData.latitude,
         insuredValue: Math.floor(quote.LMI * 1000),
         premium: Math.floor(quote.premium * 1000),
         policyType: policyData.triggerEvent.includes('drought')
-          ? 'rainfall'
+          ? PolicyTypeInput.Drought
           : policyData.triggerEvent.includes('heat') ||
               policyData.triggerEvent.includes('cold')
-            ? 'temperature'
-            : 'rainfall',
+            ? PolicyTypeInput.Temperature
+            : PolicyTypeInput.Rainfall,
         insuredArea: policyData.areaHa,
         insuredAreaUnit: 'Ha',
         plantingMonth: policyData.plantingMonth,
