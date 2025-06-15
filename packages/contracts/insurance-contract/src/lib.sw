@@ -13,16 +13,16 @@ pub fn generate_name(crop: String, policy_type: String) -> String {
 }
 pub fn generate_sub_id(
     crop: String,
-    start_date: String,
-    end_date: String,
+    start_date: u64,
+    end_date: u64,
     region_x: u64,
     region_y: u64,
     policy_type: String,
 ) -> b256 {
     let mut sub_id = Bytes::new();
     sub_id.append(crop.as_bytes());
-    sub_id.append(start_date.as_bytes());
-    sub_id.append(end_date.as_bytes());
+    sub_id.append(start_date.to_le_bytes());
+    sub_id.append(end_date.to_le_bytes());
     sub_id.append(region_x.to_le_bytes());
     sub_id.append(region_y.to_le_bytes());
     sub_id.append(policy_type.as_bytes());

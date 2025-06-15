@@ -1,2 +1,2 @@
 [workspace]
-members = ["insurance-nft", "insurance-contract"]
+members = ["insurance-nft", "insurance-contract", "insurance-manager"]

@@ -5,7 +5,7 @@ use sway_libs::signed_integers::*;
 
 abi Constructor {
     #[storage(read, write)]
-    fn constructor(owner: Address, nft_id: ContractId);
+    fn constructor(owner: Address, nft_id: ContractId, manager_id: ContractId);
 }
 
 abi OwnersContract {
@@ -19,16 +19,56 @@ abi Insurance {
     #[storage(read, write), payable]
     fn create_insurance(
         crop: String,
-        start_date: String,
-        end_date: String,
+        start_date: u64,
+        end_date: u64,
         region_x: u64,
         region_y: u64,
         insured_value: u64,
         premium: u64,
-        policy_type: String,
+        policy_type: PolicyType,
         insured_area: u64,
         insured_area_unit: String,
         planting_month: u64,
         harvest_month: u64,
     );
+}
+
+abi ManagerInfo {
+    #[storage(read)]
+    fn get_policy(policy_id: AssetId) -> Option<PolicyData>;
+
+    #[storage(read)]
+    fn get_policy_count() -> u64;
+}
+abi Manager {
+    #[storage(read, write)]
+    fn register_policy(policy_id: AssetId, data: PolicyData);
+}
+
+pub struct PolicyData {
+    pub owner: Identity,
+    pub insured_value: u64,
+    pub premium: u64,
+    pub start_date: u64,
+    pub end_date: u64,
+    pub policy_type: PolicyType,
+    pub status: Status,
+}
+
+pub enum PolicyType {
+    Rainfall: (),
+    Temperature: (),
+    Drought: (),
+}
+
+pub enum Status {
+    Active: (),
+    Inactive: (),
+    Claimed: (),
+    Expired: (),
+    Pending: (),
+    Approved: (),
+    Rejected: (),
+    Suspended: (),
+    UnderReview: (),
 }
