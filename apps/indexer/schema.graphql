@@ -1,0 +1,33 @@
+type InsuranceManager_RegisterPolicyEvent {
+  id: ID!
+  policyId: String!
+  owner: String!
+  insuredValue: String!
+  premium: String!
+  startDate: String!
+  endDate: String!
+  policyType: PolicyType!
+  status: PolicyStatus!
+  timestamp: String!
+  blockHeight: Int!
+  chainId: Int!
+}
+
+enum PolicyType {
+  Rainfall
+  Temperature
+  Drought
+}
+
+enum PolicyStatus {
+  Active
+  Inactive
+  Claimed
+  Expired
+  Pending
+  Approved
+  Rejected
+  Suspended
+  UnderReview
+}
+
