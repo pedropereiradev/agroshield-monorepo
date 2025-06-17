@@ -6,26 +6,7 @@ type InsuranceManager_RegisterPolicyEvent {
   premium: String!
   startDate: String!
   endDate: String!
-  policyType: PolicyType!
-  status: PolicyStatus!
+  policyType: String!
+  status: String!
   timestamp: String!
 }
-
-enum PolicyType {
-  Rainfall
-  Temperature
-  Drought
-}
-
-enum PolicyStatus {
-  Active
-  Inactive
-  Claimed
-  Expired
-  Pending
-  Approved
-  Rejected
-  Suspended
-  UnderReview
-}
-
