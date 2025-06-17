@@ -7,7 +7,7 @@ networks:
   contracts:
   - name: InsuranceManager
     address:
-    - 0x45c04f6a42929443216c13ba06335cd91628879cb947e74defce3cbb5dea1d10
+    - 0x3a1c4bdb7cc8fecbf21d8be009571c123e1162f0047560dab751fc0d9d8c600c
     abi_file_path: abis/insurancemanager-abi.json
     handler: src/EventHandlers.ts
     events:
