@@ -27,7 +27,6 @@ describe('InsuranceManager contract RegisterPolicyEvent event tests', () => {
         `${event.chainId}_${event.block.height}_${event.logIndex}`
       );
 
-    // Creating the expected entity
     const expectedInsuranceManagerRegisterPolicyEvent: InsuranceManager_RegisterPolicyEvent =
       {
         id: `${event.chainId}_${event.block.height}_${event.logIndex}`,
