@@ -21,7 +21,6 @@ describe('InsuranceManager contract RegisterPolicyEvent event tests', () => {
         mockDb,
       });
 
-    // Getting the actual entity from the mock database
     const actualInsuranceManagerRegisterPolicyEvent =
       mockDbUpdated.entities.InsuranceManager_RegisterPolicyEvent.get(
         `${event.chainId}_${event.block.height}_${event.logIndex}`
