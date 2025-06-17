@@ -6,7 +6,6 @@ import {
 const { MockDb, InsuranceManager } = TestHelpers;
 
 describe('InsuranceManager contract RegisterPolicyEvent event tests', () => {
-  // Create mock db
   const mockDb = MockDb.createMockDb();
 
   // Creating mock for InsuranceManager contract RegisterPolicyEvent event
