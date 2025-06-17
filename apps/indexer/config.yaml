@@ -1,15 +1,16 @@
 # yaml-language-server: $schema=./node_modules/envio/fuel.schema.json
 name: indexer
 ecosystem: fuel
-networks:
-- id: 0
-  start_block: 0
-  contracts:
-  - name: InsuranceManager
-    address:
-    - 0x3a1c4bdb7cc8fecbf21d8be009571c123e1162f0047560dab751fc0d9d8c600c
+contracts:
+  - name: insurance-manager
     abi_file_path: abis/insurancemanager-abi.json
     handler: src/EventHandlers.ts
     events:
-    - name: RegisterPolicyEvent
-      logId: '16702917729177687366'
+      - name: RegisterPolicyEvent
+        logId: '16702917729177687366'
+networks:
+  - id: 0
+    start_block: 0
+    contracts:
+      - name: insurance-manager
+        address: 0x3a1c4bdb7cc8fecbf21d8be009571c123e1162f0047560dab751fc0d9d8c600c
