@@ -1,7 +1,6 @@
 {
   "name": "@agroshield/indexer",
   "version": "0.1.0",
-  "type": "module",
   "private": true,
   "scripts": {
     "clean": "tsc --clean",
