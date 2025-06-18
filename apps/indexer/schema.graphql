@@ -1,3 +1,12 @@
 type InsuranceManager_RegisterPolicyEvent {
   id: ID!
+  policyId: String!
+  owner: String!
+  insuredValue: String!
+  premium: String!
+  startDate: String!
+  endDate: String!
+  policyType: String!
+  status: String!
+  timestamp: String!
 }
