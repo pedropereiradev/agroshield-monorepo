@@ -9,7 +9,7 @@ InsuranceManager.RegisterPolicyEvent.handler(async ({ event, context }) => {
   context.log.info(`Timestamp: ${event.params.timestamp.toString()}`);
 
   context.InsuranceManager_RegisterPolicyEvent.set({
-    id: `${event.block.id}-${event.params.timestamp.toString()}`,
+    id: `${event.block.id}-${event.block.time}-${event.transaction.id}`,
     // policyId: event.params.policy_id.bits,
     // owner: event.params.owner.payload.bits,
     // insuredValue: event.params.insured_value.toString(),
