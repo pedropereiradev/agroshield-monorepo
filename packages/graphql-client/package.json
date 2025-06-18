@@ -1,0 +1,26 @@
+{
+  "name": "@agroshield/graphql-client",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "graphql": "^16.11.0",
+    "graphql-request": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "typescript": "~5.7.2"
+  },
+  "packageManager": "pnpm@10.6.3"
+}
