@@ -5,7 +5,7 @@
     "build": "turbo run build",
     "build:all": "turbo run build",
     "build:apps": "turbo run build --filter='./apps/*'",
-    "build:packages": "turbo run build --filter='./packages/data-access' --filter='./packages/core-domain'",
+    "build:packages": "turbo run build --filter='./packages/*' --filter='!./packages/contracts' --filter='!./packages/docs'",
     "dev": "turbo run dev --filter='!contracts' --filter='!docs'",
     "lint": "turbo run lint",
     "forc:fmt": "forc fmt --path packages/contracts",
