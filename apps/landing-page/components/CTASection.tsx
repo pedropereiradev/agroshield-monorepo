@@ -2,28 +2,50 @@
 
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { leadService, LeadData } from '../lib/leadService';
 
 export default function CTASection() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [area, setArea] = useState('');
   const [crop, setCrop] = useState('');
+  const [city, setCity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would integrate with your backend API
-    console.log('Form submitted:', { name, email, area, crop });
-    setIsSubmitted(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setEmail('');
-      setName('');
-      setArea('');
-      setCrop('');
-    }, 3000);
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const leadData: LeadData = {
+        name,
+        email,
+        area,
+        crop,
+        city
+      };
+
+      await leadService.createLead(leadData);
+      setIsSubmitted(true);
+      
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setEmail('');
+        setName('');
+        setArea('');
+        setCrop('');
+        setCity('');
+      }, 3000);
+    } catch (error) {
+      console.error('Erro ao enviar formulário:', error);
+      setError('Erro ao enviar formulário. Tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,6 +70,7 @@ export default function CTASection() {
                     onChange={(e) => setName(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
                     required
+                    disabled={isLoading}
                   />
                   <input
                     type="email"
@@ -56,9 +79,10 @@ export default function CTASection() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
                     required
+                    disabled={isLoading}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <input
                     type="number"
                     placeholder="Área (hectares)"
@@ -66,25 +90,53 @@ export default function CTASection() {
                     onChange={(e) => setArea(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
                     required
+                    disabled={isLoading}
                   />
                   <select
                     value={crop}
                     onChange={(e) => setCrop(e.target.value)}
                     className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-white/50"
                     required
+                    disabled={isLoading}
                   >
                     <option value="" className="text-gray-900">Selecione a cultura</option>
                     <option value="soja" className="text-gray-900">Soja</option>
                     <option value="arroz" className="text-gray-900">Arroz</option>
                     <option value="ambos" className="text-gray-900">Soja e Arroz</option>
                   </select>
+                  <input
+                    type="text"
+                    placeholder="Sua cidade"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
+                    required
+                    disabled={isLoading}
+                  />
                 </div>
+                
+                {error && (
+                  <div className="mb-4 p-3 bg-red-500/20 border border-red-300 rounded-lg text-red-200">
+                    {error}
+                  </div>
+                )}
+                
                 <button
                   type="submit"
-                  className="w-full bg-white text-green-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors"
+                  disabled={isLoading}
+                  className="w-full bg-white text-green-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Garantir Meu Lugar na Lista
-                  <ArrowRight className="w-5 h-5 ml-2 inline" />
+                  {isLoading ? (
+                    <span className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mr-2"></div>
+                      Enviando...
+                    </span>
+                  ) : (
+                    <>
+                      Garantir Meu Lugar na Lista
+                      <ArrowRight className="w-5 h-5 ml-2 inline" />
+                    </>
+                  )}
                 </button>
               </form>
             </div>
