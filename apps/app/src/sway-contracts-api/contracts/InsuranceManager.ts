@@ -49,6 +49,8 @@ export type OwnershipTransferredInput = { new_owner: IdentityInput, previous_own
 export type OwnershipTransferredOutput = { new_owner: IdentityOutput, previous_owner: IdentityOutput };
 export type PolicyDataInput = { owner: IdentityInput, insured_value: BigNumberish, premium: BigNumberish, start_date: BigNumberish, end_date: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput };
 export type PolicyDataOutput = { owner: IdentityOutput, insured_value: BN, premium: BN, start_date: BN, end_date: BN, policy_type: PolicyTypeOutput, status: StatusOutput };
+export type RegisterPolicyEventInput = { owner: IdentityInput, policy_id: AssetIdInput, insured_value: BigNumberish, premium: BigNumberish, start_date: BigNumberish, end_date: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput, timestamp: BigNumberish };
+export type RegisterPolicyEventOutput = { owner: IdentityOutput, policy_id: AssetIdOutput, insured_value: BN, premium: BN, start_date: BN, end_date: BN, policy_type: PolicyTypeOutput, status: StatusOutput, timestamp: BN };
 
 const abi = {
   "programType": "contract",
@@ -88,19 +90,24 @@ const abi = {
       "metadataTypeId": 7
     },
     {
+      "type": "struct events::RegisterPolicyEvent",
+      "concreteTypeId": "e7ccaf2dc835d5463ff5eefc07c6e60568746c707957d8a7320168fccd9dbd14",
+      "metadataTypeId": 10
+    },
+    {
       "type": "struct interface::PolicyData",
       "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec",
-      "metadataTypeId": 10
+      "metadataTypeId": 11
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 12
+      "metadataTypeId": 13
     },
     {
       "type": "struct std::vec::Vec<struct std::asset_id::AssetId>",
       "concreteTypeId": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
-      "metadataTypeId": 15,
+      "metadataTypeId": 16,
       "typeArguments": [
         "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
       ]
@@ -108,12 +115,12 @@ const abi = {
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 16
+      "metadataTypeId": 17
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
-      "metadataTypeId": 17
+      "metadataTypeId": 18
     },
     {
       "type": "u64",
@@ -219,11 +226,11 @@ const abi = {
       "components": [
         {
           "name": "Address",
-          "typeId": 11
+          "typeId": 12
         },
         {
           "name": "ContractId",
-          "typeId": 13
+          "typeId": 14
         }
       ]
     },
@@ -263,8 +270,50 @@ const abi = {
       "metadataTypeId": 9
     },
     {
-      "type": "struct interface::PolicyData",
+      "type": "struct events::RegisterPolicyEvent",
       "metadataTypeId": 10,
+      "components": [
+        {
+          "name": "owner",
+          "typeId": 5
+        },
+        {
+          "name": "policy_id",
+          "typeId": 13
+        },
+        {
+          "name": "insured_value",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "premium",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "start_date",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "end_date",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "policy_type",
+          "typeId": 1
+        },
+        {
+          "name": "status",
+          "typeId": 2
+        },
+        {
+          "name": "timestamp",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct interface::PolicyData",
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "owner",
@@ -298,16 +347,6 @@ const abi = {
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 11,
-      "components": [
-        {
-          "name": "bits",
-          "typeId": 0
-        }
-      ]
-    },
-    {
-      "type": "struct std::asset_id::AssetId",
       "metadataTypeId": 12,
       "components": [
         {
@@ -317,7 +356,7 @@ const abi = {
       ]
     },
     {
-      "type": "struct std::contract_id::ContractId",
+      "type": "struct std::asset_id::AssetId",
       "metadataTypeId": 13,
       "components": [
         {
@@ -327,8 +366,18 @@ const abi = {
       ]
     },
     {
-      "type": "struct std::vec::RawVec",
+      "type": "struct std::contract_id::ContractId",
       "metadataTypeId": 14,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": 0
+        }
+      ]
+    },
+    {
+      "type": "struct std::vec::RawVec",
+      "metadataTypeId": 15,
       "components": [
         {
           "name": "ptr",
@@ -345,11 +394,11 @@ const abi = {
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 15,
+      "metadataTypeId": 16,
       "components": [
         {
           "name": "buf",
-          "typeId": 14,
+          "typeId": 15,
           "typeArguments": [
             {
               "name": "",
@@ -368,7 +417,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 16,
+      "metadataTypeId": 17,
       "components": [
         {
           "name": "new_owner",
@@ -378,7 +427,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 17,
+      "metadataTypeId": 18,
       "components": [
         {
           "name": "new_owner",
@@ -592,6 +641,10 @@ const abi = {
     {
       "logId": "12970362301975156672",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308"
+    },
+    {
+      "logId": "16702917729177687366",
+      "concreteTypeId": "e7ccaf2dc835d5463ff5eefc07c6e60568746c707957d8a7320168fccd9dbd14"
     }
   ],
   "messagesTypes": [],
