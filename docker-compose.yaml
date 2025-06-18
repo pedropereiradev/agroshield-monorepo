@@ -1,0 +1,21 @@
+services:
+  db:
+    image: timescale/timescaledb:latest-pg14
+    container_name: agroshield-db
+    environment:
+      POSTGRES_DB: agroshield
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: agroshield
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  timescale-data:
+    

@@ -1,12 +1,17 @@
 {
-  "name": "agro-shield",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "agroshield-monorepo",
+  "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint"
+    "build:all": "turbo run build",
+    "build:apps": "turbo run build --filter='./apps/*'",
+    "build:packages": "turbo run build --filter='./packages/*' --filter='!./packages/contracts' --filter='!./packages/docs'",
+    "dev": "turbo run dev --filter='!contracts' --filter='!docs'",
+    "lint": "turbo run lint",
+    "forc:fmt": "forc fmt --path packages/contracts",
+    "forc:build": "forc build --path packages/contracts",
+    "db:up": "docker-compose up -d db",
+    "db:down": "docker-compose down"
   },
   "keywords": [],
   "author": "",

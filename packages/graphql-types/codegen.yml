@@ -1,0 +1,14 @@
+overwrite: true
+schema: ${GRAPHQL_SCHEMA_URL:-http://localhost:8080/v1/graphql}
+generates:
+  src/generated.ts:
+    plugins:
+      - "typescript"
+    config:
+      scalars:
+        timestamptz: string
+        uuid: string
+        bigint: string
+      skipTypename: false
+      enumsAsTypes: true
+      constEnums: true

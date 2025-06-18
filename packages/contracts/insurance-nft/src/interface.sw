@@ -11,4 +11,7 @@ abi Admin {
 
     #[storage(read, write)]
     fn revoke_admin(admin: Identity);
+
+    #[storage(read, write)]
+    fn transfer_ownership(new_owner: Identity);
 }

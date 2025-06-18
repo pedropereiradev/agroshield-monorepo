@@ -10,12 +10,13 @@ use sway_libs::{
     admin::{
         add_admin,
         only_admin,
-        revoke_admin
+        revoke_admin,
     },
     asset::{
         base::{
             _name,
             _set_name,
+            _symbol,
             _total_assets,
             _total_supply,
             SetAssetAttributes,
@@ -30,6 +31,7 @@ use sway_libs::{
         _owner,
         initialize_ownership,
         only_owner,
+        transfer_ownership,
     },
     pausable::{
         _is_paused,
@@ -52,6 +54,7 @@ storage {
     name: StorageMap<AssetId, StorageString> = StorageMap {},
     metadata: StorageMetadata = StorageMetadata {},
 }
+
 impl SRC20 for Contract {
     #[storage(read)]
     fn total_assets() -> u64 {
@@ -67,10 +70,9 @@ impl SRC20 for Contract {
     }
     #[storage(read)]
     fn symbol(asset_id: AssetId) -> Option<String> {
-        if asset_id == AssetId::default() {
-            Some(String::from_ascii_str(from_str_array(SYMBOL)))
-        } else {
-            None
+        match storage.total_supply.get(asset_id).try_read() {
+            Some(_) => Some(String::from_ascii_str(from_str_array(SYMBOL))),
+            None => None,
         }
     }
     #[storage(read)]
@@ -78,12 +80,11 @@ impl SRC20 for Contract {
         Some(DECIMALS)
     }
 }
-
 impl SRC3 for Contract {
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
         require_not_paused();
-        only_admin();
+        // only_admin();
         require(sub_id.is_some(), MintError::SubIdCannotBeNone);
         let sub_id = sub_id.unwrap();
         let asset = AssetId::new(ContractId::this(), sub_id);
@@ -110,7 +111,7 @@ impl SRC3 for Contract {
     #[storage(read, write)]
     fn burn(sub_id: SubId, amount: u64) {
         require_not_paused();
-        only_admin();
+        // only_admin();
         _burn(storage.total_supply, sub_id, amount);
     }
 }
@@ -118,6 +119,18 @@ impl SRC7 for Contract {
     #[storage(read)]
     fn metadata(asset_id: AssetId, key: String) -> Option<Metadata> {
         storage.metadata.get(asset_id, key)
+
+        // require(asset_id == AssetId::default(), "Invalid AssetId provided");
+
+        // if key == String::from_ascii_str("social:x") {
+        //     Some(Metadata::String(String::from_ascii_str(from_str_array(SOCIAL_X))))
+        // } else if key == String::from_ascii_str("site:forum") {
+        //     Some(Metadata::String(String::from_ascii_str(from_str_array(SITE_FORUM))))
+        // } else if key == String::from_ascii_str("attr:health") {
+        //     Some(Metadata::Int(ATTR_HEALTH))
+        // } else {
+        //     None
+        // }
     }
 }
 
@@ -131,7 +144,7 @@ impl SRC5 for Contract {
 impl SetAssetAttributes for Contract {
     #[storage(write)]
     fn set_name(asset_id: AssetId, name: String) {
-        only_owner();
+        // only_owner();
         require(
             storage
                 .name
@@ -154,7 +167,7 @@ impl SetAssetAttributes for Contract {
 impl SetAssetMetadata for Contract {
     #[storage(read, write)]
     fn set_metadata(asset_id: AssetId, key: String, metadata: Metadata) {
-        only_owner();
+        // only_owner();
         require(
             storage
                 .metadata
@@ -200,5 +213,11 @@ impl Admin for Contract {
     fn revoke_admin(admin: Identity) {
         only_owner();
         revoke_admin(admin);
+    }
+
+    #[storage(read, write)]
+    fn transfer_ownership(new_owner: Identity) {
+        only_owner();
+        transfer_ownership(new_owner);
     }
 }

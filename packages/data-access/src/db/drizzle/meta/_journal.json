@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1747180639383,
+      "tag": "0000_create-weather-table",
+      "breakpoints": true
+    }
+  ]
+}
