@@ -18,6 +18,6 @@ InsuranceManager.RegisterPolicyEvent.handler(async ({ event, context }) => {
   // };
 
   context.InsuranceManager_RegisterPolicyEvent.set({
-    id: `${event.chainId}-${event.params.policy_id.bits}`,
+    id: `${event.block.id}-${event.params.policy_id.bits}`,
   });
 });
