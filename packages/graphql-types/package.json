@@ -1,0 +1,32 @@
+{
+  "name": "@agroshield/graphql-types",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "codegen": "dotenv -e .env -- graphql-codegen --config codegen.yml",
+    "codegen:watch": "dotenv -e .env -- graphql-codegen --config codegen.yml --watch",
+    "codegen:local": "GRAPHQL_SCHEMA_URL=http://localhost:8080/v1/graphql graphql-codegen --config codegen.yml",
+    "codegen:hosted": "graphql-codegen --config codegen.yml"
+  },
+  "dependencies": {
+    "graphql": "^16.11.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.7",
+    "@graphql-codegen/typescript": "^4.1.6",
+    "@graphql-codegen/typescript-operations": "^4.6.1",
+    "dotenv-cli": "^7.4.2",
+    "typescript": "~5.7.2"
+  },
+  "packageManager": "pnpm@10.6.3"
+}
