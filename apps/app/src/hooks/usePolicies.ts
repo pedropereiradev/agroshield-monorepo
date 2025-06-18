@@ -1,71 +1,78 @@
+import { usePoliciesByOwner } from '@agroshield/graphql-queries';
+import type {
+  InsuranceManagerRegisterPolicyEvent,
+  PolicyStatus,
+  PolicyType,
+} from '@agroshield/graphql-types';
 import { useWallet } from '@fuels/react';
-// hooks/usePolicies.ts
-import { useEffect, useState } from 'react';
-import { useInsuranceContracts } from './useInsuranceContracts';
+import { useMemo } from 'react';
 
 export interface Policy {
   id: string;
+  policyId: string;
   cropType: string;
-  policyType: string;
-  status: 'Active' | 'Pending' | 'Expired' | 'Claimed';
+  policyType: PolicyType;
+  status: PolicyStatus;
   coverageAmount: number;
   premiumPaid: number;
   startDate: string;
   endDate: string;
   progressPercentage: number;
+  timestamp: string;
 }
 
 export function usePolicies() {
-  const [policies, setPolicies] = useState<Policy[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const {
-    insuranceContract,
-    nftContract,
-    isLoading: contractsLoading,
-  } = useInsuranceContracts();
   const { wallet } = useWallet();
+  const ownerAddress = wallet?.address.toB256();
 
-  const fetchPolicies = async () => {
-    if (!insuranceContract || !wallet) {
-      return;
-    }
+  const {
+    data: rawPolicies,
+    isLoading,
+    error: queryError,
+    refetch,
+  } = usePoliciesByOwner(ownerAddress);
 
-    try {
-      setIsLoading(true);
-      setError(null);
+  const calculateProgressPercentage = (
+    startDate: number,
+    endDate: number
+  ): number => {
+    const now = Date.now() / 1000;
+    const total = endDate - startDate;
+    const elapsed = now - startDate;
 
-      // Call your contract to get policies
-      const result = await insuranceContract.functions
-        .get_policies_by_owner(wallet.address.toAddress())
-        .simulate();
+    if (now < startDate) return 0;
+    if (now > endDate) return 100;
 
-      // Transform contract data into Policy objects
-      // This will depend on your contract's return structure
-      const policiesData = result.map((item) => ({
-        // Map contract fields to your Policy interface
-      }));
-
-      setPolicies(policiesData);
-    } catch (err) {
-      console.error('Error fetching policies:', err);
-      setError('Failed to fetch policies');
-    } finally {
-      setIsLoading(false);
-    }
+    return Math.min(100, Math.max(0, (elapsed / total) * 100));
   };
 
-  // Fetch policies when contract is ready
-  useEffect(() => {
-    if (!contractsLoading && insuranceContract && wallet) {
-      fetchPolicies();
-    }
-  }, [contractsLoading, insuranceContract, wallet]);
+  const policies = useMemo(() => {
+    if (!rawPolicies) return [];
+
+    return rawPolicies.map(
+      (policy: InsuranceManagerRegisterPolicyEvent): Policy => ({
+        id: policy.policyId,
+        policyId: policy.policyId,
+        cropType: 'N/A', // TODO: Crop type should be stored in contract or derived from policy metadata
+        policyType: policy.policyType,
+        status: policy.status,
+        coverageAmount: Number(policy.insuredValue),
+        premiumPaid: Number(policy.premium),
+        startDate: new Date(Number(policy.startDate) * 1000).toISOString(),
+        endDate: new Date(Number(policy.endDate) * 1000).toISOString(),
+        progressPercentage: calculateProgressPercentage(
+          Number(policy.startDate),
+          Number(policy.endDate)
+        ),
+        timestamp: policy.timestamp,
+      })
+    );
+  }, [rawPolicies]);
 
   return {
     policies,
-    isLoading: isLoading || contractsLoading,
-    error,
-    refetch: fetchPolicies,
+    isLoading,
+    error: queryError?.message || null,
+    refetch,
   };
 }
