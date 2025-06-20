@@ -11,7 +11,7 @@ export default function Hero() {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600"> Descentralizado</span>
             <br />do Brasil
           </h1>
-          
+
           <div className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-6 mb-8 max-w-2xl mx-auto">
             <p className="text-2xl font-semibold text-gray-800 mb-2">
               "Experiência de Web3 com usabilidade da Web2"
@@ -20,12 +20,12 @@ export default function Hero() {
               Toda a segurança e transparência do blockchain, com a simplicidade de um app tradicional
             </p>
           </div>
-          
+
           <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-            Proteja sua safra contra seca, chuva excessiva, calor e frio extremos com pagamentos automáticos em 72 horas. 
-            Tecnologia blockchain, preços justos e transparência total.
+            Sua produção protegida contra os impactos do clima: estiagem, chuvas intensas e ondas de calor.
+            Com AgroShield, você conta com uma solução justa, moderna e transparente.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
             <a href="#cadastro" className="bg-green-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg">
               Cadastre-se na Lista de Espera
@@ -36,23 +36,23 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Stats */}
+          {/* Indicadores atualizados */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">72h</div>
-              <div className="text-gray-600">Tempo máximo para pagamento</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">Digital</div>
+              <div className="text-gray-600">Contratação 100% online e sem burocracia</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">16%</div>
-              <div className="text-gray-600">Mais barato que seguros tradicionais</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">Flexível</div>
+              <div className="text-gray-600">Seguro adaptado ao seu cultivo e região</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600 mb-2">24/7</div>
-              <div className="text-gray-600">Monitoramento climático</div>
+              <div className="text-gray-600">Monitoramento climático em tempo real</div>
             </div>
           </div>
         </div>
       </div>
     </section>
   );
-} 
+}

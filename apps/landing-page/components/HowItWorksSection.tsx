@@ -10,17 +10,17 @@ export default function HowItWorksSection() {
     {
       number: "02", 
       title: "Receba sua cotação",
-      description: "Nossa IA calcula o prêmio baseado em 20 anos de dados climáticos"
+      description: "Nosso sistema gera uma estimativa com base em dados climáticos históricos"
     },
     {
       number: "03",
       title: "Contrate sua apólice",
-      description: "Pague com PIX e receba seu NFT de seguro na carteira digital"
+      description: "Finalize a contratação de forma digital com facilidade e segurança"
     },
     {
       number: "04",
       title: "Proteção ativa",
-      description: "Monitoramento 24/7 e pagamentos automáticos quando necessário"
+      description: "Acompanhe sua apólice e alertas climáticos em tempo real na plataforma"
     }
   ];
 
@@ -30,7 +30,7 @@ export default function HowItWorksSection() {
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-4">Como o AgroShield funciona</h2>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
-            Processo simples e totalmente digital, do cadastro ao pagamento
+            Processo simples e totalmente digital, do cadastro ao acompanhamento
           </p>
         </div>
         
@@ -48,4 +48,4 @@ export default function HowItWorksSection() {
       </div>
     </section>
   );
-} 
+}

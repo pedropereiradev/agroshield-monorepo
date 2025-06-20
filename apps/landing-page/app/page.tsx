@@ -7,7 +7,6 @@ import ProblemSection from '../components/ProblemSection';
 import BenefitsSection from '../components/BenefitsSection';
 import HowItWorksSection from '../components/HowItWorksSection';
 import CoverageSection from '../components/CoverageSection';
-import TestimonialsSection from '../components/TestimonialsSection';
 import CTASection from '../components/CTASection';
 import Footer from '../components/Footer';
 
@@ -20,10 +19,8 @@ export default function AgroShieldLanding() {
       <BenefitsSection />
       <HowItWorksSection />
       <CoverageSection />
-      <TestimonialsSection />
-      <CTASection />
+           <CTASection />
       <Footer />
     </div>
   );
 }
-

@@ -7,13 +7,13 @@ export default function CoverageSection() {
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Cobertura Especializada
+            Cobertura sob medida para sua lavoura
           </h2>
           <p className="text-xl text-gray-600">
-            Proteção completa para soja e arroz contra os principais riscos climáticos
+            Proteção simplificada contra os riscos climáticos que mais afetam a produção de soja e arroz.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Soja */}
           <div className="bg-white p-8 rounded-xl shadow-lg">
@@ -25,19 +25,13 @@ export default function CoverageSection() {
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                 <div>
-                  <strong>Seca:</strong> ≥18 dias com menos de 5mm de chuva
+                  <strong>Estiagem:</strong> Cobertura para longos períodos sem chuva que comprometem o ciclo da cultura
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
                 <div>
-                  <strong>Chuva excessiva:</strong> ≥130mm em 5 dias durante floração
-                </div>
-              </div>
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <strong>Calor extremo:</strong> ≥42°C por 3 dias durante floração
+                  <strong>Excesso de chuva:</strong> Proteção em fases críticas como floração e enchimento de grãos
                 </div>
               </div>
             </div>
@@ -53,19 +47,13 @@ export default function CoverageSection() {
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" />
                 <div>
-                  <strong>Chuva excessiva:</strong> ≥120mm em 72h na colheita
+                  <strong>Excesso de chuva:</strong> Cobertura nos períodos sensíveis da colheita, evitando perdas por alagamento
                 </div>
               </div>
               <div className="flex items-start">
                 <CheckCircle className="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" />
                 <div>
-                  <strong>Calor extremo:</strong> ≥37°C por 2 dias na floração
-                </div>
-              </div>
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-blue-500 mr-3 mt-1 flex-shrink-0" />
-                <div>
-                  <strong>Frio extremo:</strong> ≤15°C por 4 dias na germinação
+                  <strong>Calor extremo:</strong> Proteção contra temperaturas elevadas durante a floração
                 </div>
               </div>
             </div>
@@ -74,4 +62,4 @@ export default function CoverageSection() {
       </div>
     </section>
   );
-} 
+}

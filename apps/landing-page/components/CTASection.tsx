@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 import { leadService, LeadData } from '../lib/leadService';
+import { toast } from "sonner";
 
 export default function CTASection() {
   const [email, setEmail] = useState('');
@@ -30,19 +31,17 @@ export default function CTASection() {
 
       await leadService.createLead(leadData);
       setIsSubmitted(true);
-      
-      // Reset form after 3 seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-        setEmail('');
-        setName('');
-        setArea('');
-        setCrop('');
-        setCity('');
-      }, 3000);
+      toast.success("Cadastro realizado. Agradecemos pelo seu interesse!");
+
+      setEmail('');
+      setName('');
+      setArea('');
+      setCrop('');
+      setCity('');
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       setError('Erro ao enviar formulário. Tente novamente.');
+      toast.error("Erro ao enviar o formulário. Por favor, tente novamente.");
     } finally {
       setIsLoading(false);
     }
@@ -153,4 +152,4 @@ export default function CTASection() {
       </div>
     </section>
   );
-} 
+}

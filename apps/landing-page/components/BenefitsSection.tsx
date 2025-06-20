@@ -5,23 +5,23 @@ export default function BenefitsSection() {
   const benefits = [
     {
       icon: <Zap className="w-6 h-6 text-blue-500" />,
-      title: "Pagamentos em 72h",
-      description: "Indenizações automáticas baseadas em dados climáticos, sem burocracias ou vistorias demoradas."
+      title: "Indenização Automática",
+      description: "Processos automatizados com base em dados climáticos — sem necessidade de vistoria ou análise manual.",
     },
     {
       icon: <Shield className="w-6 h-6 text-green-500" />,
       title: "Segurança Blockchain",
-      description: "Contratos inteligentes garantem transparência total e proteção contra fraudes."
+      description: "Contratos inteligentes garantem total transparência e proteção contra fraudes.",
     },
     {
       icon: <Globe className="w-6 h-6 text-purple-500" />,
       title: "Interface Simples",
-      description: "Toda a potência da Web3 com a facilidade de uso de um aplicativo tradicional."
+      description: "Tecnologia Web3 com usabilidade pensada para quem está acostumado a apps convencionais.",
     },
     {
       icon: <TrendingUp className="w-6 h-6 text-orange-500" />,
-      title: "Preços Justos",
-      description: "Até 16% mais barato que seguros tradicionais, sem intermediários desnecessários."
+      title: "Sem Burocracia",
+      description: "Esqueça os intermediários e processos lentos das seguradoras tradicionais. Aqui, tudo é direto e digital.",
     }
   ];
 

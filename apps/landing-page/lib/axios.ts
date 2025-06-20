@@ -12,7 +12,7 @@ const api = axios.create({
 // Interceptor para requisições
 api.interceptors.request.use(
   (config) => {
-    console.log('Requisição sendo enviada:', config);
+    // log removido conforme solicitado
     return config;
   },
   (error) => {
@@ -24,7 +24,7 @@ api.interceptors.request.use(
 // Interceptor para respostas
 api.interceptors.response.use(
   (response) => {
-    console.log('Resposta recebida:', response);
+    // log removido conforme solicitado
     return response;
   },
   (error) => {
@@ -33,4 +33,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;
