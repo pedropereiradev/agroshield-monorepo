@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
 import { ArrowRight, CheckCircle } from 'lucide-react';
-import { leadService, LeadData } from '../lib/leadService';
-import { toast } from "sonner";
+import type React from 'react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { type LeadData, leadService } from '../lib/leadService';
 
 export default function CTASection() {
   const [email, setEmail] = useState('');
@@ -26,12 +27,12 @@ export default function CTASection() {
         email,
         area,
         crop,
-        city
+        city,
       };
 
       await leadService.createLead(leadData);
       setIsSubmitted(true);
-      toast.success("Cadastro realizado. Agradecemos pelo seu interesse!");
+      toast.success('Cadastro realizado. Agradecemos pelo seu interesse!');
 
       setEmail('');
       setName('');
@@ -41,23 +42,27 @@ export default function CTASection() {
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
       setError('Erro ao enviar formulário. Tente novamente.');
-      toast.error("Erro ao enviar o formulário. Por favor, tente novamente.");
+      toast.error('Erro ao enviar o formulário. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <section id="cadastro" className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4">
+    <section
+      id="cadastro"
+      className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4"
+    >
       <div className="container mx-auto">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
             Seja um dos primeiros a usar o AgroShield
           </h2>
           <p className="text-xl opacity-90 mb-8">
-            Cadastre-se na nossa lista de espera e garanta acesso prioritário quando lançarmos oficialmente
+            Cadastre-se na nossa lista de espera e garanta acesso prioritário
+            quando lançarmos oficialmente
           </p>
-          
+
           {!isSubmitted ? (
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl">
               <form onSubmit={handleSubmit}>
@@ -98,10 +103,18 @@ export default function CTASection() {
                     required
                     disabled={isLoading}
                   >
-                    <option value="" className="text-gray-900">Selecione a cultura</option>
-                    <option value="soja" className="text-gray-900">Soja</option>
-                    <option value="arroz" className="text-gray-900">Arroz</option>
-                    <option value="ambos" className="text-gray-900">Soja e Arroz</option>
+                    <option value="" className="text-gray-900">
+                      Selecione a cultura
+                    </option>
+                    <option value="soja" className="text-gray-900">
+                      Soja
+                    </option>
+                    <option value="arroz" className="text-gray-900">
+                      Arroz
+                    </option>
+                    <option value="ambos" className="text-gray-900">
+                      Soja e Arroz
+                    </option>
                   </select>
                   <input
                     type="text"
@@ -113,13 +126,13 @@ export default function CTASection() {
                     disabled={isLoading}
                   />
                 </div>
-                
+
                 {error && (
                   <div className="mb-4 p-3 bg-red-500/20 border border-red-300 rounded-lg text-red-200">
                     {error}
                   </div>
                 )}
-                
+
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -142,9 +155,12 @@ export default function CTASection() {
           ) : (
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl text-center">
               <CheckCircle className="w-16 h-16 text-white mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-2">Cadastro realizado com sucesso!</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                Cadastro realizado com sucesso!
+              </h3>
               <p className="text-lg opacity-90">
-                Obrigado por se juntar à nossa lista de espera. Em breve entraremos em contato com mais informações.
+                Obrigado por se juntar à nossa lista de espera. Em breve
+                entraremos em contato com mais informações.
               </p>
             </div>
           )}

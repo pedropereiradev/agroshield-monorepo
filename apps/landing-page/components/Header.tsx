@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
-import { Shield, Menu, X } from 'lucide-react';
+import { Menu, Shield, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,19 +17,36 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#como-funciona" className="text-gray-600 hover:text-green-600 transition-colors">Como Funciona</a>
-            <a href="#beneficios" className="text-gray-600 hover:text-green-600 transition-colors">Benefícios</a>
-            <a href="#cadastro" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            <a
+              href="#como-funciona"
+              className="text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Como Funciona
+            </a>
+            <a
+              href="#beneficios"
+              className="text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Benefícios
+            </a>
+            <a
+              href="#cadastro"
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
               Começar Agora
             </a>
           </nav>
 
           {/* Mobile Menu Button */}
-          <button 
+          <button
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -37,9 +54,22 @@ export default function Header() {
         {isMenuOpen && (
           <nav className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
-              <a href="#como-funciona" className="text-gray-600 hover:text-green-600 transition-colors">Como Funciona</a>
-              <a href="#beneficios" className="text-gray-600 hover:text-green-600 transition-colors">Benefícios</a>
-              <a href="#cadastro" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center">
+              <a
+                href="#como-funciona"
+                className="text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Como Funciona
+              </a>
+              <a
+                href="#beneficios"
+                className="text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Benefícios
+              </a>
+              <a
+                href="#cadastro"
+                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center"
+              >
                 Começar Agora
               </a>
             </div>

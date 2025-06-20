@@ -1,39 +1,45 @@
-import React from 'react';
-
 export default function HowItWorksSection() {
   const steps = [
     {
-      number: "01",
-      title: "Cadastre sua propriedade",
-      description: "Informe dados da sua fazenda, cultivo e localização"
+      number: '01',
+      title: 'Cadastre sua propriedade',
+      description: 'Informe dados da sua fazenda, cultivo e localização',
     },
     {
-      number: "02", 
-      title: "Receba sua cotação",
-      description: "Nosso sistema gera uma estimativa com base em dados climáticos históricos"
+      number: '02',
+      title: 'Receba sua cotação',
+      description:
+        'Nosso sistema gera uma estimativa com base em dados climáticos históricos',
     },
     {
-      number: "03",
-      title: "Contrate sua apólice",
-      description: "Finalize a contratação de forma digital com facilidade e segurança"
+      number: '03',
+      title: 'Contrate sua apólice',
+      description:
+        'Finalize a contratação de forma digital com facilidade e segurança',
     },
     {
-      number: "04",
-      title: "Proteção ativa",
-      description: "Acompanhe sua apólice e alertas climáticos em tempo real na plataforma"
-    }
+      number: '04',
+      title: 'Proteção ativa',
+      description:
+        'Acompanhe sua apólice e alertas climáticos em tempo real na plataforma',
+    },
   ];
 
   return (
-    <section id="como-funciona" className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4">
+    <section
+      id="como-funciona"
+      className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4"
+    >
       <div className="container mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Como o AgroShield funciona</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            Como o AgroShield funciona
+          </h2>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
             Processo simples e totalmente digital, do cadastro ao acompanhamento
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
             <div key={index} className="text-center">

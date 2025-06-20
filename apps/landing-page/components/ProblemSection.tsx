@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ProblemSection() {
   return (
     <section className="py-16 bg-gray-50">
@@ -9,7 +7,8 @@ export default function ProblemSection() {
             Por que tantos produtores ainda estão sem seguro agrícola?
           </h2>
           <p className="text-lg text-gray-600 mb-8">
-            A maioria das soluções atuais é cara, difícil de entender ou não acompanha as reais necessidades do campo.
+            A maioria das soluções atuais é cara, difícil de entender ou não
+            acompanha as reais necessidades do campo.
           </p>
         </div>
       </div>
