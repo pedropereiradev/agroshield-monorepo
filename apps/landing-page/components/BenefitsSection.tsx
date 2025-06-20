@@ -73,7 +73,7 @@ export default function BenefitsSection() {
     },
     {
       feature: 'Documentação',
-      traditional: '15+ documentos físicos',
+      traditional: 'Muitos documentos físicos',
       agroshield: 'Formulário online simples',
       improvement: 'Sem papelada',
     },
@@ -128,7 +128,7 @@ export default function BenefitsSection() {
           </p>
 
           {/* Social Proof Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12">
             {socialProof.map((proof, index) => (
               <div
                 key={index}
@@ -143,7 +143,7 @@ export default function BenefitsSection() {
                 <div className="text-xs text-gray-600">{proof.detail}</div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Tab Navigation */}
