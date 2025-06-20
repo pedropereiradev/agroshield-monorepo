@@ -1,14 +1,11 @@
-"use client";
-
-import React from 'react';
+import BenefitsSection from '../components/BenefitsSection';
+import CTASection from '../components/CTASection';
+import FAQSection from '../components/FAQSection';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
-import ProblemSection from '../components/ProblemSection';
-import BenefitsSection from '../components/BenefitsSection';
 import HowItWorksSection from '../components/HowItWorksSection';
-import CoverageSection from '../components/CoverageSection';
-import CTASection from '../components/CTASection';
-import Footer from '../components/Footer';
+import ProblemSection from '../components/ProblemSection';
 
 export default function AgroShieldLanding() {
   return (
@@ -18,8 +15,9 @@ export default function AgroShieldLanding() {
       <ProblemSection />
       <BenefitsSection />
       <HowItWorksSection />
-      <CoverageSection />
-           <CTASection />
+      {/* <TestimonialsSection /> */}
+      <FAQSection />
+      <CTASection />
       <Footer />
     </div>
   );
