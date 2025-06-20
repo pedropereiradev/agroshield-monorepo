@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Host
+Host: https://agroshield.co
+
+# Sitemaps
+Sitemap: https://agroshield.co/sitemap.xml

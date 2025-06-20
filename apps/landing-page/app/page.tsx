@@ -15,7 +15,6 @@ export default function AgroShieldLanding() {
       <ProblemSection />
       <BenefitsSection />
       <HowItWorksSection />
-      {/* <TestimonialsSection /> */}
       <FAQSection />
       <CTASection />
       <Footer />
