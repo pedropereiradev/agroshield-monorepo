@@ -74,11 +74,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/logo.png', sizes: '32x32', type: 'image/png' },
-      { url: '/logo.png', sizes: '16x16', type: 'image/png' },
+      { url: '/logo-icon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo-icon.png', sizes: '16x16', type: 'image/png' },
     ],
-    shortcut: '/logo.png',
-    apple: [{ url: '/logo.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/logo-icon.png',
+    apple: [{ url: '/logo-icon.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/manifest.json',
   alternates: {
