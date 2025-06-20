@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Configuração base do axios
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
   timeout: 10000,
@@ -9,10 +8,8 @@ const api = axios.create({
   },
 });
 
-// Interceptor para requisições
 api.interceptors.request.use(
   (config) => {
-    // log removido conforme solicitado
     return config;
   },
   (error) => {
@@ -21,10 +18,8 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para respostas
 api.interceptors.response.use(
   (response) => {
-    // log removido conforme solicitado
     return response;
   },
   (error) => {
