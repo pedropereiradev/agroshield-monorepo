@@ -30,7 +30,7 @@ export default function Footer() {
     },
     {
       title: 'Contato',
-      href: 'mailto:contato@agroshield.com.br',
+      href: 'mailto:contato@agroshield.co',
       description: 'Fale conosco',
       icon: <Mail className="w-4 h-4" />,
     },
