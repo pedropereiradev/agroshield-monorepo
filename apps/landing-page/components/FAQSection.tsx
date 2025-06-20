@@ -115,7 +115,7 @@ export default function FAQSection() {
   ];
 
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-20 px-4 bg-white" id="faq">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center mb-4">
