@@ -14,12 +14,10 @@ export default function CTASection() {
   const [city, setCity] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
     try {
       const leadData: LeadData = {
@@ -41,7 +39,6 @@ export default function CTASection() {
       setCity('');
     } catch (error) {
       console.error('Erro ao enviar formulário:', error);
-      setError('Erro ao enviar formulário. Tente novamente.');
       toast.error('Erro ao enviar o formulário. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
@@ -54,7 +51,7 @@ export default function CTASection() {
       className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4"
     >
       <div className="container mx-auto">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">
             Seja um dos primeiros a usar o AgroShield
           </h2>
@@ -126,13 +123,6 @@ export default function CTASection() {
                     disabled={isLoading}
                   />
                 </div>
-
-                {error && (
-                  <div className="mb-4 p-3 bg-red-500/20 border border-red-300 rounded-lg text-red-200">
-                    {error}
-                  </div>
-                )}
-
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -140,7 +130,7 @@ export default function CTASection() {
                 >
                   {isLoading ? (
                     <span className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mr-2"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mr-2" />
                       Enviando...
                     </span>
                   ) : (
