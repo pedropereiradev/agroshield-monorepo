@@ -1,4 +1,6 @@
-import { HelpCircle, Mail, MapPin, Shield } from 'lucide-react';
+import { HelpCircle, Mail, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import logo from '../public/logo-icon.png';
 
 export default function Footer() {
   const productLinks = [
@@ -39,9 +41,9 @@ export default function Footer() {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-12">
           <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-gradient-to-r from-green-500 to-blue-500 p-2 rounded-lg">
-                <Shield className="w-8 h-8 text-white" />
+            <div className="flex items-center space-x-1 mb-6">
+              <div className="bg-gradient-to-r rounded-lg">
+                <Image src={logo} width={128} height={128} alt="Logo" />
               </div>
               <span className="text-2xl font-bold">AgroShield</span>
             </div>

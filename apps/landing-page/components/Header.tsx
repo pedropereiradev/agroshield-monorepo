@@ -1,7 +1,9 @@
 'use client';
 
-import { Menu, Shield, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
+import logo from '../public/logo-icon.png';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,7 +13,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Shield className="w-8 h-8 text-green-600" />
+            <Image src={logo} width={64} height={64} alt="Logo" />
             <span className="text-xl font-bold text-gray-900">AgroShield</span>
           </div>
 
