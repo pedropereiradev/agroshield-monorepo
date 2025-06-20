@@ -17,9 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: {
     default: 'AgroShield - Seguro Agrícola Descentralizado',
-    template: '%s | AgroShield'
+    template: '%s | AgroShield',
   },
-  description: 'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com tecnologia blockchain, pagamentos automáticos em 24-48h e transparência total. Cobertura para soja e arroz com preços até 73% mais baixos.',
+  description:
+    'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com tecnologia blockchain, pagamentos automáticos em 24-48h e transparência total. Cobertura para soja e arroz com preços até 73% mais baixos.',
   keywords: [
     'seguro agrícola',
     'seguro rural',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
     'agronegócio',
     'clima',
     'indenização automática',
-    'smart contracts'
+    'smart contracts',
   ],
   authors: [{ name: 'AgroShield', url: 'https://agroshield.co' }],
   creator: 'AgroShield',
@@ -52,10 +53,11 @@ export const metadata: Metadata = {
     url: 'https://agroshield.co',
     siteName: 'AgroShield',
     title: 'AgroShield - Seguro Agrícola Descentralizado',
-    description: 'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com blockchain e receba indenizações automáticas em 24-48h.',
+    description:
+      'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com blockchain e receba indenizações automáticas em 24-48h.',
     images: [
       {
-        url: '/logo.webp',
+        url: '/logo.png',
         width: 1200,
         height: 630,
         alt: 'AgroShield - Seguro Agrícola Descentralizado',
@@ -65,19 +67,18 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'AgroShield - Seguro Agrícola Descentralizado',
-    description: 'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com blockchain.',
-    images: ['/logo.webp'],
+    description:
+      'O primeiro seguro rural descentralizado do Brasil. Proteja sua safra com blockchain.',
+    images: ['/logo.png'],
     creator: '@agroshield',
   },
   icons: {
     icon: [
-      { url: '/logo.webp', sizes: '32x32', type: 'image/webp' },
-      { url: '/logo.webp', sizes: '16x16', type: 'image/webp' },
+      { url: '/logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo.png', sizes: '16x16', type: 'image/png' },
     ],
-    shortcut: '/logo.webp',
-    apple: [
-      { url: '/logo.webp', sizes: '180x180', type: 'image/webp' },
-    ],
+    shortcut: '/logo.png',
+    apple: [{ url: '/logo.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/manifest.json',
   alternates: {

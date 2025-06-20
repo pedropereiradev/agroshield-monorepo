@@ -4,7 +4,7 @@ export default function StructuredData() {
     '@type': 'Organization',
     name: 'AgroShield',
     url: 'https://agroshield.co',
-    logo: 'https://agroshield.co/logo.webp',
+    logo: 'https://agroshield.co/logo.png',
     description: 'O primeiro seguro rural descentralizado do Brasil',
     contactPoint: {
       '@type': 'ContactPoint',
