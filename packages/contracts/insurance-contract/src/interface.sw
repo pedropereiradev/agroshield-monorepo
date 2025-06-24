@@ -31,6 +31,15 @@ abi Insurance {
         planting_month: u64,
         harvest_month: u64,
     );
+
+    #[storage(read)]
+    fn request_claim(asset_id: AssetId);
+
+    #[storage(read)]
+    fn approve_claim(asset_id: AssetId);
+
+    #[storage(read)]
+    fn reject_claim(asset_id: AssetId);
 }
 
 abi ManagerInfo {
@@ -43,6 +52,15 @@ abi ManagerInfo {
 abi Manager {
     #[storage(read, write)]
     fn register_policy(policy_id: AssetId, data: PolicyData);
+
+    #[storage(read)]
+    fn request_claim(policy_id: AssetId);
+
+    #[storage(read)]
+    fn approve_claim(policy_id: AssetId);
+
+    #[storage(read)]
+    fn reject_claim(policy_id: AssetId);
 }
 
 pub struct PolicyData {
@@ -63,12 +81,8 @@ pub enum PolicyType {
 
 pub enum Status {
     Active: (),
-    Inactive: (),
     Claimed: (),
     Expired: (),
-    Pending: (),
     Approved: (),
     Rejected: (),
-    Suspended: (),
-    UnderReview: (),
 }

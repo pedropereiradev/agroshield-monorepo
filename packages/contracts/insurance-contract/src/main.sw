@@ -22,7 +22,6 @@ use sway_libs::ownership::{_owner, initialize_ownership, only_owner, transfer_ow
 use sway_libs::pausable::*;
 use std::context::this_balance;
 use std::asset::transfer;
-// use sway_libs::signed_integers::u64::I64;
 use std::string::String;
 use standards::src3::SRC3;
 use standards::src7::Metadata;
@@ -65,70 +64,68 @@ fn mint_token(
     let nft_contract = abi(SetAssetMetadata, nft_id.into());
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("crop"),
+        String::from_ascii_str("attr:crop"),
         Metadata::String(crop),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("start_date"),
+        String::from_ascii_str("attr:start_date"),
         Metadata::Int(start_date),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("end_date"),
+        String::from_ascii_str("attr:end_date"),
         Metadata::Int(end_date),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("region_x"),
+        String::from_ascii_str("attr:region_x"),
         Metadata::Int(region_x),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("region_y"),
+        String::from_ascii_str("attr:region_y"),
         Metadata::Int(region_y),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("insured_value"),
+        String::from_ascii_str("attr:insured_value"),
         Metadata::Int(insured_value),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("premium"),
+        String::from_ascii_str("attr:premium"),
         Metadata::Int(premium),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("policy_type"),
+        String::from_ascii_str("attr:policy_type"),
         Metadata::String(policy_type_str),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("insured_area"),
+        String::from_ascii_str("attr:insured_area"),
         Metadata::Int(insured_area),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("insured_area_unit"),
+        String::from_ascii_str("attr:insured_area_unit"),
         Metadata::String(insured_area_unit),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("planting_month"),
+        String::from_ascii_str("attr:planting_month"),
         Metadata::Int(planting_month),
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("harvest_month"),
+        String::from_ascii_str("attr:harvest_month"),
         Metadata::Int(harvest_month),
     );
     nft_contract.set_metadata(
         asset_id,
         String::from_ascii_str("image:png"),
-        Metadata::String(String::from_ascii_str(
-            "https://teal-solid-flamingo-658.mypinata.cloud/ipfs/bafybeia5kl72ixc2bvb7ykqyf7mqmy2iso7ghm4ajfccvidincpm2lxfny",
-        )),
+        Metadata::String(String::from_ascii_str("ipfs://bafybeicivqt2fnmdqoxjsj3pdlzzjb7xxg4fakkw2ha3g4tatagbn3apee")),
     );
     let nft_contract = abi(SetAssetAttributes, nft_id.into());
     let name = generate_name(crop, policy_type_str);
@@ -196,6 +193,32 @@ impl Insurance for Contract {
                 status: Status::Active,
             },
         )
+    }
+
+    #[storage(read)]
+    fn request_claim(asset_id: AssetId) {
+        let manager_id = storage.manager_id.read();
+        let manager = abi(Manager, manager_id.into());
+
+        manager.request_claim(asset_id);
+    }
+
+    #[storage(read)]
+    fn approve_claim(asset_id: AssetId) {
+        only_owner();
+        let manager_id = storage.manager_id.read();
+        let manager = abi(Manager, manager_id.into());
+
+        manager.approve_claim(asset_id);
+    }
+
+    #[storage(read)]
+    fn reject_claim(asset_id: AssetId) {
+        only_owner();
+        let manager_id = storage.manager_id.read();
+        let manager = abi(Manager, manager_id.into());
+
+        manager.reject_claim(asset_id);
     }
 }
 impl Constructor for Contract {
