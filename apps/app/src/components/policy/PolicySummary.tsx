@@ -127,18 +127,18 @@ export function PolicySummary({
                 </div> */}
                 <div className="text-gray-500">LMI:</div>
                 <div className="font-medium text-right">
-                  {quote.LMI.toFixed(4)} ETH
+                  {quote.LMI.toFixed(4)} USDC
                 </div>
                 <div className="text-gray-500">Premium:</div>
                 <div className="font-medium text-right">
-                  {quote.premium.toFixed(4)} ETH
+                  {quote.premium.toFixed(4)} USDC
                 </div>
               </div>
             </div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t">
               <span className="font-medium">Total:</span>
               <span className="text-xl font-bold">
-                {quote.premium.toFixed(4)} ETH
+                {quote.premium.toFixed(4)} USDC
               </span>
             </div>
           </div>
