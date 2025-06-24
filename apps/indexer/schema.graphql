@@ -1,4 +1,4 @@
-type InsuranceManager_RegisterPolicyEvent {
+type Policies {
   id: ID!
   policyId: String!
   owner: String!
@@ -9,4 +9,13 @@ type InsuranceManager_RegisterPolicyEvent {
   policyType: String!
   status: String!
   timestamp: String!
+  claims: [Claims!]! @derivedFrom(field: "policy")
+}
+
+type Claims {
+  id: ID!
+  policy: Policies!
+  timestamp: String!
+  oldStatus: String!
+  newStatus: String!
 }

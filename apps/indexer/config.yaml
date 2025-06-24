@@ -11,5 +11,13 @@ networks:
     abi_file_path: abis/insurancemanager-abi.json
     handler: src/EventHandlers.ts
     events:
+    - name: ApproveClaimEvent
+      logId: '12097520186714049702'
+    - name: ExpirePolicyEvent
+      logId: '17592643628849736535'
     - name: RegisterPolicyEvent
       logId: '16702917729177687366'
+    - name: RejectClaimEvent
+      logId: '8420981007029399393'
+    - name: RequestClaimEvent
+      logId: '8664469497107667899'
