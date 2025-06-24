@@ -2,9 +2,17 @@ contract;
 
 pub mod interface;
 mod events;
+mod errors;
 
-use interface::{Admin, Constructor, Manager, ManagerInfo, PolicyData, PolicyError};
-use events::RegisterPolicyEvent;
+use interface::{Admin, Constructor, Manager, ManagerInfo, PolicyData, PolicyError, Status};
+use events::{
+    ApproveClaimEvent,
+    ExpirePolicyEvent,
+    RegisterPolicyEvent,
+    RejectClaimEvent,
+    RequestClaimEvent,
+};
+use errors::InsuranceManagerError;
 use standards::src5::{SRC5, State};
 use sway_libs::ownership::{_owner, initialize_ownership, only_owner, transfer_ownership};
 use sway_libs::admin::{add_admin, is_admin, revoke_admin};
@@ -17,46 +25,6 @@ storage {
     owner_policy_at_index: StorageMap<(Identity, u64), AssetId> = StorageMap {},
     policy_owners: StorageMap<AssetId, Identity> = StorageMap {},
     policy_count: u64 = 0,
-}
-#[storage(read)]
-// fn only_owner_or_admin() {
-//     let sender = msg_sender().unwrap();
-//     let owner = _owner();
-
-//     require(
-//         owner != State::Uninitialized,
-//         PolicyError::ContractNotInitialized,
-//     );
-
-//     require(
-//         owner == State::Initialized(sender) || is_admin(sender),
-//         PolicyError::OnlyOwnerOrAdmin,
-//     );
-// }
-
-impl Constructor for Contract {
-    #[storage(read, write)]
-    fn constructor(owner: Identity, admin: Identity) {
-        initialize_ownership(owner);
-        add_admin(admin);
-    }
-}
-impl Admin for Contract {
-    #[storage(read, write)]
-    fn revoke_admin(admin: Identity) {
-        only_owner();
-        revoke_admin(admin);
-    }
-    #[storage(read, write)]
-    fn add_admin(admin: Identity) {
-        only_owner();
-        add_admin(admin);
-    }
-    #[storage(read, write)]
-    fn transfer_ownership(new_owner: Identity) {
-        only_owner();
-        transfer_ownership(new_owner);
-    }
 }
 impl Manager for Contract {
     #[storage(read, write)]
@@ -84,6 +52,116 @@ impl Manager for Contract {
             policy_type: data.policy_type,
             status: data.status,
             timestamp: timestamp(),
+        });
+    }
+
+    #[storage(read, write)]
+    fn request_claim(policy_id: AssetId) {
+        let policy = storage.policies.get(policy_id).try_read();
+
+        require(policy.is_some(), InsuranceManagerError::PolicyNotFound);
+
+        let current_timestamp = timestamp();
+
+        let mut policy = policy.unwrap();
+
+        if policy.end_date < current_timestamp {
+            let old_status = policy.status;
+            policy.status = Status::Expired;
+
+            storage.policies.insert(policy_id, policy);
+
+            log(ExpirePolicyEvent {
+                policy_id: policy_id,
+                timestamp: current_timestamp,
+                old_status: old_status,
+                new_status: Status::Expired,
+            });
+
+            return;
+        }
+
+        require(
+            match policy
+                .status {
+                Status::Active => true,
+                _ => false,
+            },
+            InsuranceManagerError::InvalidPolicyStatus,
+        );
+
+        let old_status = policy.status;
+        policy.status = Status::Claimed;
+
+        storage.policies.insert(policy_id, policy);
+
+        log(RequestClaimEvent {
+            policy_id: policy_id,
+            timestamp: current_timestamp,
+            old_status: old_status,
+            new_status: Status::Claimed,
+        });
+    }
+
+    #[storage(read, write)]
+    fn approve_claim(policy_id: AssetId) {
+        only_owner();
+
+        let policy = storage.policies.get(policy_id).try_read();
+        require(policy.is_some(), InsuranceManagerError::PolicyNotFound);
+
+        let mut policy = policy.unwrap();
+
+        require(
+            match policy
+                .status {
+                Status::Claimed => true,
+                _ => false,
+            },
+            InsuranceManagerError::InvalidPolicyStatus,
+        );
+
+        let old_status = policy.status;
+        policy.status = Status::Approved;
+
+        storage.policies.insert(policy_id, policy);
+
+        log(ApproveClaimEvent {
+            policy_id: policy_id,
+            timestamp: timestamp(),
+            old_status: old_status,
+            new_status: Status::Approved,
+        });
+    }
+
+    #[storage(read, write)]
+    fn reject_claim(policy_id: AssetId) {
+        only_owner();
+
+        let policy = storage.policies.get(policy_id).try_read();
+        require(policy.is_some(), InsuranceManagerError::PolicyNotFound);
+
+        let mut policy = policy.unwrap();
+
+        require(
+            match policy
+                .status {
+                Status::Claimed => true,
+                _ => false,
+            },
+            InsuranceManagerError::InvalidPolicyStatus,
+        );
+
+        let old_status = policy.status;
+        policy.status = Status::Rejected;
+
+        storage.policies.insert(policy_id, policy);
+
+        log(RejectClaimEvent {
+            policy_id: policy_id,
+            timestamp: timestamp(),
+            old_status: old_status,
+            new_status: Status::Rejected,
         });
     }
 }
@@ -121,6 +199,32 @@ impl ManagerInfo for Contract {
         }
     }
 }
+
+impl Constructor for Contract {
+    #[storage(read, write)]
+    fn constructor(owner: Identity, admin: Identity) {
+        initialize_ownership(owner);
+        add_admin(admin);
+    }
+}
+impl Admin for Contract {
+    #[storage(read, write)]
+    fn revoke_admin(admin: Identity) {
+        only_owner();
+        revoke_admin(admin);
+    }
+    #[storage(read, write)]
+    fn add_admin(admin: Identity) {
+        only_owner();
+        add_admin(admin);
+    }
+    #[storage(read, write)]
+    fn transfer_ownership(new_owner: Identity) {
+        only_owner();
+        transfer_ownership(new_owner);
+    }
+}
+
 impl SRC5 for Contract {
     #[storage(read)]
     fn owner() -> State {

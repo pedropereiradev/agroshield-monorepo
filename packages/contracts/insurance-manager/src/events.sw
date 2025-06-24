@@ -13,3 +13,31 @@ pub struct RegisterPolicyEvent {
     pub status: Status,
     pub timestamp: u64,
 }
+
+pub struct RequestClaimEvent {
+    pub policy_id: AssetId,
+    pub timestamp: u64,
+    pub old_status: Status,
+    pub new_status: Status,
+}
+
+pub struct ApproveClaimEvent {
+    pub policy_id: AssetId,
+    pub timestamp: u64,
+    pub old_status: Status,
+    pub new_status: Status,
+}
+
+pub struct RejectClaimEvent {
+    pub policy_id: AssetId,
+    pub timestamp: u64,
+    pub old_status: Status,
+    pub new_status: Status,
+}
+
+pub struct ExpirePolicyEvent {
+    pub policy_id: AssetId,
+    pub timestamp: u64,
+    pub old_status: Status,
+    pub new_status: Status,
+}

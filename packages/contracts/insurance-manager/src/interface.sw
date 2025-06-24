@@ -21,6 +21,15 @@ abi Admin {
 abi Manager {
     #[storage(read, write)]
     fn register_policy(policy_id: AssetId, data: PolicyData);
+
+    #[storage(read, write)]
+    fn request_claim(policy_id: AssetId);
+
+    #[storage(read, write)]
+    fn approve_claim(policy_id: AssetId);
+
+    #[storage(read, write)]
+    fn reject_claim(policy_id: AssetId);
 }
 
 abi ManagerInfo {
@@ -60,12 +69,8 @@ pub enum PolicyType {
 
 pub enum Status {
     Active: (),
-    Inactive: (),
     Claimed: (),
     Expired: (),
-    Pending: (),
     Approved: (),
     Rejected: (),
-    Suspended: (),
-    UnderReview: (),
 }
