@@ -1,5 +1,5 @@
 import { useAccount, useDisconnect } from '@fuels/react';
-import { Copy, LogOut, Shield } from 'lucide-react';
+import { Copy, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import {
@@ -29,7 +29,13 @@ export function Header() {
     <header className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-6 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <Shield className="h-8 w-8" />
+          <div className="flex items-center justify-center bg-primary-foreground rounded-md">
+            <img
+              src="./logo-icon.png"
+              alt="Shield Icon"
+              className="h-16 w-16"
+            />
+          </div>
           <h1 className="text-2xl font-bold">AgroShield</h1>
         </div>
         <div className="flex gap-4">
