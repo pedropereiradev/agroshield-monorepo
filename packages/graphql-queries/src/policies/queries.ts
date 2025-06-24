@@ -1,65 +1,80 @@
 import { gql } from 'graphql-request';
-import { POLICY_EVENT_FRAGMENT } from '../shared/fragments';
+import {
+  POLICY_FRAGMENT,
+  POLICY_WITH_CLAIMS_FRAGMENT,
+} from '../shared/fragments';
 
 export const GET_POLICIES_BY_OWNER = gql`
-  ${POLICY_EVENT_FRAGMENT}
+  ${POLICY_FRAGMENT}
   query GetPoliciesByOwner($owner: String!) {
-    InsuranceManager_RegisterPolicyEvent(
+    Policies(
       where: { owner: { _eq: $owner } }
       order_by: { timestamp: desc }
     ) {
-      ...PolicyEventFields
+      ...PolicyFields
     }
   }
 `;
 
 export const GET_POLICY_BY_ID = gql`
-  ${POLICY_EVENT_FRAGMENT}
+  ${POLICY_WITH_CLAIMS_FRAGMENT}
   query GetPolicyById($policyId: String!) {
-    InsuranceManager_RegisterPolicyEvent(
+    Policies(
       where: { policyId: { _eq: $policyId } }
       limit: 1
     ) {
-      ...PolicyEventFields
+      ...PolicyWithClaimsFields
+    }
+  }
+`;
+
+export const GET_POLICY_BY_POLICY_ID = gql`
+  ${POLICY_FRAGMENT}
+  query GetPolicyByPolicyId($policyId: String!) {
+    Policies(
+      where: { policyId: { _eq: $policyId } }
+      limit: 1
+    ) {
+      ...PolicyFields
     }
   }
 `;
 
 export const GET_ALL_POLICIES = gql`
-  ${POLICY_EVENT_FRAGMENT}
+  ${POLICY_FRAGMENT}
   query GetAllPolicies($limit: Int = 50, $offset: Int = 0) {
-    InsuranceManager_RegisterPolicyEvent(
+    Policies(
       limit: $limit
       offset: $offset
       order_by: { timestamp: desc }
     ) {
-      ...PolicyEventFields
+      ...PolicyFields
     }
   }
 `;
 
 export const GET_POLICIES_BY_STATUS = gql`
-  ${POLICY_EVENT_FRAGMENT}
-  query GetPoliciesByStatus($status: PolicyStatus!, $limit: Int = 50) {
-    InsuranceManager_RegisterPolicyEvent(
+  ${POLICY_FRAGMENT}
+  query GetPoliciesByStatus($status: String!, $limit: Int = 50) {
+    Policies(
       where: { status: { _eq: $status } }
       limit: $limit
       order_by: { timestamp: desc }
     ) {
-      ...PolicyEventFields
+      ...PolicyFields
     }
   }
 `;
 
 export const SUBSCRIBE_TO_NEW_POLICIES = gql`
-  ${POLICY_EVENT_FRAGMENT}
+  ${POLICY_FRAGMENT}
   subscription SubscribeToNewPolicies($owner: String) {
-    InsuranceManager_RegisterPolicyEvent(
+    Policies(
       where: { owner: { _eq: $owner } }
       order_by: { timestamp: desc }
       limit: 1
     ) {
-      ...PolicyEventFields
+      ...PolicyFields
     }
   }
 `;

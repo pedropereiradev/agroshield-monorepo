@@ -1,14 +1,12 @@
 import { graphQLClient } from '@agroshield/graphql-client';
-import type {
-  InsuranceManagerRegisterPolicyEvent,
-  PolicyStatus,
-} from '@agroshield/graphql-types';
+import type { Policies } from '@agroshield/graphql-types';
 import { type UseQueryResult, useQuery } from '@tanstack/react-query';
 import {
   GET_ALL_POLICIES,
   GET_POLICIES_BY_OWNER,
   GET_POLICIES_BY_STATUS,
   GET_POLICY_BY_ID,
+  GET_POLICY_BY_POLICY_ID,
 } from './queries';
 
 interface GetPoliciesByOwnerVariables {
@@ -25,29 +23,33 @@ interface GetAllPoliciesVariables {
 }
 
 interface GetPoliciesByStatusVariables {
-  status: PolicyStatus;
+  status: string;
   limit?: number;
 }
 
 interface GetPoliciesByOwnerResponse {
-  InsuranceManager_RegisterPolicyEvent: InsuranceManagerRegisterPolicyEvent[];
+  Policies: Policies[];
 }
 
 interface GetPolicyByIdResponse {
-  InsuranceManager_RegisterPolicyEvent: InsuranceManagerRegisterPolicyEvent[];
+  Policies: Policies[];
+}
+
+interface GetPolicyByPolicyIdResponse {
+  Policies: Policies[];
 }
 
 interface GetAllPoliciesResponse {
-  InsuranceManager_RegisterPolicyEvent: InsuranceManagerRegisterPolicyEvent[];
+  Policies: Policies[];
 }
 
 interface GetPoliciesByStatusResponse {
-  InsuranceManager_RegisterPolicyEvent: InsuranceManagerRegisterPolicyEvent[];
+  Policies: Policies[];
 }
 
 export function usePoliciesByOwner(
   owner: string | undefined
-): UseQueryResult<InsuranceManagerRegisterPolicyEvent[], Error> {
+): UseQueryResult<Policies[], Error> {
   return useQuery({
     queryKey: ['policies', 'by-owner', owner],
     queryFn: async () => {
@@ -58,7 +60,7 @@ export function usePoliciesByOwner(
         { owner } as GetPoliciesByOwnerVariables
       );
 
-      return response.InsuranceManager_RegisterPolicyEvent;
+      return response.Policies;
     },
     enabled: !!owner,
   });
@@ -66,7 +68,7 @@ export function usePoliciesByOwner(
 
 export function usePolicyById(
   policyId: string | undefined
-): UseQueryResult<InsuranceManagerRegisterPolicyEvent | null, Error> {
+): UseQueryResult<Policies | null, Error> {
   return useQuery({
     queryKey: ['policies', 'by-id', policyId],
     queryFn: async () => {
@@ -77,7 +79,26 @@ export function usePolicyById(
         { policyId } as GetPolicyByIdVariables
       );
 
-      return response.InsuranceManager_RegisterPolicyEvent[0] || null;
+      return response.Policies[0] || null;
+    },
+    enabled: !!policyId,
+  });
+}
+
+export function usePolicyByPolicyId(
+  policyId: string | undefined
+): UseQueryResult<Policies | null, Error> {
+  return useQuery({
+    queryKey: ['policies', 'by-policy-id', policyId],
+    queryFn: async () => {
+      if (!policyId) throw new Error('Policy ID is required');
+
+      const response = await graphQLClient.request<GetPolicyByPolicyIdResponse>(
+        GET_POLICY_BY_POLICY_ID,
+        { policyId } as GetPolicyByIdVariables
+      );
+
+      return response.Policies[0] || null;
     },
     enabled: !!policyId,
   });
@@ -85,7 +106,7 @@ export function usePolicyById(
 
 export function useAllPolicies(
   variables: GetAllPoliciesVariables = {}
-): UseQueryResult<InsuranceManagerRegisterPolicyEvent[], Error> {
+): UseQueryResult<Policies[], Error> {
   const { limit = 50, offset = 0 } = variables;
 
   return useQuery({
@@ -96,15 +117,15 @@ export function useAllPolicies(
         { limit, offset } as GetAllPoliciesVariables
       );
 
-      return response.InsuranceManager_RegisterPolicyEvent;
+      return response.Policies;
     },
   });
 }
 
 export function usePoliciesByStatus(
-  status: PolicyStatus,
+  status: string,
   limit = 50
-): UseQueryResult<InsuranceManagerRegisterPolicyEvent[], Error> {
+): UseQueryResult<Policies[], Error> {
   return useQuery({
     queryKey: ['policies', 'by-status', status, limit],
     queryFn: async () => {
@@ -113,7 +134,7 @@ export function usePoliciesByStatus(
         { status, limit } as GetPoliciesByStatusVariables
       );
 
-      return response.InsuranceManager_RegisterPolicyEvent;
+      return response.Policies;
     },
   });
 }
