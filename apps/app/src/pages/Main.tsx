@@ -1,11 +1,11 @@
-import { Overview } from '@/components/dashboard/tabs/Overview';
-import { Policies } from '@/components/dashboard/tabs/Policies';
-import { Rewards } from '@/components/dashboard/tabs/Rewards';
+import { Claims } from '@/components/main/tabs/Claims';
+import { Overview } from '@/components/main/tabs/Overview';
+import { Policies } from '@/components/main/tabs/Policies';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
 
-export default function Dashboard() {
+export default function Main() {
   const navigate = useNavigate();
   return (
     <div className="p-4">
@@ -26,7 +26,7 @@ export default function Dashboard() {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="policies">Minhas apólices</TabsTrigger>
-          <TabsTrigger value="rewards">Resgates</TabsTrigger>
+          <TabsTrigger value="claims">Resgates</TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
           <Overview />
@@ -34,8 +34,8 @@ export default function Dashboard() {
         <TabsContent value="policies" className="space-y-6">
           <Policies />
         </TabsContent>
-        <TabsContent value="rewards" className="space-y-6">
-          <Rewards />
+        <TabsContent value="claims" className="space-y-6">
+          <Claims />
         </TabsContent>
       </Tabs>
     </div>

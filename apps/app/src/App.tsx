@@ -1,8 +1,9 @@
 import { useIsConnected } from '@fuels/react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/layout/PrivateRoute';
-import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import Main from './pages/Main';
+import NewClaim from './pages/NewClaim';
 import NewPolicy from './pages/NewPolicy';
 
 export default function App() {
@@ -15,14 +16,14 @@ export default function App() {
   return (
     <Routes>
       <Route
-        path="/"
-        element={isConnected ? <Navigate to="/dashboard" replace /> : <Login />}
+        path="/login"
+        element={isConnected ? <Navigate to="/" replace /> : <Login />}
       />
       <Route
-        path="/dashboard"
+        path="/"
         element={
           <PrivateRoute>
-            <Dashboard />
+            <Main />
           </PrivateRoute>
         }
       />
@@ -34,7 +35,15 @@ export default function App() {
           </PrivateRoute>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route
+        path="/new-claim"
+        element={
+          <PrivateRoute>
+            <NewClaim />
+          </PrivateRoute>
+        }
+      />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
