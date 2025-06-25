@@ -7,8 +7,6 @@ export const POLICY_FRAGMENT = gql`
     owner
     insuredValue
     premium
-    startDate
-    endDate
     policyType
     status
     timestamp
@@ -35,8 +33,6 @@ export const POLICY_WITH_CLAIMS_FRAGMENT = gql`
     owner
     insuredValue
     premium
-    startDate
-    endDate
     policyType
     status
     timestamp

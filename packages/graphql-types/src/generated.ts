@@ -149,14 +149,12 @@ export type Policies = {
   /** An array relationship */
   claims: Array<Claims>;
   db_write_timestamp?: Maybe<Scalars['timestamp']['output']>;
-  endDate: Scalars['String']['output'];
   id: Scalars['String']['output'];
   insuredValue: Scalars['String']['output'];
   owner: Scalars['String']['output'];
   policyId: Scalars['String']['output'];
   policyType: Scalars['String']['output'];
   premium: Scalars['String']['output'];
-  startDate: Scalars['String']['output'];
   status: Scalars['String']['output'];
   timestamp: Scalars['String']['output'];
 };
@@ -178,14 +176,12 @@ export type Policies_Bool_Exp = {
   _or?: InputMaybe<Array<Policies_Bool_Exp>>;
   claims?: InputMaybe<Claims_Bool_Exp>;
   db_write_timestamp?: InputMaybe<Timestamp_Comparison_Exp>;
-  endDate?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<String_Comparison_Exp>;
   insuredValue?: InputMaybe<String_Comparison_Exp>;
   owner?: InputMaybe<String_Comparison_Exp>;
   policyId?: InputMaybe<String_Comparison_Exp>;
   policyType?: InputMaybe<String_Comparison_Exp>;
   premium?: InputMaybe<String_Comparison_Exp>;
-  startDate?: InputMaybe<String_Comparison_Exp>;
   status?: InputMaybe<String_Comparison_Exp>;
   timestamp?: InputMaybe<String_Comparison_Exp>;
 };
@@ -194,14 +190,12 @@ export type Policies_Bool_Exp = {
 export type Policies_Order_By = {
   claims_aggregate?: InputMaybe<Claims_Aggregate_Order_By>;
   db_write_timestamp?: InputMaybe<Order_By>;
-  endDate?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   insuredValue?: InputMaybe<Order_By>;
   owner?: InputMaybe<Order_By>;
   policyId?: InputMaybe<Order_By>;
   policyType?: InputMaybe<Order_By>;
   premium?: InputMaybe<Order_By>;
-  startDate?: InputMaybe<Order_By>;
   status?: InputMaybe<Order_By>;
   timestamp?: InputMaybe<Order_By>;
 };
@@ -210,8 +204,6 @@ export type Policies_Order_By = {
 export type Policies_Select_Column =
   /** column name */
   | 'db_write_timestamp'
-  /** column name */
-  | 'endDate'
   /** column name */
   | 'id'
   /** column name */
@@ -224,8 +216,6 @@ export type Policies_Select_Column =
   | 'policyType'
   /** column name */
   | 'premium'
-  /** column name */
-  | 'startDate'
   /** column name */
   | 'status'
   /** column name */
@@ -242,14 +232,12 @@ export type Policies_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Policies_Stream_Cursor_Value_Input = {
   db_write_timestamp?: InputMaybe<Scalars['timestamp']['input']>;
-  endDate?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['String']['input']>;
   insuredValue?: InputMaybe<Scalars['String']['input']>;
   owner?: InputMaybe<Scalars['String']['input']>;
   policyId?: InputMaybe<Scalars['String']['input']>;
   policyType?: InputMaybe<Scalars['String']['input']>;
   premium?: InputMaybe<Scalars['String']['input']>;
-  startDate?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   timestamp?: InputMaybe<Scalars['String']['input']>;
 };
