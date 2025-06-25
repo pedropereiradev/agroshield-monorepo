@@ -4,8 +4,6 @@ import { useInsuranceContracts } from './useInsuranceContracts';
 
 export interface PolicyDetails {
   crop: string;
-  startDate: number;
-  endDate: number;
   regionX: number;
   regionY: number;
   insuredValue: number;
@@ -41,8 +39,6 @@ export function usePolicyCreation() {
       const { waitForResult } = await insuranceContract.functions
         .create_insurance(
           policyDetails.crop,
-          policyDetails.startDate,
-          policyDetails.endDate,
           policyDetails.regionX * -1,
           policyDetails.regionY * -1,
           policyDetails.insuredValue,

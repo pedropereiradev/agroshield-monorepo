@@ -5,6 +5,7 @@ import type {
   PolicyType,
 } from '@agroshield/graphql-types';
 import { useWallet } from '@fuels/react';
+import { DateTime } from 'fuels';
 import { useMemo } from 'react';
 
 export interface Policy {
@@ -32,11 +33,10 @@ export function usePolicies() {
     refetch,
   } = usePoliciesByOwner(ownerAddress);
 
-  const calculateProgressPercentage = (
-    startDate: number,
-    endDate: number
-  ): number => {
+  const calculateProgressPercentage = (startTimestamp: string): number => {
     const now = Date.now() / 1000;
+    const startDate = DateTime.fromTai64(startTimestamp).toUnixSeconds();
+    const endDate = startDate + 31536000; // 1 year later
     const total = endDate - startDate;
     const elapsed = now - startDate;
 
@@ -58,12 +58,11 @@ export function usePolicies() {
         status: policy.status,
         coverageAmount: Number(policy.insuredValue),
         premiumPaid: Number(policy.premium),
-        startDate: new Date(Number(policy.startDate) * 1000).toISOString(),
-        endDate: new Date(Number(policy.endDate) * 1000).toISOString(),
-        progressPercentage: calculateProgressPercentage(
-          Number(policy.startDate),
-          Number(policy.endDate)
-        ),
+        startDate: DateTime.fromTai64(policy.timestamp).toISOString(),
+        endDate: DateTime.fromUnixSeconds(
+          DateTime.fromTai64(policy.timestamp).toUnixSeconds() + 31536000
+        ).toISOString(),
+        progressPercentage: calculateProgressPercentage(policy.timestamp),
         timestamp: policy.timestamp,
       })
     );

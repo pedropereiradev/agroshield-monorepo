@@ -99,8 +99,6 @@ export default function NewPolicy() {
     try {
       const policyDetails: PolicyDetails = {
         crop: policyData.crop,
-        startDate: Math.floor(new Date().getTime() / 1000),
-        endDate: Math.floor((Date.now() + 90 * 24 * 60 * 60 * 1000) / 1000),
         regionX: policyData.longitude,
         regionY: policyData.latitude,
         insuredValue: Math.floor(quote.LMI * 1000),

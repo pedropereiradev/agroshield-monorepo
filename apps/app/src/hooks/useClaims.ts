@@ -1,6 +1,7 @@
 import { useClaimsByPolicyOwner } from '@agroshield/graphql-queries';
 import type { Claims } from '@agroshield/graphql-types';
 import { useWallet } from '@fuels/react';
+import { DateTime } from 'fuels';
 import { useMemo } from 'react';
 
 export interface Claim {
@@ -26,7 +27,9 @@ export function useClaims() {
   } = useClaimsByPolicyOwner(ownerAddress);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const formattedDate = DateTime.fromTai64(dateString).toDateString();
+
+    const date = new Date(formattedDate);
     return date.toLocaleDateString('pt-BR', {
       year: 'numeric',
       month: 'short',
