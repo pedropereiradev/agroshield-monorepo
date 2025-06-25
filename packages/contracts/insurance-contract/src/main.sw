@@ -28,6 +28,7 @@ use standards::src7::Metadata;
 use sway_libs::asset::base::SetAssetAttributes;
 use sway_libs::asset::metadata::SetAssetMetadata;
 use std::hash::sha256;
+use std::block::timestamp;
 storage {
     nft_id: ContractId = ContractId::zero(),
     manager_id: ContractId = ContractId::zero(),
@@ -35,8 +36,6 @@ storage {
 #[storage(read, write)]
 fn mint_token(
     crop: String,
-    start_date: u64,
-    end_date: u64,
     region_x: u64,
     region_y: u64,
     insured_value: u64,
@@ -46,17 +45,11 @@ fn mint_token(
     insured_area_unit: String,
     planting_month: u64,
     harvest_month: u64,
+    timestamp: u64,
     receiver: Identity,
 ) -> AssetId {
     let policy_type_str = policy_type_to_string(policy_type);
-    let sub_id = generate_sub_id(
-        crop,
-        start_date,
-        end_date,
-        region_x,
-        region_y,
-        policy_type_str,
-    );
+    let sub_id = generate_sub_id(crop, region_x, region_y, policy_type_str, timestamp);
     let nft_id = storage.nft_id.read();
     let asset_id = AssetId::new(nft_id, sub_id);
     let src3_contract = abi(SRC3, nft_id.into());
@@ -69,13 +62,8 @@ fn mint_token(
     );
     nft_contract.set_metadata(
         asset_id,
-        String::from_ascii_str("attr:start_date"),
-        Metadata::Int(start_date),
-    );
-    nft_contract.set_metadata(
-        asset_id,
-        String::from_ascii_str("attr:end_date"),
-        Metadata::Int(end_date),
+        String::from_ascii_str("attr:timestamp"),
+        Metadata::Int(timestamp),
     );
     nft_contract.set_metadata(
         asset_id,
@@ -146,8 +134,6 @@ impl Insurance for Contract {
     #[storage(read, write), payable]
     fn create_insurance(
         crop: String,
-        start_date: u64,
-        end_date: u64,
         region_x: u64,
         region_y: u64,
         insured_value: u64,
@@ -161,11 +147,10 @@ impl Insurance for Contract {
         require_not_paused();
 
         let owner = msg_sender().unwrap();
+        let timestamp = timestamp();
 
         let asset_id = mint_token(
             crop,
-            start_date,
-            end_date,
             region_x,
             region_y,
             insured_value,
@@ -175,6 +160,7 @@ impl Insurance for Contract {
             insured_area_unit,
             planting_month,
             harvest_month,
+            timestamp,
             owner,
         );
 
@@ -187,9 +173,8 @@ impl Insurance for Contract {
                 owner,
                 insured_value,
                 premium,
-                start_date,
-                end_date,
                 policy_type,
+                timestamp,
                 status: Status::Active,
             },
         )

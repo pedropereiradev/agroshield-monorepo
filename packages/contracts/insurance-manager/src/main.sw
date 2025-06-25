@@ -47,11 +47,9 @@ impl Manager for Contract {
             policy_id: policy_id,
             insured_value: data.insured_value,
             premium: data.premium,
-            start_date: data.start_date,
-            end_date: data.end_date,
             policy_type: data.policy_type,
             status: data.status,
-            timestamp: timestamp(),
+            timestamp: data.timestamp,
         });
     }
 
@@ -62,10 +60,11 @@ impl Manager for Contract {
         require(policy.is_some(), InsuranceManagerError::PolicyNotFound);
 
         let current_timestamp = timestamp();
+        let seconds_in_year: u64 = 365 * 24 * 60 * 60;
 
         let mut policy = policy.unwrap();
 
-        if policy.end_date < current_timestamp {
+        if current_timestamp - policy.timestamp > seconds_in_year {
             let old_status = policy.status;
             policy.status = Status::Expired;
 

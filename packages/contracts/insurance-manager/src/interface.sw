@@ -50,8 +50,7 @@ pub struct PolicyData {
     pub owner: Identity,
     pub insured_value: u64,
     pub premium: u64,
-    pub start_date: u64,
-    pub end_date: u64,
+    pub timestamp: u64,
     pub policy_type: PolicyType,
     pub status: Status,
 }

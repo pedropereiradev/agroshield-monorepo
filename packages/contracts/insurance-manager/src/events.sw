@@ -7,8 +7,6 @@ pub struct RegisterPolicyEvent {
     pub policy_id: AssetId,
     pub insured_value: u64,
     pub premium: u64,
-    pub start_date: u64,
-    pub end_date: u64,
     pub policy_type: PolicyType,
     pub status: Status,
     pub timestamp: u64,

@@ -19,8 +19,6 @@ abi Insurance {
     #[storage(read, write), payable]
     fn create_insurance(
         crop: String,
-        start_date: u64,
-        end_date: u64,
         region_x: u64,
         region_y: u64,
         insured_value: u64,
@@ -67,8 +65,7 @@ pub struct PolicyData {
     pub owner: Identity,
     pub insured_value: u64,
     pub premium: u64,
-    pub start_date: u64,
-    pub end_date: u64,
+    pub timestamp: u64,
     pub policy_type: PolicyType,
     pub status: Status,
 }
