@@ -338,16 +338,26 @@ const abi = {
     {
       "inputs": [
         {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "approve_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
           "name": "crop",
           "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
-        },
-        {
-          "name": "start_date",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "end_date",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "region_x",
@@ -399,6 +409,42 @@ const abi = {
         {
           "name": "payable",
           "arguments": []
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "reject_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "request_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -529,6 +575,10 @@ const abi = {
   ],
   "loggedTypes": [
     {
+      "logId": "4571204900286667806",
+      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+    },
+    {
       "logId": "10032608944051208538",
       "concreteTypeId": "8b3afcadf894415a10b09fc3717487e33802c8ffbb030edafe84ca4a71b280bc"
     },
@@ -543,10 +593,6 @@ const abi = {
     {
       "logId": "9255886348526303176",
       "concreteTypeId": "807383981d4c37c8f75fab945840c1ca8647ee5c102deea493c55063d08fa5ff"
-    },
-    {
-      "logId": "4571204900286667806",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
     },
     {
       "logId": "12970362301975156672",
@@ -574,7 +620,10 @@ export class InsuranceContractInterface extends Interface {
   }
 
   declare functions: {
+    approve_claim: FunctionFragment;
     create_insurance: FunctionFragment;
+    reject_claim: FunctionFragment;
+    request_claim: FunctionFragment;
     constructor: FunctionFragment;
     transfer_funds: FunctionFragment;
     transfer_ownership: FunctionFragment;
@@ -591,7 +640,10 @@ export class InsuranceContract extends __Contract {
 
   declare interface: InsuranceContractInterface;
   declare functions: {
-    create_insurance: InvokeFunction<[crop: StdString, start_date: BigNumberish, end_date: BigNumberish, region_x: BigNumberish, region_y: BigNumberish, insured_value: BigNumberish, premium: BigNumberish, policy_type: PolicyTypeInput, insured_area: BigNumberish, insured_area_unit: StdString, planting_month: BigNumberish, harvest_month: BigNumberish], void>;
+    approve_claim: InvokeFunction<[asset_id: AssetIdInput], void>;
+    create_insurance: InvokeFunction<[crop: StdString, region_x: BigNumberish, region_y: BigNumberish, insured_value: BigNumberish, premium: BigNumberish, policy_type: PolicyTypeInput, insured_area: BigNumberish, insured_area_unit: StdString, planting_month: BigNumberish, harvest_month: BigNumberish], void>;
+    reject_claim: InvokeFunction<[asset_id: AssetIdInput], void>;
+    request_claim: InvokeFunction<[asset_id: AssetIdInput], void>;
     constructor: InvokeFunction<[owner: AddressInput, nft_id: ContractIdInput, manager_id: ContractIdInput], void>;
     transfer_funds: InvokeFunction<[amount: BigNumberish, asset_id: AssetIdInput, recipient: AddressInput], void>;
     transfer_ownership: InvokeFunction<[new_owner: AddressInput], void>;

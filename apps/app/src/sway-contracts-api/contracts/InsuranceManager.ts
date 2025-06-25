@@ -30,27 +30,37 @@ export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractId
 export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
 export enum InitializationErrorInput { CannotReinitialized = 'CannotReinitialized' };
 export enum InitializationErrorOutput { CannotReinitialized = 'CannotReinitialized' };
+export enum InsuranceManagerErrorInput { InvalidPolicyStatus = 'InvalidPolicyStatus', PolicyNotFound = 'PolicyNotFound' };
+export enum InsuranceManagerErrorOutput { InvalidPolicyStatus = 'InvalidPolicyStatus', PolicyNotFound = 'PolicyNotFound' };
 export enum PolicyTypeInput { Rainfall = 'Rainfall', Temperature = 'Temperature', Drought = 'Drought' };
 export enum PolicyTypeOutput { Rainfall = 'Rainfall', Temperature = 'Temperature', Drought = 'Drought' };
 export type StateInput = Enum<{ Uninitialized: undefined, Initialized: IdentityInput, Revoked: undefined }>;
 export type StateOutput = Enum<{ Uninitialized: void, Initialized: IdentityOutput, Revoked: void }>;
-export enum StatusInput { Active = 'Active', Inactive = 'Inactive', Claimed = 'Claimed', Expired = 'Expired', Pending = 'Pending', Approved = 'Approved', Rejected = 'Rejected', Suspended = 'Suspended', UnderReview = 'UnderReview' };
-export enum StatusOutput { Active = 'Active', Inactive = 'Inactive', Claimed = 'Claimed', Expired = 'Expired', Pending = 'Pending', Approved = 'Approved', Rejected = 'Rejected', Suspended = 'Suspended', UnderReview = 'UnderReview' };
+export enum StatusInput { Active = 'Active', Claimed = 'Claimed', Expired = 'Expired', Approved = 'Approved', Rejected = 'Rejected' };
+export enum StatusOutput { Active = 'Active', Claimed = 'Claimed', Expired = 'Expired', Approved = 'Approved', Rejected = 'Rejected' };
 
 export type AddressInput = { bits: string };
 export type AddressOutput = AddressInput;
+export type ApproveClaimEventInput = { policy_id: AssetIdInput, timestamp: BigNumberish, old_status: StatusInput, new_status: StatusInput };
+export type ApproveClaimEventOutput = { policy_id: AssetIdOutput, timestamp: BN, old_status: StatusOutput, new_status: StatusOutput };
 export type AssetIdInput = { bits: string };
 export type AssetIdOutput = AssetIdInput;
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
+export type ExpirePolicyEventInput = { policy_id: AssetIdInput, timestamp: BigNumberish, old_status: StatusInput, new_status: StatusInput };
+export type ExpirePolicyEventOutput = { policy_id: AssetIdOutput, timestamp: BN, old_status: StatusOutput, new_status: StatusOutput };
 export type OwnershipSetInput = { new_owner: IdentityInput };
 export type OwnershipSetOutput = { new_owner: IdentityOutput };
 export type OwnershipTransferredInput = { new_owner: IdentityInput, previous_owner: IdentityInput };
 export type OwnershipTransferredOutput = { new_owner: IdentityOutput, previous_owner: IdentityOutput };
-export type PolicyDataInput = { owner: IdentityInput, insured_value: BigNumberish, premium: BigNumberish, start_date: BigNumberish, end_date: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput };
-export type PolicyDataOutput = { owner: IdentityOutput, insured_value: BN, premium: BN, start_date: BN, end_date: BN, policy_type: PolicyTypeOutput, status: StatusOutput };
-export type RegisterPolicyEventInput = { owner: IdentityInput, policy_id: AssetIdInput, insured_value: BigNumberish, premium: BigNumberish, start_date: BigNumberish, end_date: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput, timestamp: BigNumberish };
-export type RegisterPolicyEventOutput = { owner: IdentityOutput, policy_id: AssetIdOutput, insured_value: BN, premium: BN, start_date: BN, end_date: BN, policy_type: PolicyTypeOutput, status: StatusOutput, timestamp: BN };
+export type PolicyDataInput = { owner: IdentityInput, insured_value: BigNumberish, premium: BigNumberish, timestamp: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput };
+export type PolicyDataOutput = { owner: IdentityOutput, insured_value: BN, premium: BN, timestamp: BN, policy_type: PolicyTypeOutput, status: StatusOutput };
+export type RegisterPolicyEventInput = { owner: IdentityInput, policy_id: AssetIdInput, insured_value: BigNumberish, premium: BigNumberish, policy_type: PolicyTypeInput, status: StatusInput, timestamp: BigNumberish };
+export type RegisterPolicyEventOutput = { owner: IdentityOutput, policy_id: AssetIdOutput, insured_value: BN, premium: BN, policy_type: PolicyTypeOutput, status: StatusOutput, timestamp: BN };
+export type RejectClaimEventInput = { policy_id: AssetIdInput, timestamp: BigNumberish, old_status: StatusInput, new_status: StatusInput };
+export type RejectClaimEventOutput = { policy_id: AssetIdOutput, timestamp: BN, old_status: StatusOutput, new_status: StatusOutput };
+export type RequestClaimEventInput = { policy_id: AssetIdInput, timestamp: BigNumberish, old_status: StatusInput, new_status: StatusInput };
+export type RequestClaimEventOutput = { policy_id: AssetIdOutput, timestamp: BN, old_status: StatusOutput, new_status: StatusOutput };
 
 const abi = {
   "programType": "contract",
@@ -62,24 +72,29 @@ const abi = {
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     },
     {
+      "type": "enum errors::InsuranceManagerError",
+      "concreteTypeId": "37d18180aed0b74ab63f602f726d1f48490f826b0cccddde132ed2c22908d89a",
+      "metadataTypeId": 1
+    },
+    {
       "type": "enum standards::src5::AccessError",
       "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d",
-      "metadataTypeId": 3
+      "metadataTypeId": 4
     },
     {
       "type": "enum standards::src5::State",
       "concreteTypeId": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
-      "metadataTypeId": 4
+      "metadataTypeId": 5
     },
     {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
-      "metadataTypeId": 5
+      "metadataTypeId": 6
     },
     {
       "type": "enum std::option::Option<struct interface::PolicyData>",
       "concreteTypeId": "75d00cbb3a4172a774d9ca244ba8ef8794b1f74d48a7d0844e1bd00dee830b24",
-      "metadataTypeId": 6,
+      "metadataTypeId": 7,
       "typeArguments": [
         "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec"
       ]
@@ -87,27 +102,47 @@ const abi = {
     {
       "type": "enum sway_libs::ownership::errors::InitializationError",
       "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
-      "metadataTypeId": 7
+      "metadataTypeId": 8
+    },
+    {
+      "type": "struct events::ApproveClaimEvent",
+      "concreteTypeId": "a7e30683b0354ca6dc343a9f04c5fe98496f2a6556b5a6a9058a5a058319b6df",
+      "metadataTypeId": 11
+    },
+    {
+      "type": "struct events::ExpirePolicyEvent",
+      "concreteTypeId": "f425a02bada0ab572352bef590b4b40e2151c1a2046bb5eb1055b2f03b892da8",
+      "metadataTypeId": 12
     },
     {
       "type": "struct events::RegisterPolicyEvent",
       "concreteTypeId": "e7ccaf2dc835d5463ff5eefc07c6e60568746c707957d8a7320168fccd9dbd14",
-      "metadataTypeId": 10
+      "metadataTypeId": 13
+    },
+    {
+      "type": "struct events::RejectClaimEvent",
+      "concreteTypeId": "74dd559c104c6f616746aa8d160ec37284ff90641b46c98d88a86d5577c0c844",
+      "metadataTypeId": 14
+    },
+    {
+      "type": "struct events::RequestClaimEvent",
+      "concreteTypeId": "783e6119ee4f5bbb336af3161f60bb8906ef07b5a2a76d95b9f2771fd7872941",
+      "metadataTypeId": 15
     },
     {
       "type": "struct interface::PolicyData",
       "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec",
-      "metadataTypeId": 11
+      "metadataTypeId": 16
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 13
+      "metadataTypeId": 18
     },
     {
       "type": "struct std::vec::Vec<struct std::asset_id::AssetId>",
       "concreteTypeId": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
-      "metadataTypeId": 16,
+      "metadataTypeId": 21,
       "typeArguments": [
         "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
       ]
@@ -115,12 +150,12 @@ const abi = {
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 17
+      "metadataTypeId": 22
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
-      "metadataTypeId": 18
+      "metadataTypeId": 23
     },
     {
       "type": "u64",
@@ -133,8 +168,22 @@ const abi = {
       "metadataTypeId": 0
     },
     {
-      "type": "enum interface::PolicyType",
+      "type": "enum errors::InsuranceManagerError",
       "metadataTypeId": 1,
+      "components": [
+        {
+          "name": "InvalidPolicyStatus",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "PolicyNotFound",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum interface::PolicyType",
+      "metadataTypeId": 2,
       "components": [
         {
           "name": "Rainfall",
@@ -152,14 +201,10 @@ const abi = {
     },
     {
       "type": "enum interface::Status",
-      "metadataTypeId": 2,
+      "metadataTypeId": 3,
       "components": [
         {
           "name": "Active",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "Inactive",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         },
         {
@@ -171,30 +216,18 @@ const abi = {
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         },
         {
-          "name": "Pending",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
           "name": "Approved",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         },
         {
           "name": "Rejected",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "Suspended",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "UnderReview",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         }
       ]
     },
     {
       "type": "enum standards::src5::AccessError",
-      "metadataTypeId": 3,
+      "metadataTypeId": 4,
       "components": [
         {
           "name": "NotOwner",
@@ -204,7 +237,7 @@ const abi = {
     },
     {
       "type": "enum standards::src5::State",
-      "metadataTypeId": 4,
+      "metadataTypeId": 5,
       "components": [
         {
           "name": "Uninitialized",
@@ -212,7 +245,7 @@ const abi = {
         },
         {
           "name": "Initialized",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "Revoked",
@@ -222,21 +255,21 @@ const abi = {
     },
     {
       "type": "enum std::identity::Identity",
-      "metadataTypeId": 5,
+      "metadataTypeId": 6,
       "components": [
         {
           "name": "Address",
-          "typeId": 12
+          "typeId": 17
         },
         {
           "name": "ContractId",
-          "typeId": 14
+          "typeId": 19
         }
       ]
     },
     {
       "type": "enum std::option::Option",
-      "metadataTypeId": 6,
+      "metadataTypeId": 7,
       "components": [
         {
           "name": "None",
@@ -244,16 +277,16 @@ const abi = {
         },
         {
           "name": "Some",
-          "typeId": 8
+          "typeId": 9
         }
       ],
       "typeParameters": [
-        8
+        9
       ]
     },
     {
       "type": "enum sway_libs::ownership::errors::InitializationError",
-      "metadataTypeId": 7,
+      "metadataTypeId": 8,
       "components": [
         {
           "name": "CannotReinitialized",
@@ -263,23 +296,67 @@ const abi = {
     },
     {
       "type": "generic T",
-      "metadataTypeId": 8
-    },
-    {
-      "type": "raw untyped ptr",
       "metadataTypeId": 9
     },
     {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 10
+    },
+    {
+      "type": "struct events::ApproveClaimEvent",
+      "metadataTypeId": 11,
+      "components": [
+        {
+          "name": "policy_id",
+          "typeId": 18
+        },
+        {
+          "name": "timestamp",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "old_status",
+          "typeId": 3
+        },
+        {
+          "name": "new_status",
+          "typeId": 3
+        }
+      ]
+    },
+    {
+      "type": "struct events::ExpirePolicyEvent",
+      "metadataTypeId": 12,
+      "components": [
+        {
+          "name": "policy_id",
+          "typeId": 18
+        },
+        {
+          "name": "timestamp",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "old_status",
+          "typeId": 3
+        },
+        {
+          "name": "new_status",
+          "typeId": 3
+        }
+      ]
+    },
+    {
       "type": "struct events::RegisterPolicyEvent",
-      "metadataTypeId": 10,
+      "metadataTypeId": 13,
       "components": [
         {
           "name": "owner",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "policy_id",
-          "typeId": 13
+          "typeId": 18
         },
         {
           "name": "insured_value",
@@ -290,20 +367,12 @@ const abi = {
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
-          "name": "start_date",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "end_date",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
           "name": "policy_type",
-          "typeId": 1
+          "typeId": 2
         },
         {
           "name": "status",
-          "typeId": 2
+          "typeId": 3
         },
         {
           "name": "timestamp",
@@ -312,12 +381,56 @@ const abi = {
       ]
     },
     {
+      "type": "struct events::RejectClaimEvent",
+      "metadataTypeId": 14,
+      "components": [
+        {
+          "name": "policy_id",
+          "typeId": 18
+        },
+        {
+          "name": "timestamp",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "old_status",
+          "typeId": 3
+        },
+        {
+          "name": "new_status",
+          "typeId": 3
+        }
+      ]
+    },
+    {
+      "type": "struct events::RequestClaimEvent",
+      "metadataTypeId": 15,
+      "components": [
+        {
+          "name": "policy_id",
+          "typeId": 18
+        },
+        {
+          "name": "timestamp",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "old_status",
+          "typeId": 3
+        },
+        {
+          "name": "new_status",
+          "typeId": 3
+        }
+      ]
+    },
+    {
       "type": "struct interface::PolicyData",
-      "metadataTypeId": 11,
+      "metadataTypeId": 16,
       "components": [
         {
           "name": "owner",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "insured_value",
@@ -328,26 +441,22 @@ const abi = {
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
-          "name": "start_date",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "end_date",
+          "name": "timestamp",
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "policy_type",
-          "typeId": 1
+          "typeId": 2
         },
         {
           "name": "status",
-          "typeId": 2
+          "typeId": 3
         }
       ]
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 12,
+      "metadataTypeId": 17,
       "components": [
         {
           "name": "bits",
@@ -357,7 +466,7 @@ const abi = {
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 13,
+      "metadataTypeId": 18,
       "components": [
         {
           "name": "bits",
@@ -367,7 +476,7 @@ const abi = {
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 14,
+      "metadataTypeId": 19,
       "components": [
         {
           "name": "bits",
@@ -377,11 +486,11 @@ const abi = {
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 15,
+      "metadataTypeId": 20,
       "components": [
         {
           "name": "ptr",
-          "typeId": 9
+          "typeId": 10
         },
         {
           "name": "cap",
@@ -389,20 +498,20 @@ const abi = {
         }
       ],
       "typeParameters": [
-        8
+        9
       ]
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 16,
+      "metadataTypeId": 21,
       "components": [
         {
           "name": "buf",
-          "typeId": 15,
+          "typeId": 20,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 8
+              "typeId": 9
             }
           ]
         },
@@ -412,35 +521,182 @@ const abi = {
         }
       ],
       "typeParameters": [
-        8
+        9
       ]
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 17,
+      "metadataTypeId": 22,
       "components": [
         {
           "name": "new_owner",
-          "typeId": 5
+          "typeId": 6
         }
       ]
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 18,
+      "metadataTypeId": 23,
       "components": [
         {
           "name": "new_owner",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "previous_owner",
-          "typeId": 5
+          "typeId": 6
         }
       ]
     }
   ],
   "functions": [
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "approve_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "data",
+          "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec"
+        }
+      ],
+      "name": "register_policy",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "reject_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "request_claim",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_owner_policy_count",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_policies_by_owner",
+      "output": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "policy_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "get_policy",
+      "output": "75d00cbb3a4172a774d9ca244ba8ef8794b1f74d48a7d0844e1bd00dee830b24",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_policy_count",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
     {
       "inputs": [
         {
@@ -522,96 +778,6 @@ const abi = {
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "policy_id",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        },
-        {
-          "name": "data",
-          "concreteTypeId": "83eb3c42176cc10b4b1846bfd14c46d158f467350ce7edccfd02d637429066ec"
-        }
-      ],
-      "name": "register_policy",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "owner",
-          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
-        }
-      ],
-      "name": "get_owner_policy_count",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "owner",
-          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
-        }
-      ],
-      "name": "get_policies_by_owner",
-      "output": "8b2275934873f381a769c82334e6f66595eeb350d8b2dd012eef4d9bb117942b",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "policy_id",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        }
-      ],
-      "name": "get_policy",
-      "output": "75d00cbb3a4172a774d9ca244ba8ef8794b1f74d48a7d0844e1bd00dee830b24",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [],
-      "name": "get_policy_count",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
       "inputs": [],
       "name": "owner",
       "output": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
@@ -627,6 +793,34 @@ const abi = {
   ],
   "loggedTypes": [
     {
+      "logId": "4571204900286667806",
+      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+    },
+    {
+      "logId": "4022138331907274570",
+      "concreteTypeId": "37d18180aed0b74ab63f602f726d1f48490f826b0cccddde132ed2c22908d89a"
+    },
+    {
+      "logId": "12097520186714049702",
+      "concreteTypeId": "a7e30683b0354ca6dc343a9f04c5fe98496f2a6556b5a6a9058a5a058319b6df"
+    },
+    {
+      "logId": "16702917729177687366",
+      "concreteTypeId": "e7ccaf2dc835d5463ff5eefc07c6e60568746c707957d8a7320168fccd9dbd14"
+    },
+    {
+      "logId": "8420981007029399393",
+      "concreteTypeId": "74dd559c104c6f616746aa8d160ec37284ff90641b46c98d88a86d5577c0c844"
+    },
+    {
+      "logId": "17592643628849736535",
+      "concreteTypeId": "f425a02bada0ab572352bef590b4b40e2151c1a2046bb5eb1055b2f03b892da8"
+    },
+    {
+      "logId": "8664469497107667899",
+      "concreteTypeId": "783e6119ee4f5bbb336af3161f60bb8906ef07b5a2a76d95b9f2771fd7872941"
+    },
+    {
       "logId": "2161305517876418151",
       "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893"
     },
@@ -635,16 +829,8 @@ const abi = {
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5"
     },
     {
-      "logId": "4571204900286667806",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
-    },
-    {
       "logId": "12970362301975156672",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308"
-    },
-    {
-      "logId": "16702917729177687366",
-      "concreteTypeId": "e7ccaf2dc835d5463ff5eefc07c6e60568746c707957d8a7320168fccd9dbd14"
     }
   ],
   "messagesTypes": [],
@@ -664,15 +850,18 @@ export class InsuranceManagerInterface extends Interface {
   }
 
   declare functions: {
-    constructor: FunctionFragment;
-    add_admin: FunctionFragment;
-    revoke_admin: FunctionFragment;
-    transfer_ownership: FunctionFragment;
+    approve_claim: FunctionFragment;
     register_policy: FunctionFragment;
+    reject_claim: FunctionFragment;
+    request_claim: FunctionFragment;
     get_owner_policy_count: FunctionFragment;
     get_policies_by_owner: FunctionFragment;
     get_policy: FunctionFragment;
     get_policy_count: FunctionFragment;
+    constructor: FunctionFragment;
+    add_admin: FunctionFragment;
+    revoke_admin: FunctionFragment;
+    transfer_ownership: FunctionFragment;
     owner: FunctionFragment;
   };
 }
@@ -683,15 +872,18 @@ export class InsuranceManager extends __Contract {
 
   declare interface: InsuranceManagerInterface;
   declare functions: {
-    constructor: InvokeFunction<[owner: IdentityInput, admin: IdentityInput], void>;
-    add_admin: InvokeFunction<[admin: IdentityInput], void>;
-    revoke_admin: InvokeFunction<[admin: IdentityInput], void>;
-    transfer_ownership: InvokeFunction<[new_owner: IdentityInput], void>;
+    approve_claim: InvokeFunction<[policy_id: AssetIdInput], void>;
     register_policy: InvokeFunction<[policy_id: AssetIdInput, data: PolicyDataInput], void>;
+    reject_claim: InvokeFunction<[policy_id: AssetIdInput], void>;
+    request_claim: InvokeFunction<[policy_id: AssetIdInput], void>;
     get_owner_policy_count: InvokeFunction<[owner: IdentityInput], BN>;
     get_policies_by_owner: InvokeFunction<[owner: IdentityInput], Vec<AssetIdOutput>>;
     get_policy: InvokeFunction<[policy_id: AssetIdInput], Option<PolicyDataOutput>>;
     get_policy_count: InvokeFunction<[], BN>;
+    constructor: InvokeFunction<[owner: IdentityInput, admin: IdentityInput], void>;
+    add_admin: InvokeFunction<[admin: IdentityInput], void>;
+    revoke_admin: InvokeFunction<[admin: IdentityInput], void>;
+    transfer_ownership: InvokeFunction<[new_owner: IdentityInput], void>;
     owner: InvokeFunction<[], StateOutput>;
   };
 
