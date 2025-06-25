@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import {
 } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { usePolicies } from '@/hooks/usePolicies';
+import { useRequestClaim } from '@/hooks/useRequestClaim';
 import { CloudRain, Leaf, Loader2, Thermometer } from 'lucide-react';
 
 const statusColors = {
@@ -26,6 +28,7 @@ const statusColors = {
 
 export function Policies() {
   const { policies, isLoading, error } = usePolicies();
+  const { requestClaim, isRequesting } = useRequestClaim();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -51,6 +54,10 @@ export function Policies() {
 
   const formatCurrency = (amount: number) => {
     return (amount / 1e9).toFixed(4);
+  };
+
+  const handleClaimRequest = async (policyId: string) => {
+    await requestClaim(policyId);
   };
 
   if (isLoading) {
@@ -195,6 +202,21 @@ export function Policies() {
                         value={policy.progressPercentage}
                         className="h-2"
                       />
+                      <div className="flex justify-end py-3">
+                        <Button
+                          onClick={() => {
+                            handleClaimRequest(policy.id);
+                          }}
+                          disabled={isRequesting || policy.status !== 'Active'}
+                        >
+                          {isRequesting && <Loader2 className="animate-spin" />}
+                          {isRequesting
+                            ? 'Solicitando...'
+                            : policy.status === 'Active'
+                              ? 'Solicitar Resgate'
+                              : 'Resgate Indisponível'}
+                        </Button>
+                      </div>
                     </div>
                   </AccordionContent>
                 </AccordionItem>

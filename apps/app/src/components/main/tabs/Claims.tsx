@@ -5,12 +5,10 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -201,7 +199,7 @@ export function Claims() {
           </Accordion>
         )}
       </CardContent>
-      <CardFooter className="flex justify-end">
+      {/* <CardFooter className="flex justify-end">
         <Button
           size="lg"
           onClick={() => {
@@ -210,7 +208,7 @@ export function Claims() {
         >
           Solicitar resgate
         </Button>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 }
