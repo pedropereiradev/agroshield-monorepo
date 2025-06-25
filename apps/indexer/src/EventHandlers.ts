@@ -5,13 +5,11 @@ import { InsuranceManager } from 'generated';
 
 InsuranceManager.RegisterPolicyEvent.handler(async ({ event, context }) => {
   context.Policies.set({
-    id: `${event.chainId}_${event.block.height}_${event.logIndex}`,
+    id: event.params.policy_id.bits,
     policyId: event.params.policy_id.bits,
     owner: event.params.owner.payload.bits,
     insuredValue: event.params.insured_value.toString(),
     premium: event.params.premium.toString(),
-    startDate: event.params.start_date.toString(),
-    endDate: event.params.end_date.toString(),
     policyType: event.params.policy_type.case,
     status: event.params.status.case,
     timestamp: String(event.params.timestamp),
@@ -19,9 +17,7 @@ InsuranceManager.RegisterPolicyEvent.handler(async ({ event, context }) => {
 });
 
 InsuranceManager.RequestClaimEvent.handler(async ({ event, context }) => {
-  const policy = await context.Policies.get(
-    `${event.chainId}_${event.block.height}_${event.logIndex}`
-  );
+  const policy = await context.Policies.get(event.params.policy_id.bits);
 
   if (policy) {
     context.Policies.set({
@@ -40,9 +36,7 @@ InsuranceManager.RequestClaimEvent.handler(async ({ event, context }) => {
 });
 
 InsuranceManager.ApproveClaimEvent.handler(async ({ event, context }) => {
-  const policy = await context.Policies.get(
-    `${event.chainId}_${event.block.height}_${event.logIndex}`
-  );
+  const policy = await context.Policies.get(event.params.policy_id.bits);
 
   if (policy) {
     context.Policies.set({
@@ -61,9 +55,7 @@ InsuranceManager.ApproveClaimEvent.handler(async ({ event, context }) => {
 });
 
 InsuranceManager.RejectClaimEvent.handler(async ({ event, context }) => {
-  const policy = await context.Policies.get(
-    `${event.chainId}_${event.block.height}_${event.logIndex}`
-  );
+  const policy = await context.Policies.get(event.params.policy_id.bits);
 
   if (policy) {
     context.Policies.set({
@@ -82,9 +74,7 @@ InsuranceManager.RejectClaimEvent.handler(async ({ event, context }) => {
 });
 
 InsuranceManager.ExpirePolicyEvent.handler(async ({ event, context }) => {
-  const policy = await context.Policies.get(
-    `${event.chainId}_${event.block.height}_${event.logIndex}`
-  );
+  const policy = await context.Policies.get(event.params.policy_id.bits);
 
   if (policy) {
     context.Policies.set({
