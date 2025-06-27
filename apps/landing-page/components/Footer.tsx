@@ -14,11 +14,6 @@ export default function Footer() {
       href: '#beneficios',
       description: 'Vantagens do seguro digital',
     },
-    {
-      title: 'Cobertura',
-      href: '#cobertura',
-      description: 'Proteção para soja e arroz',
-    },
   ];
 
   const supportLinks = [
