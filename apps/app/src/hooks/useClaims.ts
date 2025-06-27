@@ -65,7 +65,9 @@ export function useClaims() {
     return rawClaims.map(
       (claim: Claims): Claim => ({
         id: claim.id,
+        //@ts-ignore
         policyId: claim.policy.policyId,
+        //@ts-ignore
         policyDbId: claim.policy.id,
         timestamp: claim.timestamp,
         oldStatus: claim.oldStatus,

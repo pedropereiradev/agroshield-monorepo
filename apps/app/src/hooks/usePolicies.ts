@@ -1,9 +1,5 @@
 import { usePoliciesByOwner } from '@agroshield/graphql-queries';
-import type {
-  InsuranceManagerRegisterPolicyEvent,
-  PolicyStatus,
-  PolicyType,
-} from '@agroshield/graphql-types';
+import type { Policies } from '@agroshield/graphql-types';
 import { useWallet } from '@fuels/react';
 import { DateTime } from 'fuels';
 import { useMemo } from 'react';
@@ -12,8 +8,8 @@ export interface Policy {
   id: string;
   policyId: string;
   cropType: string;
-  policyType: PolicyType;
-  status: PolicyStatus;
+  policyType: string;
+  status: string;
   coverageAmount: number;
   premiumPaid: number;
   startDate: string;
@@ -50,7 +46,7 @@ export function usePolicies() {
     if (!rawPolicies) return [];
 
     return rawPolicies.map(
-      (policy: InsuranceManagerRegisterPolicyEvent): Policy => ({
+      (policy: Policies): Policy => ({
         id: policy.policyId,
         policyId: policy.policyId,
         cropType: 'N/A', // TODO: Crop type should be stored in contract or derived from policy metadata

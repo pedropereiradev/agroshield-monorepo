@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/card';
 import { useClaims } from '@/hooks/useClaims';
 import { ArrowRight, Clock, FileText, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 const statusColors = {
   Pending: { background: 'bg-yellow-100', text: 'text-yellow-800' },
@@ -28,7 +27,6 @@ const statusColors = {
 
 export function Claims() {
   const { claims, isLoading, error } = useClaims();
-  const navigate = useNavigate();
 
   if (isLoading) {
     return (
