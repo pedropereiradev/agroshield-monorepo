@@ -100,7 +100,6 @@ export async function createLead(formData: FormData) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
-    // Check honeypot field (should be empty for legitimate users)
     const honeypot = formData.get('website') as string;
     if (honeypot) {
       throw new Error('Submissão inválida detectada.');
