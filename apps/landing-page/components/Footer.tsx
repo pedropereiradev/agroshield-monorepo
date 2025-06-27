@@ -66,6 +66,7 @@ export default function Footer() {
             <h4 className="text-xl font-bold mb-6 text-white">Produto</h4>
             <ul className="space-y-4">
               {productLinks.map((link, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: keep index here
                 <li key={index}>
                   <a
                     href={link.href}
@@ -87,6 +88,7 @@ export default function Footer() {
             <h4 className="text-xl font-bold mb-6 text-white">Suporte</h4>
             <ul className="space-y-4">
               {supportLinks.map((link, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: keep index here
                 <li key={index}>
                   <a
                     href={link.href}
