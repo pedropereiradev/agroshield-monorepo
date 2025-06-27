@@ -1,4 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm install --no-frozen-lockfile && pnpm build"
+  "buildCommand": "cd ../.. && pnpm install --no-frozen-lockfile && pnpm --filter @agroshield/landing-page build",
+  "outputDirectory": ".next",
+  "ignoreCommand": "bash -c 'git diff HEAD^ HEAD --quiet -- apps/landing-page/ || exit 1'"
 }
