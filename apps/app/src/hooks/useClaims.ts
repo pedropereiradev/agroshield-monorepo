@@ -39,8 +39,8 @@ export function useClaims() {
     });
   };
 
-  const getTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
+  const getTimeAgo = (tai64Timestamp: string) => {
+    const date = new Date(DateTime.fromTai64(tai64Timestamp).toDateString());
     const now = new Date();
     const diffInMs = now.getTime() - date.getTime();
     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
