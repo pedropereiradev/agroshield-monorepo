@@ -14,6 +14,7 @@ import {
   months,
 } from '@/constants/policy';
 import type { QuoteResponse } from '@/services/quote';
+import { formatCurrency } from '@/utils/currency';
 import clsx from 'clsx';
 import { Loader2 } from 'lucide-react';
 
@@ -127,18 +128,18 @@ export function PolicySummary({
                 </div> */}
                 <div className="text-gray-500">LMI:</div>
                 <div className="font-medium text-right">
-                  {quote.LMI.toFixed(4)} USDC
+                  {formatCurrency(quote.LMI, 2)}
                 </div>
                 <div className="text-gray-500">Premium:</div>
                 <div className="font-medium text-right">
-                  {quote.premium.toFixed(4)} USDC
+                  {formatCurrency(quote.premium, 2)}
                 </div>
               </div>
             </div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t">
               <span className="font-medium">Total:</span>
               <span className="text-xl font-bold">
-                {quote.premium.toFixed(4)} USDC
+                {formatCurrency(quote.premium, 2)}
               </span>
             </div>
           </div>

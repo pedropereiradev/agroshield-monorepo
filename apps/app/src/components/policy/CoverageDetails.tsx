@@ -3,6 +3,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {} from '@/components/ui/tooltip';
+import { formatCurrency } from '@/utils/currency';
 
 interface CoverageDetailsProps {
   coverageAmount: number;
@@ -30,8 +31,8 @@ export function CoverageDetails({
       <TabsContent value="basic" className="space-y-6 pt-4">
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <Label>Valor coberto (ETH)</Label>
-            <span className="font-medium">{coverageAmount} ETH</span>
+            <Label>Valor coberto (USDC)</Label>
+            <span className="font-medium">{formatCurrency(coverageAmount)}</span>
           </div>
           <Slider
             defaultValue={[coverageAmount]}
@@ -41,8 +42,8 @@ export function CoverageDetails({
             onValueChange={onCoverageChange}
           />
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>1 ETH</span>
-            <span>10 ETH</span>
+            <span>1 USDC</span>
+            <span>10 USDC</span>
           </div>
         </div>
 

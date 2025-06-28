@@ -10,6 +10,7 @@ import type { PolicyDetails } from '@/hooks/usePolicyCreation';
 import { useQuote, validateQuoteRequest } from '@/hooks/useQuote';
 import type { QuoteRequest } from '@/services/quote';
 import { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
+import { toMicroUnits } from '@/utils/currency';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -101,8 +102,8 @@ export default function NewPolicy() {
         crop: policyData.crop,
         regionX: policyData.longitude,
         regionY: policyData.latitude,
-        insuredValue: Math.floor(quote.LMI * 1000),
-        premium: Math.floor(quote.premium * 1000),
+        insuredValue: toMicroUnits(quote.LMI),
+        premium: toMicroUnits(quote.premium),
         policyType: policyData.triggerEvent.includes('drought')
           ? PolicyTypeInput.Drought
           : policyData.triggerEvent.includes('heat') ||
