@@ -13,17 +13,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { useClaims } from '@/hooks/useClaims';
+import { cn } from '@/lib/utils';
+import { getStatusColor, getStatusLabel } from '@/utils/mapping';
 import { ArrowRight, Clock, FileText, Loader2 } from 'lucide-react';
-
-const statusColors = {
-  Pending: { background: 'bg-yellow-100', text: 'text-yellow-800' },
-  Active: { background: 'bg-green-100', text: 'text-green-800' },
-  Inactive: { background: 'bg-red-100', text: 'text-red-800' },
-  Approved: { background: 'bg-blue-100', text: 'text-blue-800' },
-  Rejected: { background: 'bg-red-100', text: 'text-red-800' },
-  Claimed: { background: 'bg-purple-100', text: 'text-purple-800' },
-  Expired: { background: 'bg-gray-100', text: 'text-gray-800' },
-};
 
 export function Claims() {
   const { claims, isLoading, error } = useClaims();
@@ -99,31 +91,21 @@ export function Claims() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge
-                        className={`${
-                          statusColors[
-                            claim.oldStatus as keyof typeof statusColors
-                          ]?.background || 'bg-gray-100'
-                        } ${
-                          statusColors[
-                            claim.oldStatus as keyof typeof statusColors
-                          ]?.text || 'text-gray-800'
-                        }`}
+                        className={cn(
+                          getStatusColor(claim.oldStatus).background,
+                          getStatusColor(claim.oldStatus).text
+                        )}
                       >
-                        {claim.oldStatus}
+                        {getStatusLabel(claim.oldStatus) || claim.oldStatus}
                       </Badge>
                       <ArrowRight className="h-4 w-4 text-muted-foreground" />
                       <Badge
-                        className={`${
-                          statusColors[
-                            claim.newStatus as keyof typeof statusColors
-                          ]?.background || 'bg-gray-100'
-                        } ${
-                          statusColors[
-                            claim.newStatus as keyof typeof statusColors
-                          ]?.text || 'text-gray-800'
-                        }`}
+                        className={cn(
+                          getStatusColor(claim.newStatus).background,
+                          getStatusColor(claim.newStatus).text
+                        )}
                       >
-                        {claim.newStatus}
+                        {getStatusLabel(claim.newStatus)}
                       </Badge>
                     </div>
                   </div>
@@ -158,17 +140,12 @@ export function Claims() {
                         Status Anterior
                       </p>
                       <Badge
-                        className={`${
-                          statusColors[
-                            claim.oldStatus as keyof typeof statusColors
-                          ]?.background || 'bg-gray-100'
-                        } ${
-                          statusColors[
-                            claim.oldStatus as keyof typeof statusColors
-                          ]?.text || 'text-gray-800'
-                        }`}
+                        className={cn(
+                          getStatusColor(claim.oldStatus).background,
+                          getStatusColor(claim.oldStatus).text
+                        )}
                       >
-                        {claim.oldStatus}
+                        {getStatusLabel(claim.oldStatus)}
                       </Badge>
                     </div>
 
@@ -177,17 +154,12 @@ export function Claims() {
                         Novo Status
                       </p>
                       <Badge
-                        className={`${
-                          statusColors[
-                            claim.newStatus as keyof typeof statusColors
-                          ]?.background || 'bg-gray-100'
-                        } ${
-                          statusColors[
-                            claim.newStatus as keyof typeof statusColors
-                          ]?.text || 'text-gray-800'
-                        }`}
+                        className={cn(
+                          getStatusColor(claim.newStatus).background,
+                          getStatusColor(claim.newStatus).text
+                        )}
                       >
-                        {claim.newStatus}
+                        {getStatusLabel(claim.newStatus)}
                       </Badge>
                     </div>
                   </div>

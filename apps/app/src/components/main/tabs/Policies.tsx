@@ -16,15 +16,14 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { usePolicies } from '@/hooks/usePolicies';
 import { useRequestClaim } from '@/hooks/useRequestClaim';
+import { cn } from '@/lib/utils';
+import { formatMicroUnits } from '@/utils/currency';
+import {
+  getPolicyLabel,
+  getStatusColor,
+  getStatusLabel,
+} from '@/utils/mapping';
 import { CloudRain, Leaf, Loader2, Thermometer } from 'lucide-react';
-
-const statusColors = {
-  Active: { background: 'bg-green-100', text: 'text-green-800' },
-  Inactive: { background: 'bg-red-100', text: 'text-red-800' },
-  Pending: { background: 'bg-yellow-100', text: 'text-yellow-800' },
-  Expired: { background: 'bg-gray-100', text: 'text-gray-800' },
-  Claimed: { background: 'bg-blue-100', text: 'text-blue-800' },
-};
 
 export function Policies() {
   const { policies, isLoading, error } = usePolicies();
@@ -50,10 +49,6 @@ export function Policies() {
       default:
         return Leaf;
     }
-  };
-
-  const formatCurrency = (amount: number) => {
-    return (amount / 1e9).toFixed(4);
   };
 
   const handleClaimRequest = async (policyId: string) => {
@@ -130,7 +125,8 @@ export function Policies() {
                         </div>
                         <div className="text-left">
                           <h3 className="font-medium">
-                            {policy.cropType} - {policy.policyType}
+                            {policy.cropType} -{' '}
+                            {getPolicyLabel(policy.policyType)}
                           </h3>
                           <p className="text-sm text-muted-foreground">
                             Apólice #{policy.id.slice(0, 8)}...
@@ -138,18 +134,17 @@ export function Policies() {
                         </div>
                       </div>
                       <Badge
-                        className={`${
-                          statusColors[
-                            policy.status as keyof typeof statusColors
-                          ]?.background || 'bg-gray-100'
-                        } ${statusColors[policy.status as keyof typeof statusColors]?.text || 'text-gray-800'}`}
+                        className={cn(
+                          getStatusColor(policy.status).background,
+                          getStatusColor(policy.status).text
+                        )}
                       >
-                        {policy.status}
+                        {getStatusLabel(policy.status)}
                       </Badge>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="p-4 pt-0 bg-accent/10">
-                    <h4 className="text-sm font-medium mb-4">Details</h4>
+                    <h4 className="text-sm font-medium mb-4">Detalhes</h4>
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div>
@@ -157,7 +152,7 @@ export function Policies() {
                           Valor da Cobertura
                         </p>
                         <p className="font-medium">
-                          {formatCurrency(policy.coverageAmount)} ETH
+                          {formatMicroUnits(policy.coverageAmount)}
                         </p>
                       </div>
 
@@ -166,7 +161,7 @@ export function Policies() {
                           Prêmio Pago
                         </p>
                         <p className="font-medium">
-                          {formatCurrency(policy.premiumPaid)} ETH
+                          {formatMicroUnits(policy.premiumPaid)}
                         </p>
                       </div>
 
