@@ -1,0 +1,64 @@
+name: Deploy @agroshield/api-server to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo -e "Host vps\n\tHostName $SSH_HOST\n\tUser $SSH_USER\n\tIdentityFile ~/.ssh/deploy_key\n\tStrictHostKeyChecking no\n\tUserKnownHostsFile=/dev/null" >> ~/.ssh/config
+          chmod 700 ~/.ssh
+
+      - name: Upload .env file to VPS
+        env:
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          RISK_MARGIN: ${{ secrets.RISK_MARGIN }}
+          OPS_COST: ${{ secrets.OPS_COST }}
+          PROJECT_PROFIT: ${{ secrets.PROJECT_PROFIT }}
+          OPEN_METEO_RATE_LIMIT: ${{ secrets.OPEN_METEO_RATE_LIMIT }}
+        run: |
+          ssh vps "echo 'NODE_ENV=${NODE_ENV}
+          NODE_ENV=${NODE_ENV}
+          DB_NAME=${DB_NAME}
+          DB_USER=${DB_USER}
+          DB_PASSWORD=${DB_PASSWORD}
+          DB_HOST=${DB_HOST}
+          DB_PORT=${DB_PORT}
+          RISK_MARGIN=${RISK_MARGIN}
+          OPS_COST=${OPS_COST}
+          PROJECT_PROFIT=${PROJECT_PROFIT}
+          OPEN_METEO_RATE_LIMIT=${OPEN_METEO_RATE_LIMIT}' > /root/projects/agroshield-monorepo/.env"
+
+      - name: Verify .env file
+        run: |
+          ssh vps "cat /root/projects/agroshield-monorepo/.env"
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh vps '
+            cd /root/projects/agroshield-monorepo &&
+            git pull origin main &&
+            docker-compose down &&
+            docker-compose up -d --build
+          '
