@@ -11,18 +11,9 @@ class Application {
 
   constructor() {
     this.app = fastify({ logger: true }).register(fastifyCors, {
-      origin: (origin, cb) => {
-        if (!origin) {
-          cb(null, true);
-          return;
-        }
-        const hostname = new URL(origin as string).hostname;
-        if (hostname === 'localhost' || hostname === 'app.agroshield.co') {
-          cb(null, true);
-          return;
-        }
-        cb(new Error('Not allowed'), false);
-      },
+      origin: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
     });
     this.routeManager = new RouteManager(this.app);
     this.port = Number(process.env.PORT) || 3000;
