@@ -10,8 +10,8 @@
     "lint": "turbo run lint",
     "forc:fmt": "forc fmt --path packages/contracts",
     "forc:build": "forc build --path packages/contracts",
-    "db:up": "docker-compose up -d db",
-    "db:down": "docker-compose down"
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down"
   },
   "keywords": [],
   "author": "",
