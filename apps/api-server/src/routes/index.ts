@@ -22,7 +22,7 @@ export class RouteManager {
       async (fastify) => {
         await quoteRoutes.quoteRoutes(fastify);
       },
-      { prefix: '/api/quotes' }
+      { prefix: '/quotes' }
     );
   }
 }
