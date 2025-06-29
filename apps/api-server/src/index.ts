@@ -17,7 +17,7 @@ class Application {
           return;
         }
         const hostname = new URL(origin as string).hostname;
-        if (hostname === 'localhost') {
+        if (hostname === 'localhost' || hostname === 'app.agroshield.co') {
           cb(null, true);
           return;
         }
