@@ -15,8 +15,8 @@ import type { QuoteRequest, QuoteResponse } from '../schemas/quote.schema';
 const { RISK_MARGIN, OPS_COST, PROJECT_PROFIT } = process.env;
 
 export default class QuoteService {
-  private _locationRepo: LocationRepo;
   private _weatherRepo: WeatherRepo;
+  private _locationRepo: LocationRepo;
   private _openMeteoHistoricalClient: OpenMeteoHistoricalClient;
 
   constructor() {
