@@ -13,6 +13,10 @@ export class RouteManager {
       return { hello: 'world' };
     });
 
+    this.app.get('/health', async () => {
+      return { status: 'ok' };
+    });
+
     const quoteRoutes = new QuoteRoutes();
     this.app.register(
       async (fastify) => {
