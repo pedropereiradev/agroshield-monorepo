@@ -3,4 +3,5 @@
 .turbo
 
 /**/.env
+/**/.env.dev
 /**/dist

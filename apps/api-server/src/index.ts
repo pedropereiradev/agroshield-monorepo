@@ -12,6 +12,10 @@ class Application {
   constructor() {
     this.app = fastify({ logger: true }).register(fastifyCors, {
       origin: (origin, cb) => {
+        if (!origin) {
+          cb(null, true);
+          return;
+        }
         const hostname = new URL(origin as string).hostname;
         if (hostname === 'localhost') {
           cb(null, true);
