@@ -5,9 +5,12 @@ export interface GraphQLConfig {
 
 export function createGraphQLConfig(): GraphQLConfig {
   const endpoint =
-    process.env.VITE_INDEXER_GRAPHQL_ENDPOINT ||
+    //@ts-ignore
+    import.meta.env.VITE_INDEXER_GRAPHQL_ENDPOINT ||
     'http://localhost:8080/v1/graphql';
-  const adminSecret = process.env.VITE_INDEXER_HASURA_ADMIN_SECRET || 'testing';
+  const adminSecret =
+    //@ts-ignore
+    import.meta.env.VITE_INDEXER_HASURA_ADMIN_SECRET || 'testing';
 
   return {
     endpoint,
