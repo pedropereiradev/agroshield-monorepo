@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "test": "vitest",
