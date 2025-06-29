@@ -1,0 +1,52 @@
+services:
+  db:
+    image: timescale/timescaledb:latest-pg14
+    container_name: agroshield-db-dev
+    environment:
+      POSTGRES_DB: agroshield_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescale-dev-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api-server:
+    build:
+      context: .
+      dockerfile: apps/api-server/Dockerfile.dev
+    container_name: agroshield-api-dev
+    ports:
+      - "3001:3000"
+    environment:
+      - COMPOSE_BAKE=true
+      - NODE_ENV=development
+      
+      - DB_NAME=agroshield_dev
+      - DB_USER=postgres
+      - DB_PASSWORD=dev_password
+      - DB_HOST=db
+      - DB_PORT=5432
+      
+      - RISK_MARGIN=0.06
+      - OPS_COST=0.3
+      - PROJECT_PROFIT=0.15
+      
+      - OPEN_METEO_RATE_LIMIT=60
+    volumes:
+      - ./apps/api-server/src:/app/apps/api-server/src
+      - ./packages/core-domain/src:/app/packages/core-domain/src
+      - ./packages/data-access/src:/app/packages/data-access/src
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    command: ["pnpm", "--filter", "@agroshield/api-server", "dev"]
+
+volumes:
+  timescale-dev-data:

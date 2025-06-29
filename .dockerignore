@@ -1,0 +1,67 @@
+# Node modules
+**/node_modules
+**/dist
+**/.next
+**/build
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Development files
+**/*.log
+**/.env*
+!.env.dev
+!.env.prod
+
+# IDE
+.vscode
+.idea
+**/*.swp
+**/*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Documentation
+**/*.md
+!README.md
+
+# Tests
+**/*.test.*
+**/*.spec.*
+**/coverage
+
+# Temporary files
+**/tmp
+**/temp
+
+# Apps we don't need for migration
+apps/app
+apps/landing-page
+apps/indexer
+
+# Packages not needed for migration
+packages/contracts
+packages/docs
+packages/graphql-types
+packages/jobs
+
+# Keep only what's needed
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!apps/api-server/package.json
+!packages/core-domain/package.json
+!packages/data-access/package.json
+!packages/core-domain/src
+!packages/data-access/src
+!apps/api-server/src
+!turbo.json
+!tsconfig.base.json

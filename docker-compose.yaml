@@ -3,9 +3,9 @@ services:
     image: timescale/timescaledb:latest-pg14
     container_name: agroshield-db
     environment:
-      POSTGRES_DB: agroshield
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: agroshield
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -15,6 +15,33 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  api-server:
+    build:
+      context: .
+      dockerfile: apps/api-server/Dockerfile
+    container_name: agroshield-api
+    ports:
+      - "3001:3000"
+    environment:
+      - COMPOSE_BAKE=true
+      - NODE_ENV=${NODE_ENV}
+      
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+
+      - RISK_MARGIN=${RISK_MARGIN}
+      - OPS_COST=${OPS_COST}
+      - PROJECT_PROFIT=${PROJECT_PROFIT}
+
+      - OPEN_METEO_RATE_LIMIT=${OPEN_METEO_RATE_LIMIT}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   timescale-data:
