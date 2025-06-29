@@ -34,6 +34,7 @@ RUN pnpm install --frozen-lockfile --prod
 
 COPY --from=base /app/packages/core-domain/dist ./packages/core-domain/dist
 COPY --from=base /app/packages/data-access/dist ./packages/data-access/dist
+COPY --from=base /app/packages/data-access/drizzle.config.ts ./packages/data-access/drizzle.config.ts
 COPY --from=base /app/apps/api-server/dist ./apps/api-server/dist
 
 COPY --from=base /app/packages/core-domain/package.json ./packages/core-domain/
