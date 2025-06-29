@@ -5,8 +5,9 @@ export interface GraphQLConfig {
 
 export function createGraphQLConfig(): GraphQLConfig {
   const endpoint =
-    process.env.INDEXER_GRAPHQL_ENDPOINT || 'http://localhost:8080/v1/graphql';
-  const adminSecret = process.env.INDEXER_HASURA_ADMIN_SECRET || 'testing';
+    process.env.VITE_INDEXER_GRAPHQL_ENDPOINT ||
+    'http://localhost:8080/v1/graphql';
+  const adminSecret = process.env.VITE_INDEXER_HASURA_ADMIN_SECRET || 'testing';
 
   return {
     endpoint,
