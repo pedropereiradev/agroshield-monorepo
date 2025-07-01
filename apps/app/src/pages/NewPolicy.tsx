@@ -46,10 +46,10 @@ export default function NewPolicy() {
     reset: resetQuote,
   } = useQuote({
     onSuccess: () => {
-      toast.success('Quote generated successfully');
+      toast.success('Cotação obtida com sucesso!');
     },
     onError: (error) => {
-      toast.error(`Failed to get quote: ${error.message}`);
+      toast.error(`Falha ao obter cotação: ${error.message}`);
     },
   });
 
@@ -89,10 +89,10 @@ export default function NewPolicy() {
 
   const handlePurchasePolicy = async () => {
     if (!isReady || !quote) {
-      toast.error('Cannot purchase policy', {
+      toast.error('Não foi possível comprar a apólice', {
         description: !isReady
-          ? 'Please connect your wallet first.'
-          : 'Please get a quote first.',
+          ? 'Por favor, conecte sua carteira primeiro.'
+          : 'Por favor, obtenha uma cotação primeiro.',
       });
       return;
     }
