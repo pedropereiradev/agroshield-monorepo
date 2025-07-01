@@ -1,6 +1,6 @@
 import { CropSelection } from '@/components/policy/CropSelection';
 import { FarmDetailsForm } from '@/components/policy/FarmDetailsForm';
-import { FarmLocation } from '@/components/policy/FarmLocation';
+import { FarmLocationMap } from '@/components/policy/FarmLocationMap';
 import { PolicySummary } from '@/components/policy/PolicySummary';
 import { RiskEventSelection } from '@/components/policy/RiskEventSelection';
 import { Button } from '@/components/ui/button';
@@ -176,10 +176,10 @@ export default function NewPolicy() {
             }
           />
 
-          <FarmLocation
+          <FarmLocationMap
             latitude={policyData.latitude}
-            onLatitudeChange={(value) => handleFieldChange('latitude', value)}
             longitude={policyData.longitude}
+            onLatitudeChange={(value) => handleFieldChange('latitude', value)}
             onLongitudeChange={(value) => handleFieldChange('longitude', value)}
           />
         </div>
