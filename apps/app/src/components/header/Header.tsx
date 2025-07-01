@@ -32,7 +32,7 @@ export function Header() {
           <div className="flex items-center justify-center bg-primary-foreground rounded-md">
             <img
               src="./logo-icon.png"
-              alt="Shield Icon"
+              alt="AgroShield Logo"
               className="h-16 w-16"
             />
           </div>
