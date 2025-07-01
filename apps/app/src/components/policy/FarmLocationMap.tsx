@@ -12,9 +12,9 @@ import { Crosshair, MapPin } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 
-(
-  L.Icon.Default.prototype as L.Icon.Default & { _getIconUrl?: () => string }
-)._getIconUrl = undefined;
+// biome-ignore lint/performance/noDelete: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -60,6 +60,15 @@ export function FarmLocationMap({
     longitude || -46.633309,
   ]);
   const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (latitude && longitude) {
