@@ -88,3 +88,8 @@ export const months = [
   { value: 11, label: 'Novembro' },
   { value: 12, label: 'Dezembro' },
 ];
+
+export const crops: { value: Crop; label: string }[] = [
+  { value: 'soy', label: 'Soja' },
+  { value: 'rice', label: 'Arroz' },
+];
