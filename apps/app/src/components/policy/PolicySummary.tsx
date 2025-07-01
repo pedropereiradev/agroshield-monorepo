@@ -10,6 +10,7 @@ import {
 import {
   type Crop,
   type EventId,
+  crops,
   eventOptions,
   months,
 } from '@/constants/policy';
@@ -58,6 +59,7 @@ export function PolicySummary({
   const selectedEvent = eventOptions[crop].find(
     (event) => event.id === triggerEvent
   );
+  const selectedCrop = crops.find((c) => c.value === crop);
 
   const coveragePctUI = Math.round(coveragePct * 100);
 
@@ -79,7 +81,9 @@ export function PolicySummary({
               />
             )}
             <div>
-              <span className="font-medium capitalize">{crop}</span>
+              <span className="font-medium capitalize">
+                {selectedCrop?.label}
+              </span>
               <span className="text-gray-500"> - {selectedEvent?.label}</span>
             </div>
           </div>
@@ -130,7 +134,7 @@ export function PolicySummary({
                 <div className="font-medium text-right">
                   {formatCurrency(quote.LMI, 2)}
                 </div>
-                <div className="text-gray-500">Premium:</div>
+                <div className="text-gray-500">Prêmio:</div>
                 <div className="font-medium text-right">
                   {formatCurrency(quote.premium, 2)}
                 </div>
@@ -170,7 +174,7 @@ export function PolicySummary({
                 Realizando Cotação...
               </>
             ) : (
-              'Get Quote'
+              'Obter cotação'
             )}
           </Button>
         ) : (
@@ -185,7 +189,7 @@ export function PolicySummary({
                 Processando...
               </>
             ) : (
-              'Purchase Policy'
+              'Comprar Apólice'
             )}
           </Button>
         )}

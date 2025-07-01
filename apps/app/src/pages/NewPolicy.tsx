@@ -119,17 +119,16 @@ export default function NewPolicy() {
       const result = await createPolicy(policyDetails);
 
       if (result) {
-        toast.success('Policy created successfully!', {
-          description:
-            'Your insurance policy has been created and is available.',
+        toast.success('Apólice criada com sucesso!', {
+          description: 'Sua apólice de seguro foi criada e está disponível.',
         });
         navigate('/dashboard');
       }
     } catch (e) {
       console.error('Error creating policy:', e);
-      toast.error('Error creating policy', {
+      toast.error('Erro ao criar apólice', {
         description:
-          'There was an error creating your policy. Please try again.',
+          'Houve um erro ao criar sua apólice. Por favor, tente novamente.',
       });
     }
   };
@@ -144,7 +143,7 @@ export default function NewPolicy() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <h1 className="text-3xl font-bold">New Insurance Policy</h1>
+        <h1 className="text-3xl font-bold">Nova Apólice de Seguro</h1>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
