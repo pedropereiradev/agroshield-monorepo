@@ -48,7 +48,7 @@ export default function FAQSection() {
         {
           question: 'Como funciona o monitoramento climático?',
           answer:
-            'Utilizamos uma rede de estações meteorológicas automáticas, dados de satélites e APIs de múltiplas fontes meteorológicas para monitorar sua propriedade 24/7. Os dados são verificados por pelo menos fontes independentes antes de acionar qualquer pagamento.',
+            'Utilizamos uma rede de estações meteorológicas automáticas, dados de satélites e APIs de múltiplas fontes meteorológicas para monitorar sua propriedade 24/7. Os dados são verificados por fontes independentes antes de acionar qualquer pagamento.',
         },
         {
           question: 'O que NÃO é coberto pela apólice?',

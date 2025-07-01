@@ -1,6 +1,6 @@
 import { CropSelection } from '@/components/policy/CropSelection';
 import { FarmDetailsForm } from '@/components/policy/FarmDetailsForm';
-import { FarmLocation } from '@/components/policy/FarmLocation';
+import { FarmLocationMap } from '@/components/policy/FarmLocationMap';
 import { PolicySummary } from '@/components/policy/PolicySummary';
 import { RiskEventSelection } from '@/components/policy/RiskEventSelection';
 import { Button } from '@/components/ui/button';
@@ -46,10 +46,10 @@ export default function NewPolicy() {
     reset: resetQuote,
   } = useQuote({
     onSuccess: () => {
-      toast.success('Quote generated successfully');
+      toast.success('Cotação obtida com sucesso!');
     },
     onError: (error) => {
-      toast.error(`Failed to get quote: ${error.message}`);
+      toast.error(`Falha ao obter cotação: ${error.message}`);
     },
   });
 
@@ -89,10 +89,10 @@ export default function NewPolicy() {
 
   const handlePurchasePolicy = async () => {
     if (!isReady || !quote) {
-      toast.error('Cannot purchase policy', {
+      toast.error('Não foi possível comprar a apólice', {
         description: !isReady
-          ? 'Please connect your wallet first.'
-          : 'Please get a quote first.',
+          ? 'Por favor, conecte sua carteira primeiro.'
+          : 'Por favor, obtenha uma cotação primeiro.',
       });
       return;
     }
@@ -119,17 +119,16 @@ export default function NewPolicy() {
       const result = await createPolicy(policyDetails);
 
       if (result) {
-        toast.success('Policy created successfully!', {
-          description:
-            'Your insurance policy has been created and is available.',
+        toast.success('Apólice criada com sucesso!', {
+          description: 'Sua apólice de seguro foi criada e está disponível.',
         });
         navigate('/dashboard');
       }
     } catch (e) {
       console.error('Error creating policy:', e);
-      toast.error('Error creating policy', {
+      toast.error('Erro ao criar apólice', {
         description:
-          'There was an error creating your policy. Please try again.',
+          'Houve um erro ao criar sua apólice. Por favor, tente novamente.',
       });
     }
   };
@@ -144,7 +143,7 @@ export default function NewPolicy() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <h1 className="text-3xl font-bold">New Insurance Policy</h1>
+        <h1 className="text-3xl font-bold">Nova Apólice de Seguro</h1>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
@@ -177,10 +176,10 @@ export default function NewPolicy() {
             }
           />
 
-          <FarmLocation
+          <FarmLocationMap
             latitude={policyData.latitude}
-            onLatitudeChange={(value) => handleFieldChange('latitude', value)}
             longitude={policyData.longitude}
+            onLatitudeChange={(value) => handleFieldChange('latitude', value)}
             onLongitudeChange={(value) => handleFieldChange('longitude', value)}
           />
         </div>

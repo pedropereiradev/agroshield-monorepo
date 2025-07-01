@@ -114,7 +114,7 @@ export function FarmDetailsForm({
               }
             >
               <SelectTrigger id="planting-month">
-                <SelectValue placeholder="Select month" />
+                <SelectValue placeholder="Selecionar mês" />
               </SelectTrigger>
               <SelectContent>
                 {months.map((month) => (
@@ -135,7 +135,7 @@ export function FarmDetailsForm({
               }
             >
               <SelectTrigger id="harvest-month">
-                <SelectValue placeholder="Select month" />
+                <SelectValue placeholder="Selecionar mês" />
               </SelectTrigger>
               <SelectContent>
                 {months.map((month) => (
