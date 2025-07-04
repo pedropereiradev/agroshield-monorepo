@@ -17,9 +17,9 @@ export function calculateExpectedLoss(
  * Calculates the full premium to charge for a policy.
  * @param insuredValue   - Limit of Monetary Indemnity (LMI).
  * @param probability     - Probability of event occurrence (0.0 - 1.0).
- * @param riskMargin      - Prudential buffer amount.
- * @param opsCost         - Operational cost loading.
- * @param projectProfit   - Desired project profit loading.
+ * @param riskMargin      - Risk margin multiplier (e.g., 0.06 for 6%).
+ * @param opsCost         - Operational cost multiplier (e.g., 0.3 for 30%).
+ * @param projectProfit   - Project profit multiplier (e.g., 0.15 for 15%).
  * @returns Total premium amount.
  */
 export function calculatePremium({
@@ -30,5 +30,6 @@ export function calculatePremium({
   projectProfit,
 }: CalculatePremiumPayload): number {
   const expectedLoss = calculateExpectedLoss(probability, insuredValue);
-  return expectedLoss + riskMargin + opsCost + projectProfit;
+  const loadingMultiplier = 1 + riskMargin + opsCost + projectProfit;
+  return expectedLoss * loadingMultiplier;
 }

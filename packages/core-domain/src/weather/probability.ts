@@ -29,9 +29,9 @@ export function probability(
   // Wilson score interval (binomial)
   if (n === 0) {
     return {
-      p: 0,
-      lower: 0,
-      upper: 0,
+      p: 0.03, // 3% minimum probability
+      lower: 0.005,
+      upper: 0.02,
     };
   }
 
@@ -41,9 +41,16 @@ export function probability(
   const centre = phat + z ** 2 / (2 * n);
   const margin = z * Math.sqrt((phat * (1 - phat) + z ** 2 / (4 * n)) / n);
 
+  const calculatedP = phat;
+  const calculatedLower = (centre - margin) / denom;
+  const calculatedUpper = (centre + margin) / denom;
+
+  // Apply minimum probability floor of 3%
+  const minProbability = 0.03;
+
   return {
-    p: phat,
-    lower: (centre - margin) / denom,
-    upper: (centre + margin) / denom,
+    p: Math.max(calculatedP, minProbability),
+    lower: Math.max(calculatedLower, 0.005),
+    upper: Math.max(calculatedUpper, 0.02),
   };
 }

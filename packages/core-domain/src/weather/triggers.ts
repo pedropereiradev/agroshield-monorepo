@@ -29,9 +29,9 @@ export const TRIGGERS: Record<EventId, TriggerSpec> = {
     rule: (d) => d.tMin < 15 && d.windMax > 15,
   },
   rice_drought: {
-    window: 10,
-    rule: (d) => d.precip < 2,
-    postCheck: (slice) => slice.some((x) => x.tMax > 35),
+    window: 7,
+    rule: (d) => d.precip < 5,
+    postCheck: (slice) => slice.some((x) => x.tMax > 30),
   },
   rice_flood: {
     window: 3,

@@ -17,7 +17,7 @@ export class OpenMeteoHistoricalClient {
     const baseURL = 'https://archive-api.open-meteo.com/v1/archive';
     this.client = axios.create({
       baseURL,
-      timeout: 15_000,
+      timeout: 25_000,
       headers: { 'Content-Type': 'application/json' },
     });
 
