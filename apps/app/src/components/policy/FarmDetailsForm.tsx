@@ -116,7 +116,7 @@ export function FarmDetailsForm({
               <SelectTrigger id="planting-month">
                 <SelectValue placeholder="Selecionar mês" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[1000]">
                 {months.map((month) => (
                   <SelectItem key={month.value} value={month.value.toString()}>
                     {month.label}
@@ -137,7 +137,7 @@ export function FarmDetailsForm({
               <SelectTrigger id="harvest-month">
                 <SelectValue placeholder="Selecionar mês" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-[1000]">
                 {months.map((month) => (
                   <SelectItem key={month.value} value={month.value.toString()}>
                     {month.label}
