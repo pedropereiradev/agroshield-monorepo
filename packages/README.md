@@ -41,21 +41,6 @@
 | **Prod build**    | `pnpm --filter @agro/api-server build` → `node dist/index.js`.                                                         |
 | **Docker target** | `api` stage in root `Dockerfile`.                                                                                      |
 
----
-
-## 📦 `@agro/jobs`
-
-| Item                | Details                                                                                     |
-| ------------------- | ------------------------------------------------------------------------------------------- |
-| **Goal**            | House **scheduled/batch code**—initially the daily weather ETL, later oracle reports.       |
-| **Entry points**    | `runDaily.ts` (invoked by node‑cron *or* as Kubernetes CronJob CMD).                        |
-| **Dependencies**    | `@agro/data-access` for DB + OpenWeather.                                                   |
-| **Cron expression** | Defaults to `5 0 * * *` (00:05 UTC); override via `CRON_EXPRESSION`.                        |
-| **Local run**       | `pnpm --filter @agro/jobs start` (executes job once).                                       |
-| **Docker target**   | `etl` stage in root `Dockerfile`—deploy as separate container or schedule with ECS/Fargate. |
-
----
-
 ## 🔄 Package Relationships
 
 ```mermaid
