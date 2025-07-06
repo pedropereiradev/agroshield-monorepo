@@ -1,98 +1,178 @@
 # AgroShield
 
-Decentralized parametric crop insurance platform built on the Fuel blockchain.
+## Visão Geral
 
-## Overview
+O AgroShield é uma plataforma descentralizada de seguro paramétrico para cultivos, construída na blockchain Fuel. Utiliza uma arquitetura de monólito modular com separação clara entre componentes on-chain (contratos inteligentes) e off-chain (TypeScript/Node.js).
 
-AgroShield provides parametric crop insurance using smart contracts and automated weather data. Farmers can create policies, receive automatic payouts based on weather conditions, and track their coverage through a simple web interface.
+## Estrutura Principal
 
-## Quick Start
+```
+agroshield-monorepo/
+├── apps/                         # Aplicações principais
+│   ├── api-server/               # Servidor API (Fastify)
+│   ├── app/                      # Frontend Vite
+│   ├── landing-page/             # Frontend NextJS
+│   └── indexer/                  # Indexador Envio
+└── packages/                     # Pacotes compartilhados
+    ├── contracts/                # Contratos Sway (Fuel)
+    ├── core-domain/              # Lógica de negócio pura
+    ├── data-access/              # Repositórios e acesso a dados
+    ├── graphql-client/           # Cliente GraphQL
+    ├── graphql-queries/          # Consultas GraphQL
+    ├── graphql-types/            # Tipos GraphQL
+    └── docs/                     # Documentação
+```
 
-### Prerequisites
-- Node.js 18+
-- pnpm
-- Fuel toolchain (forc, fuel-core)
+## Arquitetura em Camadas
 
-### Installation
+### 1. Contratos Inteligentes (`packages/contracts/`)
+Contratos Sway executados na blockchain Fuel:
+
+- **`insurance-contract`**: Gerenciamento principal de apólices e pagamentos
+- **`insurance-manager`**: Rastreamento de status das apólices
+- **`insurance-nft`**: Representação NFT das apólices
+
+### 2. Domínio Central (`packages/core-domain/`)
+Lógica de negócio pura sem dependências externas:
+- Entidades de domínio
+- Objetos de valor
+- Regras de negócio
+- Zero dependências de banco de dados ou APIs
+
+### 3. Acesso a Dados (`packages/data-access/`)
+Implementação do padrão Repository para dados externos:
+- Repositórios de banco de dados
+- Clientes de API meteorológica (Open-Meteo, OpenWeather)
+- Único responsável pela persistência e chamadas de API externas
+
+### 4. Servidor API (`apps/api-server/`)
+Servidor HTTP Fastify:
+- Endpoints REST para o frontend
+- Processamento de dados meteorológicos
+- Cotação das apólices
+
+### 5. Frontend (`apps/app/`)
+Aplicação React com integração Fuel:
+- Vite, TailwindCSS, componentes shadcn/ui
+- Integração com connectors de carteira Fuel
+- Interface para criação e gerenciamento de apólices
+
+### 6. Indexador (`apps/indexer/`)
+Indexador Fuel para eventos blockchain:
+- Monitora contratos inteligentes
+- Processa eventos on-chain
+- Sincroniza dados com banco off-chain
+
+## Dependências Principais
+
+### Monorepo
+- **PNPM Workspaces**: Gerenciamento de dependências
+- **Turborepo**: Orquestração de builds
+
+### Fuel Toolchain
+- **forc**: v0.67.0 (compilador Sway)
+- **fuel-core**: v0.41.9 (nó Fuel)
+
+### Frontend
+- **React 19**: Framework principal
+- **Vite**: Build tool
+- **TailwindCSS v4**: Estilização
+- **Fuel React SDK**: Integração blockchain
+
+### Backend
+- **Fastify**: Servidor HTTP
+- **TypeScript**: Linguagem principal
+- **Biome**: Linting e formatação
+
+## Comandos de Desenvolvimento
+
+### Instalação e Build
 ```bash
-# Install dependencies
+# Instalar dependências
 pnpm install
 
-# Build contracts
+# Build completo do monorepo
+pnpm build
+```
+
+### Aplicações Específicas
+```bash
+# Frontend React
+pnpm --filter @agroshield/app dev
+
+# Servidor API
+pnpm --filter @agroshield/api-server dev
+```
+
+### Contratos Sway
+```bash
+# Formatar contratos
+pnpm forc:fmt
+
+# Compilar contratos
 pnpm forc:build
 
-# Start development environment
-pnpm dev
+# Build contratos para frontend
+pnpm --filter @agroshield/app fuels:build
+
+# Deploy contratos
+pnpm --filter @agroshield/app fuels:deploy
 ```
 
-### Development Commands
+## Fluxo de Trabalho
 
-**Build & Development:**
-```bash
-pnpm build              # Build entire monorepo
-pnpm dev                # Start development (excludes contracts)
-pnpm --filter @agroshield/app dev       # Frontend only
-pnpm --filter @agroshield/api-server dev # API server only
-```
+### 1. Alterações em Contratos
+1. Atualizar contratos Sway
+2. Executar `pnpm forc:build`
+3. Regenerar bindings frontend: `pnpm --filter @agroshield/app fuels:build`
 
-**Smart Contracts:**
-```bash
-pnpm forc:fmt           # Format Sway contracts
-pnpm forc:build         # Build contracts
-pnpm --filter @agroshield/app fuels:build  # Generate frontend bindings
-pnpm --filter @agroshield/app fuels:deploy # Deploy contracts
-```
+### 2. Alterações Backend
+1. Modificações no core-domain fluem através do data-access
+2. Chegam ao api-server
 
-**Code Quality:**
-```bash
-pnpm lint               # Lint all packages
-pnpm test               # Run tests
-```
+### 3. Desenvolvimento Frontend
+1. Usa Fuel testnet
+2. Interação com contratos através de bindings gerados
 
-**Database:**
-```bash
-pnpm db:up              # Start PostgreSQL in Docker
-pnpm db:down            # Stop database
-```
-
-## Project Structure
+## Estrutura de Dependências
 
 ```
-├── apps/
-│   ├── app/            # React frontend
-│   ├── api-server/     # Fastify API server
-│   └── indexer/        # Fuel blockchain indexer
-├── packages/
-│   ├── contracts/      # Sway smart contracts
-│   ├── core-domain/    # Business logic
-│   ├── data-access/    # Database & API clients
-│   └── graphql-queries/ # GraphQL queries & hooks
+@agroshield/core-domain
+    ↓
+@agroshield/data-access
+    ↓
+@agroshield/api-server
+
+@agroshield/graphql-types
+    ↓
+@agroshield/graphql-queries
+    ↓
+@agroshield/graphql-client
+    ↓
+Aplicações Frontend
 ```
 
-## Architecture
+## Integração com Contratos
 
-- **Smart Contracts**: Sway contracts on Fuel blockchain for policy management
-- **Frontend**: React app with Fuel wallet integration
-- **Backend**: Fastify server with GraphQL endpoints
-- **Indexer**: Processes blockchain events into PostgreSQL database
-- **Domain Logic**: Clean architecture with separated business rules
+O frontend se comunica com contratos inteligentes através de bindings TypeScript gerados em `apps/app/src/sway-contracts-api/`. Estes são gerados automaticamente a partir dos contratos Sway usando o toolchain Fuel.
 
-## Features
+## Padronização de Código com Biome
 
-- ✅ Create parametric crop insurance policies
-- ✅ Automatic weather-based payouts
-- ✅ Policy status tracking and claims history
-- ✅ Wallet-based authentication
-- 🚧 Weather data integration (in progress)
-- 🚧 Advanced policy types (in progress)
+O projeto utiliza **Biome** como ferramenta unificada para linting, formatação e análise de código. Biome oferece:
 
-## Tech Stack
+- **Performance superior**: Mais rápido que ESLint + Prettier
+- **Configuração zero**: Funciona out-of-the-box com configurações sensatas
+- **Consistência**: Garantia de estilo de código uniforme em todo o monorepo
+- **TypeScript nativo**: Suporte completo sem configurações adicionais
 
-- **Blockchain**: Fuel (Sway contracts)
-- **Frontend**: React 19, Vite, TailwindCSS, Fuel React SDK
-- **Backend**: Fastify, TypeScript, PostgreSQL
-- **Tooling**: PNPM workspaces, Turborepo, Biome
+Todas as regras de estilo e qualidade são aplicadas automaticamente durante o desenvolvimento e build, garantindo que o código mantenha alta qualidade e consistência entre todos os colaboradores.
 
----
+## Tecnologias Utilizadas
 
-*This is a development version. Features and documentation are subject to change.*
+- **Blockchain**: Fuel Network
+- **Contratos**: Sway
+- **Backend**: Node.js, TypeScript, Fastify
+- **Frontend**: React, Vite, TailwindCSS
+- **Banco de Dados**: PostgreSQL
+- **APIs**: Open-Meteo
+- **DevOps**: Docker, pnpm, Turborepo
