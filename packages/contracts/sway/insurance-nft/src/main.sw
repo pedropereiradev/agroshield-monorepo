@@ -41,7 +41,7 @@ use sway_libs::{
         require_not_paused,
     },
 };
-use std::{hash::Hash, storage::storage_string::*, string::String};
+use std::{storage::storage_string::*, string::String};
 
 configurable {
     DECIMALS: u8 = 0u8,
