@@ -1,32 +1,110 @@
 import { getApiServerConfig } from '@agroshield/config';
 import fastifyCors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import fastify, { type FastifyInstance } from 'fastify';
-import { RouteManager } from './routes';
 
 class Application {
   private app: FastifyInstance;
-  private routeManager: RouteManager;
   private port: number;
   private host: string;
 
   constructor() {
     const config = getApiServerConfig();
 
-    this.app = fastify({ logger: true }).register(fastifyCors, {
+    this.app = fastify({ logger: true });
+    this.port = config.port;
+    this.host = config.host;
+
+    this.setupPlugins(config);
+    this.setupErrorHandler();
+  }
+
+  private async setupPlugins(
+    config: ReturnType<typeof getApiServerConfig>
+  ): Promise<void> {
+    await this.app.register(fastifyCors, {
       origin: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
     });
-    this.routeManager = new RouteManager(this.app);
-    this.port = config.port;
-    this.host = config.host;
 
-    this.setupServer();
+    await this.app.register(swagger, {
+      openapi: {
+        openapi: '3.0.0',
+        info: {
+          title: 'AgroShield API',
+          description: 'Decentralized parametric crop insurance platform API',
+          version: '0.1.0',
+          contact: {
+            name: 'AgroShield Team',
+            url: 'https://github.com/pedropereiradev/agroshield-monorepo',
+          },
+        },
+        servers: [
+          {
+            url: `http://localhost:${config.port}`,
+            description: 'Development server',
+          },
+        ],
+        tags: [
+          { name: 'Quotes', description: 'Insurance quote operations' },
+          { name: 'Health', description: 'Health check endpoints' },
+        ],
+      },
+    });
+
+    await this.app.register(swaggerUi, {
+      routePrefix: '/docs',
+      uiConfig: {
+        docExpansion: 'list',
+        deepLinking: false,
+      },
+      staticCSP: true,
+      transformStaticCSP: (header) => header,
+    });
+
+    this.app.get(
+      '/',
+      {
+        schema: {
+          description: 'API root endpoint',
+          tags: ['Health'],
+          summary: 'Root endpoint',
+          response: {
+            200: {
+              type: 'object',
+              properties: {
+                message: { type: 'string' },
+                version: { type: 'string' },
+                docs: { type: 'string' },
+              },
+            },
+          },
+        },
+      },
+      async () => {
+        return {
+          message: 'AgroShield API',
+          version: '0.1.0',
+          docs: '/docs',
+        };
+      }
+    );
+
+    await this.app.register(
+      async (fastify) => {
+        const healthRoutes = (await import('./routes/health')).default;
+        const quotesRoutes = (await import('./routes/quotes')).default;
+
+        await fastify.register(healthRoutes, { prefix: '/health' });
+        await fastify.register(quotesRoutes, { prefix: '/quotes' });
+      },
+      { prefix: '/' }
+    );
   }
 
-  private setupServer(): void {
-    this.routeManager.registerRoutes();
-
+  private setupErrorHandler(): void {
     this.app.setErrorHandler((error, _request, reply) => {
       this.app.log.error(error);
 
@@ -42,8 +120,10 @@ class Application {
 
   public async start(): Promise<void> {
     try {
+      await this.app.ready();
       await this.app.listen({ port: this.port, host: this.host });
-      this.app.log.info(`Server listening on http://localhost:${this.port}`);
+
+      this.app.printRoutes();
     } catch (err) {
       this.app.log.error(err);
       process.exit(1);
