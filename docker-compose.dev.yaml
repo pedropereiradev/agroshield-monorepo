@@ -3,9 +3,9 @@ services:
     image: timescale/timescaledb:latest-pg14
     container_name: agroshield-db-dev
     environment:
-      POSTGRES_DB: agroshield_dev
+      POSTGRES_DB: agroshield
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: dev_password
+      POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
     volumes:
@@ -27,9 +27,9 @@ services:
       - COMPOSE_BAKE=true
       - NODE_ENV=development
       
-      - DB_NAME=agroshield_dev
+      - DB_NAME=agroshield
       - DB_USER=postgres
-      - DB_PASSWORD=dev_password
+      - DB_PASSWORD=password
       - DB_HOST=db
       - DB_PORT=5432
       
