@@ -1,6 +1,6 @@
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
+import type { PolicyTypeInput } from '@agroshield/contracts';
 import { CloudRain, type LucideIcon, Sun, Thermometer } from 'lucide-react';
 
 interface PolicyTypeSelectorProps {

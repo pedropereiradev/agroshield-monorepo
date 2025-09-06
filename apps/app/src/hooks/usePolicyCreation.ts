@@ -1,4 +1,5 @@
-import type { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
+import type { PolicyTypeInput } from '@agroshield/contracts';
+import type { Account } from 'fuels';
 import { useState } from 'react';
 import { useInsuranceContracts } from './useInsuranceContracts';
 
@@ -15,7 +16,7 @@ export interface PolicyDetails {
   harvestMonth: number;
 }
 
-export function usePolicyCreation() {
+export function usePolicyCreation(wallet: Account | null) {
   const [isCreating, setIsCreating] = useState(false);
   const [transactionId, setTransactionId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,9 +33,27 @@ export function usePolicyCreation() {
       return null;
     }
 
+    if (!wallet) {
+      setError('Wallet not connected');
+      return null;
+    }
+
     try {
       setIsCreating(true);
       setError(null);
+
+      // const amount = await checkAccountBalance(
+      //   this.account,
+      //   domainName,
+      //   period
+      // );
+      const accountBalance = await wallet.getBalance();
+      const assetId = await wallet.provider.getBaseAssetId();
+
+      if (accountBalance.lt(policyDetails.premium)) {
+        setError('Insufficient balance');
+        return null;
+      }
 
       const { waitForResult } = await insuranceContract.functions
         .create_insurance(
@@ -50,6 +69,9 @@ export function usePolicyCreation() {
           policyDetails.harvestMonth
         )
         .addContracts([nftContract])
+        .callParams({
+          forward: { amount: policyDetails.premium, assetId },
+        })
         .call();
 
       const result = await waitForResult();

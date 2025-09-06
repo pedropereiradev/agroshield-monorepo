@@ -2,14 +2,12 @@ import {
   InsuranceContract,
   InsuranceManager,
   InsuranceNft,
-} from '@/sway-contracts-api';
-import { useWallet } from '@fuels/react';
-import { useEffect, useState } from 'react';
-import {
   insuranceContract,
   insuranceManager,
   insuranceNft,
-} from '../sway-contracts-api/contract-ids.json';
+} from '@agroshield/contracts';
+import { useWallet } from '@fuels/react';
+import { useEffect, useState } from 'react';
 
 const INSURANCE_CONTRACT_ID = insuranceContract;
 const INSURANCE_NFT_CONTRACT_ID = insuranceNft;

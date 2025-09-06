@@ -9,8 +9,8 @@ import { usePolicyCreation } from '@/hooks/usePolicyCreation';
 import type { PolicyDetails } from '@/hooks/usePolicyCreation';
 import { useQuote, validateQuoteRequest } from '@/hooks/useQuote';
 import type { QuoteRequest } from '@/services/quote';
-import { PolicyTypeInput } from '@/sway-contracts-api/contracts/InsuranceContract';
 import { toMicroUnits } from '@/utils/currency';
+import { useWallet } from '@fuels/react';
 import { ArrowLeft } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,12 +18,13 @@ import { toast } from 'sonner';
 
 export default function NewPolicy() {
   const navigate = useNavigate();
+  const { wallet } = useWallet();
   const {
     createPolicy,
     isCreating,
     error: policyError,
     isReady,
-  } = usePolicyCreation();
+  } = usePolicyCreation(wallet);
 
   const [policyData, setPolicyData] = useState<QuoteRequest>({
     crop: 'soy',
