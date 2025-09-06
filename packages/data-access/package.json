@@ -14,12 +14,10 @@
   "license": "ISC",
   "packageManager": "pnpm@10.6.3",
   "dependencies": {
+    "@agroshield/config": "workspace:*",
     "axios": "^1.9.0",
-    "bottleneck": "^2.19.5",
-    "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.4",
-    "drizzle-orm": "^0.43.1",
-    "pg": "^8.16.0"
+    "drizzle-orm": "^0.43.1"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

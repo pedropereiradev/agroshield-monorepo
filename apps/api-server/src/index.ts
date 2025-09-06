@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import { getApiServerConfig } from '@agroshield/config';
 import fastifyCors from '@fastify/cors';
 import fastify, { type FastifyInstance } from 'fastify';
 import { RouteManager } from './routes';
@@ -10,14 +10,16 @@ class Application {
   private host: string;
 
   constructor() {
+    const config = getApiServerConfig();
+
     this.app = fastify({ logger: true }).register(fastifyCors, {
       origin: true,
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
     });
     this.routeManager = new RouteManager(this.app);
-    this.port = Number(process.env.PORT) || 3000;
-    this.host = process.env.HOST || '0.0.0.0';
+    this.port = config.port;
+    this.host = config.host;
 
     this.setupServer();
   }
