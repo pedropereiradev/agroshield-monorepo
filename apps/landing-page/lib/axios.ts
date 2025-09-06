@@ -1,7 +1,10 @@
+import { getLandingPageConfig } from '@agroshield/config';
 import axios from 'axios';
 
+const config = getLandingPageConfig();
+
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+  baseURL: config.apiUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

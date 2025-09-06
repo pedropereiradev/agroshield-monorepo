@@ -115,8 +115,8 @@ export async function createLead(formData: FormData) {
     validateInput({ name, email, area, crop, location });
 
     const existingLead = await sql`
-      SELECT id FROM leads 
-      WHERE email = ${email} 
+      SELECT id FROM leads
+      WHERE email = ${email}
       AND created_at > NOW() - INTERVAL '24 hours'
     `;
 
@@ -125,8 +125,8 @@ export async function createLead(formData: FormData) {
     }
 
     const suspiciousCheck = await sql`
-      SELECT COUNT(*) as count FROM leads 
-      WHERE (name = ${name} OR location = ${location}) 
+      SELECT COUNT(*) as count FROM leads
+      WHERE (name = ${name} OR location = ${location})
       AND created_at > NOW() - INTERVAL '1 hour'
     `;
 
@@ -137,7 +137,7 @@ export async function createLead(formData: FormData) {
     }
 
     await sql`
-      INSERT INTO leads (name, email, area, crop, location) 
+      INSERT INTO leads (name, email, area, crop, location)
       VALUES (${name}, ${email}, ${area}, ${crop}, ${location})
     `;
 
