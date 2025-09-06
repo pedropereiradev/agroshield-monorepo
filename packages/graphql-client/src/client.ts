@@ -17,8 +17,4 @@ export function createGraphQLClient(): GraphQLClient {
   return clientInstance;
 }
 
-export function resetGraphQLClient(): void {
-  clientInstance = null;
-}
-
 export const graphQLClient = createGraphQLClient();
