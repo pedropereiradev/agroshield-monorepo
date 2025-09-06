@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import { getContractsConfig } from '@agroshield/config';
 import { Provider, Wallet, createConfig } from 'fuels';
 import {
   InsuranceContract,
@@ -6,14 +6,8 @@ import {
   InsuranceNft,
 } from './src/sway-programs-api';
 
-dotenv.config();
-
-const providerUrl = process.env.VITE_FUELS_PROVIDER_URL;
-const privateKey = process.env.VITE_FUELS_PRIVATE_KEY;
-
-if (!providerUrl || !privateKey) {
-  throw new Error('Missing environment variables');
-}
+const config = getContractsConfig();
+const { providerUrl, privateKey } = config;
 
 export default createConfig({
   workspace: './sway',
