@@ -1,6 +1,7 @@
-import { and, between, eq, or, sql } from 'drizzle-orm';
+import { and, eq, or, sql } from 'drizzle-orm';
 import { db } from '../db/client';
-import { locations, weatherData } from '../entities';
+import { weatherData } from '../entities';
+import type { CreateWeatherDataPayload } from './types';
 
 export class WeatherRepo {
   private _db;
@@ -9,86 +10,80 @@ export class WeatherRepo {
     this._db = db;
   }
 
-  async createWeatherData(
-    locationId: string,
-    weatherDataParams: {
-      day: Date;
-      precipitationSum?: number;
-      precipitationHours?: number;
-      temp2mMax?: number;
-      temp2mMin?: number;
-      windSpeed10mMax?: number;
-      windGusts10mMax?: number;
-      weatherCode?: number;
-      shortwaveRadiation?: number;
-      et0Fao?: number;
-    }
-  ) {
+  async createWeatherData({
+    regionId,
+    weatherDataParams,
+  }: CreateWeatherDataPayload) {
     try {
-      const formattedDay = weatherDataParams.day.toISOString().split('T')[0];
-
       const newWeatherData = await this._db
         .insert(weatherData)
         .values({
-          locationId,
-          ...weatherDataParams,
-          day: formattedDay,
+          regionId,
+          date: weatherDataParams.date,
+          weatherCode: weatherDataParams.weatherCode,
+          temperatureMax: weatherDataParams.temperatureMax,
+          temperatureMin: weatherDataParams.temperatureMin,
+          precipitationSum: weatherDataParams.precipitationSum,
+          windSpeedMax: weatherDataParams.windSpeedMax,
+          rainSum: weatherDataParams.rainSum,
+          snowfallSum: weatherDataParams.snowfallSum,
+          sunrise: weatherDataParams.sunrise
+            ? new Date(weatherDataParams.sunrise)
+            : null,
+          sunset: weatherDataParams.sunset
+            ? new Date(weatherDataParams.sunset)
+            : null,
+          sunshineDuration: weatherDataParams.sunshineDuration,
+          daylightDuration: weatherDataParams.daylightDuration,
+          windGustsMax: weatherDataParams.windGustsMax,
+          windDirectionDominant: weatherDataParams.windDirectionDominant,
+          shortwaveRadiationSum: weatherDataParams.shortwaveRadiationSum,
+          et0FaoEvapotranspiration: weatherDataParams.et0FaoEvapotranspiration,
         })
         .returning();
 
       return newWeatherData[0];
     } catch (error) {
       console.error('Error creating weather data:', error);
+      console.error('Weather data params:', weatherDataParams);
       throw error;
     }
   }
 
-  async fetchWeatherDataByLocation(
+  async fetchWeatherDataByRegion(
+    regionId: number,
     startMonth: number,
-    endMonth: number,
-    latitude: number,
-    longitude: number,
-    radiusInDegrees = 0.045
+    endMonth: number
   ) {
     try {
+      console.log('fetchWeatherDataByRegion', {
+        regionId,
+        startMonth,
+        endMonth,
+      });
+
       let monthCondition;
 
       if (startMonth <= endMonth) {
         monthCondition = and(
-          sql`EXTRACT(MONTH FROM ${weatherData.day}) >= ${startMonth}`,
-          sql`EXTRACT(MONTH FROM ${weatherData.day}) <= ${endMonth}`
+          sql`EXTRACT(MONTH FROM ${weatherData.date}) >= ${startMonth}`,
+          sql`EXTRACT(MONTH FROM ${weatherData.date}) <= ${endMonth}`
         );
       } else {
         monthCondition = or(
-          sql`EXTRACT(MONTH FROM ${weatherData.day}) >= ${startMonth}`,
-          sql`EXTRACT(MONTH FROM ${weatherData.day}) <= ${endMonth}`
+          sql`EXTRACT(MONTH FROM ${weatherData.date}) >= ${startMonth}`,
+          sql`EXTRACT(MONTH FROM ${weatherData.date}) <= ${endMonth}`
         );
       }
 
       const weather = await this._db
-        .select({ weatherData })
+        .select()
         .from(weatherData)
-        .innerJoin(locations, eq(weatherData.locationId, locations.id))
-        .where(
-          and(
-            between(
-              locations.latitude,
-              latitude - radiusInDegrees,
-              latitude + radiusInDegrees
-            ),
-            between(
-              locations.longitude,
-              longitude - radiusInDegrees,
-              longitude + radiusInDegrees
-            ),
-            monthCondition
-          )
-        );
+        .where(and(eq(weatherData.regionId, regionId), monthCondition));
 
-      return weather.map((data) => data.weatherData);
+      return weather;
     } catch (error) {
-      console.error('Error fetching weather data:', error);
-
+      console.error('Error fetching weather data by region:', error);
       throw error;
     }
   }

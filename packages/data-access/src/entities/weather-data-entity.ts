@@ -2,41 +2,37 @@ import { relations } from 'drizzle-orm';
 import {
   date,
   doublePrecision,
-  index,
   integer,
   pgTable,
-  primaryKey,
-  uuid,
+  serial,
+  timestamp,
 } from 'drizzle-orm/pg-core';
-import { locations } from './location-entity';
+import { locationRegions } from './location-region-entity';
 
-export const weatherData = pgTable(
-  'weather_data',
-  {
-    id: uuid('id').defaultRandom(),
-    locationId: uuid('location_id')
-      .notNull()
-      .references(() => locations.id),
-    day: date('day').notNull(),
-    precipitationSum: doublePrecision('precipitation_sum'),
-    precipitationHours: integer('precipitation_hours'),
-    temp2mMax: doublePrecision('temperature_2m_max'),
-    temp2mMin: doublePrecision('temperature_2m_min'),
-    windSpeed10mMax: doublePrecision('wind_speed_10m_max'),
-    windGusts10mMax: doublePrecision('wind_gusts_10m_max'),
-    weatherCode: integer('weather_code'),
-    shortwaveRadiation: doublePrecision('shortwave_radiation_sum'),
-    et0Fao: doublePrecision('et0_fao_evapotranspiration'),
-  },
-  (table) => [
-    primaryKey({ name: 'weather_data_pk', columns: [table.id, table.day] }),
-    index('weather_data_day_idx').on(table.day),
-  ]
-);
+export const weatherData = pgTable('weather_data', {
+  id: serial().primaryKey(),
+  regionId: serial('region_id').references(() => locationRegions.id),
+  date: date().notNull(),
+  weatherCode: integer('weather_code'),
+  temperatureMax: doublePrecision('temperature_max'),
+  temperatureMin: doublePrecision('temperature_min'),
+  precipitationSum: doublePrecision('precipitation_sum'),
+  windSpeedMax: doublePrecision('wind_speed_max'),
+  rainSum: doublePrecision('rain_sum'),
+  snowfallSum: doublePrecision('snowfall_sum'),
+  sunrise: timestamp('sunrise'),
+  sunset: timestamp('sunset'),
+  sunshineDuration: doublePrecision('sunshine_duration'),
+  daylightDuration: doublePrecision('daylight_duration'),
+  windGustsMax: doublePrecision('wind_gusts_max'),
+  windDirectionDominant: doublePrecision('wind_direction_dominant'),
+  shortwaveRadiationSum: doublePrecision('shortwave_radiation_sum'),
+  et0FaoEvapotranspiration: doublePrecision('et0_fao_evapotranspiration'),
+});
 
 export const weatherDataRelations = relations(weatherData, ({ one }) => ({
-  location: one(locations, {
-    fields: [weatherData.locationId],
-    references: [locations.id],
+  region: one(locationRegions, {
+    fields: [weatherData.regionId],
+    references: [locationRegions.id],
   }),
 }));
