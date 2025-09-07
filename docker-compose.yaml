@@ -1,6 +1,6 @@
 services:
   db:
-    image: timescale/timescaledb:latest-pg14
+    image: postgres
     container_name: agroshield-db
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - timescale-data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -42,7 +42,7 @@ services:
     environment:
       - COMPOSE_BAKE=true
       - NODE_ENV=${NODE_ENV}
-      
+
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
@@ -62,5 +62,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  timescale-data:
-    
+  postgres:
