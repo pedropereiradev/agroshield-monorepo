@@ -1,7 +1,6 @@
 import { detect } from './detectors';
 import type { EventId, Probability, SeasonWindow, WeatherDay } from './types';
 
-/** Return empirical probability and Wilson CI (95 %). */
 export function probability(
   event: EventId,
   weather: WeatherDay[],
@@ -26,10 +25,9 @@ export function probability(
     }
   }
 
-  // Wilson score interval (binomial)
   if (n === 0) {
     return {
-      p: 0.03, // 3% minimum probability
+      p: 0.03,
       lower: 0.005,
       upper: 0.02,
     };
@@ -45,12 +43,11 @@ export function probability(
   const calculatedLower = (centre - margin) / denom;
   const calculatedUpper = (centre + margin) / denom;
 
-  // Apply minimum probability floor of 3%
   const minProbability = 0.03;
 
   return {
-    p: Math.max(calculatedP, minProbability),
-    lower: Math.max(calculatedLower, 0.005),
-    upper: Math.max(calculatedUpper, 0.02),
+    p: Math.round(Math.max(calculatedP, minProbability) * 100) / 100,
+    lower: Math.round(Math.max(calculatedLower, 0.005) * 100) / 100,
+    upper: Math.round(Math.max(calculatedUpper, 0.02) * 100) / 100,
   };
 }
