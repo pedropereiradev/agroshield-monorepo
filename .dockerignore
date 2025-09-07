@@ -62,6 +62,7 @@ packages/jobs
 !packages/data-access/package.json
 !packages/core-domain/src
 !packages/data-access/src
+!packages/config/package.json
 !apps/api-server/src
 !turbo.json
 !tsconfig.base.json
