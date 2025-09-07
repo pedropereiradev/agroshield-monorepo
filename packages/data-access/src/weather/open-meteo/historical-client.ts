@@ -1,13 +1,12 @@
-import axios, { type AxiosInstance, type AxiosError } from 'axios';
+import axios, { type AxiosInstance } from 'axios';
+import { dailyVariables } from '../../utils/weather/constants';
+import { getTimeWindow } from '../../utils/weather/time-interval';
 import type {
   DailyVariable,
   DailyWeatherData,
   GetDailyParams,
-  GetHourlyParams,
   HistoricalParams,
   HistoricalResponse,
-  HourlyVariable,
-  HourlyWeatherData,
 } from './types';
 
 export class OpenMeteoHistoricalClient {
@@ -17,7 +16,7 @@ export class OpenMeteoHistoricalClient {
     const baseURL = 'https://archive-api.open-meteo.com/v1/archive';
     this.client = axios.create({
       baseURL,
-      timeout: 25_000,
+      timeout: 40_000,
       headers: { 'Content-Type': 'application/json' },
     });
 
@@ -29,168 +28,94 @@ export class OpenMeteoHistoricalClient {
     }
   }
 
-  async getArchive(params: HistoricalParams): Promise<HistoricalResponse> {
-    try {
-      const serial: Record<string, any> = { ...params };
-      if (params.hourly) serial.hourly = params.hourly.join(',');
-      if (params.daily) serial.daily = params.daily.join(',');
-      if (Array.isArray(params.latitude))
-        serial.latitude = params.latitude.join(',');
-      if (Array.isArray(params.longitude))
-        serial.longitude = params.longitude.join(',');
-
-      const resp = await this.client.get<HistoricalResponse>('', {
-        params: serial,
-      });
-      return resp.data;
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const e = err as AxiosError<{ error: boolean; reason: string }>;
-        throw new Error(
-          e.response?.data?.reason ?? `Open-Meteo failed: ${e.message}`
-        );
-      }
-      throw err;
-    }
-  }
-
-  private processDailyResponse(
-    response: HistoricalResponse
-  ): DailyWeatherData[] {
-    if (
-      !response.daily ||
-      !response.daily.time ||
-      response.daily.time.length === 0
-    ) {
-      return [];
-    }
-
-    const result: DailyWeatherData[] = [];
-    const days = response.daily.time.length;
-
-    const variableMap: Partial<Record<DailyVariable, string>> = {
-      weather_code: 'weatherCode',
-      temperature_2m_max: 'tMax',
-      temperature_2m_min: 'tMin',
-      precipitation_sum: 'precip',
-      wind_speed_10m_max: 'windMax',
-    };
-
-    for (let i = 0; i < days; i++) {
-      const dayData: DailyWeatherData = {
-        date: response.daily.time[i],
-      };
-
-      for (const [key, values] of Object.entries(response.daily)) {
-        if (key !== 'time' && Array.isArray(values) && values.length > i) {
-          const mappedKey = variableMap[key as DailyVariable] || key;
-          dayData[mappedKey] = values[i];
-        }
-      }
-
-      result.push(dayData);
-    }
-
-    return result;
-  }
-
-  private processHourlyResponse(
-    response: HistoricalResponse
-  ): HourlyWeatherData[] {
-    if (
-      !response.hourly ||
-      !response.hourly.time ||
-      response.hourly.time.length === 0
-    ) {
-      return [];
-    }
-
-    const result: HourlyWeatherData[] = [];
-    const hours = response.hourly.time.length;
-
-    const variableMap: Partial<Record<HourlyVariable, string>> = {
-      temperature_2m: 'temperature',
-      precipitation: 'precipitation',
-      relativehumidity_2m: 'humidity',
-      windspeed_10m: 'windSpeed',
-    };
-
-    for (let i = 0; i < hours; i++) {
-      const hourData: HourlyWeatherData = {
-        time: response.hourly.time[i],
-      };
-
-      for (const [key, values] of Object.entries(response.hourly)) {
-        if (key !== 'time' && Array.isArray(values) && values.length > i) {
-          const mappedKey = variableMap[key as HourlyVariable] || key;
-          hourData[mappedKey] = values[i];
-        }
-      }
-
-      result.push(hourData);
-    }
-
-    return result;
-  }
-
   async getDaily(params: GetDailyParams): Promise<DailyWeatherData[]> {
-    const {
-      latitude,
-      longitude,
-      start_date,
-      end_date,
-      variables = [
-        'weather_code',
-        'temperature_2m_max',
-        'temperature_2m_min',
-        'precipitation_sum',
-        'wind_speed_10m_max',
-      ],
-      ...opts
-    } = params;
+    const { latitude, longitude } = params;
+    const { startDate, endDate } = getTimeWindow(30);
 
     const response = await this.getArchive({
       latitude,
       longitude,
-      start_date,
-      end_date,
-      daily: variables,
-      timezone: opts.timezone ?? 'auto',
-      elevation: opts.elevation,
-      temperature_unit: opts.temperature_unit,
-      precipitation_unit: opts.precipitation_unit,
-      timeformat: opts.timeformat,
-      cell_selection: opts.cell_selection,
+      start_date: startDate,
+      end_date: endDate,
+      daily: dailyVariables,
+      timezone: 'GMT',
     });
 
     return this.processDailyResponse(response);
   }
 
-  async getHourly(params: GetHourlyParams): Promise<HourlyWeatherData[]> {
-    const {
-      latitude,
-      longitude,
-      start_date,
-      end_date,
-      variables = ['temperature_2m', 'precipitation'],
-      ...opts
-    } = params;
+  private async getArchive(
+    params: HistoricalParams
+  ): Promise<HistoricalResponse> {
+    // try {
+    const serial: Record<string, any> = { ...params };
+    if (params.daily) serial.daily = params.daily.join(',');
 
-    const response = await this.getArchive({
-      latitude,
-      longitude,
-      start_date,
-      end_date,
-      hourly: variables,
-      timezone: opts.timezone ?? 'auto',
-      elevation: opts.elevation,
-      temperature_unit: opts.temperature_unit,
-      wind_speed_unit: opts.wind_speed_unit,
-      precipitation_unit: opts.precipitation_unit,
-      timeformat: opts.timeformat,
-      cell_selection: opts.cell_selection,
+    const resp = await this.client.get<HistoricalResponse>('', {
+      params: serial,
     });
+    return resp.data;
+    // } catch (err) {
+    // if (axios.isAxiosError(err)) {
+    //   const e = err as AxiosError<{ error: boolean; reason: string }>;
+    //   throw new Error(
+    //     e.response?.data?.reason ?? `Open-Meteo failed: ${e.message}`
+    //   );
+    // }
+    //   throw err;
+    // }
+  }
 
-    return this.processHourlyResponse(response);
+  private processDailyResponse(
+    response: HistoricalResponse
+  ): DailyWeatherData[] {
+    if (!response.daily?.time?.length) {
+      return [];
+    }
+
+    const { daily } = response;
+    const days = daily.time.length;
+
+    const result: DailyWeatherData[] = new Array(days);
+
+    const variableMap: Readonly<Partial<Record<DailyVariable, string>>> = {
+      weather_code: 'weatherCode',
+      temperature_2m_max: 'temperatureMax',
+      temperature_2m_min: 'temperatureMin',
+      precipitation_sum: 'precipitationSum',
+      wind_speed_10m_max: 'windSpeedMax',
+      rain_sum: 'rainSum',
+      snowfall_sum: 'snowfallSum',
+      sunrise: 'sunrise',
+      sunset: 'sunset',
+      sunshine_duration: 'sunshineDuration',
+      daylight_duration: 'daylightDuration',
+      wind_gusts_10m_max: 'windGustsMax',
+      wind_direction_10m_dominant: 'windDirectionDominant',
+      shortwave_radiation_sum: 'shortwaveRadiationSum',
+      et0_fao_evapotranspiration: 'et0FaoEvapotranspiration',
+    } as const;
+
+    const dailyEntries = Object.entries(daily).filter(
+      ([key, values]) =>
+        key !== 'time' && Array.isArray(values) && values.length === days
+    ) as Array<[DailyVariable, (number | string)[]]>;
+
+    for (let i = 0; i < days; i++) {
+      const dayData: DailyWeatherData = {
+        date: daily.time[i],
+      };
+
+      for (const [variable, values] of dailyEntries) {
+        const mappedKey = variableMap[variable];
+        if (mappedKey) {
+          (dayData as any)[mappedKey] = values[i];
+        }
+      }
+
+      result[i] = dayData;
+    }
+
+    return result;
   }
 }
