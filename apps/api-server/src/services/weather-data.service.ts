@@ -3,6 +3,7 @@ import {
   generateCustomSeasons,
 } from '@agroshield/core-domain';
 import {
+  LocationRegionRepo,
   LocationRepo,
   OpenMeteoHistoricalClient,
   WeatherRepo,
@@ -12,10 +13,12 @@ import type { QuoteRequest } from '../schemas/quote.schema';
 export class WeatherDataService {
   private _weatherRepo: WeatherRepo;
   private _locationRepo: LocationRepo;
+  private _locationRegionRepo: LocationRegionRepo;
   private _openMeteoHistoricalClient: OpenMeteoHistoricalClient;
 
   constructor() {
     this._locationRepo = new LocationRepo();
+    this._locationRegionRepo = new LocationRegionRepo();
     this._weatherRepo = new WeatherRepo();
     this._openMeteoHistoricalClient = new OpenMeteoHistoricalClient();
   }
@@ -34,65 +37,69 @@ export class WeatherDataService {
       throw new Error('No seasons generated for this crop');
     }
 
-    const location = await this._locationRepo.findOrCreateLocation(
+    const region = await this._locationRegionRepo.findOrCreateRegion(
       latitude,
       longitude
     );
 
-    let weatherData = await this._weatherRepo.fetchWeatherDataByLocation(
+    await this._locationRepo.findOrCreateLocation(
+      latitude,
+      longitude,
+      region.id
+    );
+
+    let weatherData = await this._weatherRepo.fetchWeatherDataByRegion(
+      region.id,
       plantingMonth,
-      harvestMonth,
-      latitude,
-      longitude
+      harvestMonth
     );
 
-    // If we don't have enough data, fetch from external API
     if (weatherData.length < seasons.length * 30) {
-      await this._fetchExternalWeatherData(location.id, latitude, longitude);
+      await this._fetchExternalWeatherData(
+        region.id,
+        region.masterLatitude,
+        region.masterLongitude
+      );
 
-      weatherData = await this._weatherRepo.fetchWeatherDataByLocation(
+      weatherData = await this._weatherRepo.fetchWeatherDataByRegion(
+        region.id,
         plantingMonth,
-        harvestMonth,
-        latitude,
-        longitude
+        harvestMonth
       );
     }
 
     return weatherData.map((day) => ({
-      date: new Date(day.day),
+      date: new Date(day.date),
       precip: day.precipitationSum || 0,
-      tMax: day.temp2mMax || 0,
-      tMin: day.temp2mMin || 0,
-      windMax: day.windSpeed10mMax || 0,
+      tMax: day.temperatureMax || 0,
+      tMin: day.temperatureMin || 0,
+      windMax: day.windSpeedMax || 0,
     }));
   }
 
   private async _fetchExternalWeatherData(
-    locationId: string,
+    regionId: number,
     latitude: number,
     longitude: number
   ): Promise<void> {
-    const today = new Date();
-    const todayString = today.toISOString().split('T')[0];
-    const currentYear = today.getFullYear();
-    const startDate = new Date(currentYear - 30, 0, 1);
-    const startDateString = startDate.toISOString().split('T')[0];
+    try {
+      const externalWeatherData =
+        await this._openMeteoHistoricalClient.getDaily({
+          latitude,
+          longitude,
+        });
 
-    const externalWeatherData = await this._openMeteoHistoricalClient.getDaily({
-      latitude,
-      longitude,
-      start_date: startDateString,
-      end_date: todayString,
-    });
-
-    for (const dayData of externalWeatherData) {
-      await this._weatherRepo.createWeatherData(locationId, {
-        day: new Date(dayData.date),
-        precipitationSum: dayData.precip,
-        temp2mMax: dayData.tMax,
-        temp2mMin: dayData.tMin,
-        windSpeed10mMax: dayData.windMax,
-      });
+      await Promise.all(
+        externalWeatherData.map((dayData) => {
+          this._weatherRepo.createWeatherData({
+            regionId,
+            weatherDataParams: dayData,
+          });
+        })
+      );
+    } catch (error) {
+      console.error('Error fetching external weather data:', error);
+      throw new Error('Failed to fetch external weather data');
     }
   }
 }

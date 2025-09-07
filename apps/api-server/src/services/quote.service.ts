@@ -21,16 +21,13 @@ export default class QuoteService {
       harvestMonth,
     } = req;
 
-    // Calculate LMI (Loss Maximum Indemnity)
     const LMI = this._premiumCalculationService.calculateLMI(
       areaHa,
       coveragePct
     );
 
-    // Get weather data for the location and time period
     const weatherDays = await this._weatherDataService.getWeatherData(req);
 
-    // Calculate risk probability
     const { p, lower, upper } =
       this._premiumCalculationService.calculateRiskProbability(
         triggerEvent,
@@ -40,7 +37,6 @@ export default class QuoteService {
         harvestMonth
       );
 
-    // Calculate premium based on risk
     const premium = this._premiumCalculationService.calculatePremiumAmount(
       LMI,
       p
