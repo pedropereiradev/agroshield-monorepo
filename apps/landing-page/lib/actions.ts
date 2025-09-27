@@ -136,9 +136,13 @@ export async function createLead(formData: FormData) {
       );
     }
 
+    const areaNumber = area ? Number.parseFloat(area) : null;
+
+    const cropsArray = crops && crops.length > 0 ? crops : null;
+
     await sql`
-      INSERT INTO leads (name, email, area, crop, location) 
-      VALUES (${name}, ${email}, ${area}, ${crop}, ${location})
+      INSERT INTO leads (name, email, phone, location, profile, area, crops)
+      VALUES (${name}, ${email}, ${phone}, ${location}, ${profile}, ${areaNumber}, ${cropsArray})
     `;
 
     console.log('Lead created successfully:', {
