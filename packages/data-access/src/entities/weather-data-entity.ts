@@ -8,6 +8,7 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core';
 import { locationRegions } from './location-region-entity';
+import { quotes } from './quote-entity';
 
 export const weatherData = pgTable('weather_data', {
   id: serial().primaryKey(),
@@ -30,9 +31,10 @@ export const weatherData = pgTable('weather_data', {
   et0FaoEvapotranspiration: doublePrecision('et0_fao_evapotranspiration'),
 });
 
-export const weatherDataRelations = relations(weatherData, ({ one }) => ({
+export const weatherDataRelations = relations(weatherData, ({ one, many }) => ({
   region: one(locationRegions, {
     fields: [weatherData.regionId],
     references: [locationRegions.id],
   }),
+  quotes: many(quotes),
 }));

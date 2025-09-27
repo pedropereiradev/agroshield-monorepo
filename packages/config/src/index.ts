@@ -34,6 +34,12 @@ export interface LandingPageConfig {
   apiUrl: string;
 }
 
+export interface RedisConfig {
+  host: string;
+  port: number;
+  password?: string;
+}
+
 function requireEnvVar(name: string): string {
   const value = process.env[name];
   if (!value) {
@@ -63,7 +69,7 @@ export function getDatabaseConfig(): DatabaseConfig {
 
 export function getApiServerConfig(): ApiServerConfig {
   return {
-    port: getEnvNumber('PORT', 3000),
+    port: getEnvNumber('PORT', 3001),
     host: getEnvVar('HOST', '0.0.0.0'),
     riskMargin: getEnvNumber('RISK_MARGIN', 0.06),
     opsCost: getEnvNumber('OPS_COST', 0.3),
@@ -97,5 +103,22 @@ export function getLandingPageConfig(): LandingPageConfig {
   return {
     databaseUrl: requireEnvVar('DATABASE_URL'),
     apiUrl: getEnvVar('NEXT_PUBLIC_API_URL', 'http://localhost:3001'),
+  };
+}
+
+export function getRedisConfig(): RedisConfig {
+  return {
+    host: getEnvVar('REDIS_HOST', 'localhost'),
+    port: getEnvNumber('REDIS_PORT', 6379),
+    password: process.env.REDIS_PASSWORD,
+  };
+}
+
+export function getConfig() {
+  return {
+    ...process.env,
+    REDIS_HOST: getEnvVar('REDIS_HOST', 'localhost'),
+    REDIS_PORT: getEnvVar('REDIS_PORT', '6379'),
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   };
 }

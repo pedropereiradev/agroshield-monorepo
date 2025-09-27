@@ -10,6 +10,7 @@
     "dev:app": "pnpm --filter @agroshield/app dev",
     "dev:landing-page": "pnpm --filter @agroshield/landing-page dev",
     "dev:api": "pnpm --filter @agroshield/api-server dev",
+    "dev:worker": "pnpm --filter @agroshield/quote-worker dev",
     "lint": "turbo run lint",
     "forc:fmt": "forc fmt --path packages/contracts",
     "forc:build": "forc build --path packages/contracts",

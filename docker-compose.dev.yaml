@@ -16,6 +16,19 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: agroshield-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-dev:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api-server:
     build:
       context: .
@@ -38,15 +51,58 @@ services:
       - PROJECT_PROFIT=0.15
 
       - OPEN_METEO_RATE_LIMIT=60
+
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - ./apps/api-server/src:/app/apps/api-server/src
       - ./packages/core-domain/src:/app/packages/core-domain/src
       - ./packages/data-access/src:/app/packages/data-access/src
+      - ./packages/queue/src:/app/packages/queue/src
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     restart: unless-stopped
     command: ["pnpm", "--filter", "@agroshield/api-server", "dev"]
 
+  quote-worker:
+    build:
+      context: .
+      dockerfile: apps/quote-worker/Dockerfile.dev
+    container_name: agroshield-worker-dev
+    environment:
+      - NODE_ENV=development
+
+      - DB_NAME=agroshield
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_HOST=db
+      - DB_PORT=5432
+
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+      - RISK_MARGIN=0.06
+      - OPS_COST=0.3
+      - PROJECT_PROFIT=0.15
+
+      - OPEN_METEO_RATE_LIMIT=60
+    volumes:
+      - ./apps/quote-worker/src:/app/apps/quote-worker/src
+      - ./packages/core-domain/src:/app/packages/core-domain/src
+      - ./packages/data-access/src:/app/packages/data-access/src
+      - ./packages/queue/src:/app/packages/queue/src
+      - ./packages/config/src:/app/packages/config/src
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    command: ["pnpm", "--filter", "@agroshield/quote-worker", "dev"]
+
 volumes:
   postgres-dev:
+  redis-dev:

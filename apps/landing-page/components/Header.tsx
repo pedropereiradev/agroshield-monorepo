@@ -2,6 +2,7 @@
 
 import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import logo from '../public/logo-icon.png';
 
@@ -12,30 +13,36 @@ export default function Header() {
     <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Image src={logo} width={64} height={64} alt="Logo" />
             <span className="text-xl font-bold text-gray-900">AgroShield</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a
-              href="#como-funciona"
+              href="/#como-funciona"
               className="text-gray-600 hover:text-green-600 transition-colors"
             >
               Como Funciona
             </a>
             <a
-              href="#beneficios"
+              href="/#beneficios"
               className="text-gray-600 hover:text-green-600 transition-colors"
             >
               Benefícios
             </a>
+            <Link
+              href="/#cadastro"
+              className="text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Fale conosco
+            </Link>
             <a
-              href="#cadastro"
+              href="/cotacao"
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
-              Começar Agora
+              Solicitar Cotação
             </a>
           </nav>
 
@@ -57,22 +64,28 @@ export default function Header() {
           <nav className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
               <a
-                href="#como-funciona"
+                href="/#como-funciona"
                 className="text-gray-600 hover:text-green-600 transition-colors"
               >
                 Como Funciona
               </a>
               <a
-                href="#beneficios"
+                href="/#beneficios"
                 className="text-gray-600 hover:text-green-600 transition-colors"
               >
                 Benefícios
               </a>
+              <Link
+                href="/#cadastro"
+                className="text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Fale conosco
+              </Link>
               <a
-                href="#cadastro"
+                href="/cotacao"
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center"
               >
-                Começar Agora
+                Solicitar Cotação
               </a>
             </div>
           </nav>
