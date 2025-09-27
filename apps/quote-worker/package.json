@@ -1,0 +1,26 @@
+{
+  "name": "@agroshield/quote-worker",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.3",
+  "dependencies": {
+    "@agroshield/config": "workspace:*",
+    "@agroshield/core-domain": "workspace:*",
+    "@agroshield/data-access": "workspace:*",
+    "@agroshield/queue": "workspace:*",
+    "bullmq": "^5.36.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsx": "^4.19.4",
+    "typescript": "~5.7.2"
+  }
+}
