@@ -17,8 +17,13 @@ export default function Header() {
             <span className="text-xl font-bold text-gray-900">AgroShield</span>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            <a
+              href="#publico-alvo"
+              className="text-gray-600 hover:text-green-600 transition-colors"
+            >
+              Para Quem
+            </a>
             <a
               href="#como-funciona"
               className="text-gray-600 hover:text-green-600 transition-colors"
@@ -26,20 +31,13 @@ export default function Header() {
               Como Funciona
             </a>
             <a
-              href="#beneficios"
-              className="text-gray-600 hover:text-green-600 transition-colors"
-            >
-              Benefícios
-            </a>
-            <a
               href="#cadastro"
               className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
-              Começar Agora
+              Garantir Minha Vaga
             </a>
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -52,10 +50,15 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden mt-4 py-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4">
+              <a
+                href="#publico-alvo"
+                className="text-gray-600 hover:text-green-600 transition-colors"
+              >
+                Para Quem
+              </a>
               <a
                 href="#como-funciona"
                 className="text-gray-600 hover:text-green-600 transition-colors"
@@ -63,16 +66,10 @@ export default function Header() {
                 Como Funciona
               </a>
               <a
-                href="#beneficios"
-                className="text-gray-600 hover:text-green-600 transition-colors"
-              >
-                Benefícios
-              </a>
-              <a
                 href="#cadastro"
                 className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-center"
               >
-                Começar Agora
+                Garantir Minha Vaga
               </a>
             </div>
           </nav>
