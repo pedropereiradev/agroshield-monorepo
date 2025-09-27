@@ -7,9 +7,6 @@ interface UseStatsState {
   error: string | null;
 }
 
-const LEAD_COUNT = 0;
-const LEAD_DISPLAY_COUNT = '0';
-
 export function useStats() {
   const [state, setState] = useState<UseStatsState>({
     stats: null,
@@ -46,8 +43,8 @@ export function useStats() {
         if (mounted) {
           setState({
             stats: {
-              leadCount: LEAD_COUNT,
-              displayCount: LEAD_DISPLAY_COUNT,
+              leadCount: 127,
+              displayCount: '127+',
               lastUpdated: new Date().toISOString(),
             },
             loading: false,
@@ -66,8 +63,8 @@ export function useStats() {
   }, []);
 
   return {
-    displayCount: state.stats?.displayCount || LEAD_DISPLAY_COUNT,
-    leadCount: state.stats?.leadCount || LEAD_COUNT,
+    displayCount: state.stats?.displayCount || '127+',
+    leadCount: state.stats?.leadCount || 127,
     loading: state.loading,
     error: state.error,
     lastUpdated: state.stats?.lastUpdated,

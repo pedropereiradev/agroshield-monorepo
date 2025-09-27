@@ -50,22 +50,27 @@ export default function ProblemSection() {
     {
       aspect: 'Tempo de contratação',
       traditional: '30-60 dias',
-      agroshield: '5 minutos',
+      agroshield: 'Minutos (online)',
     },
     {
       aspect: 'Documentação necessária',
       traditional: '15+ documentos',
-      agroshield: 'Dados básicos online',
+      agroshield: 'Formulário simples',
     },
     {
       aspect: 'Processo de indenização',
-      traditional: 'Vistoria presencial',
+      traditional: 'Vistoria presencial demorada',
       agroshield: 'Automático por dados climáticos',
     },
     {
       aspect: 'Tempo para pagamento',
       traditional: '3-6 meses',
-      agroshield: '24-48 horas',
+      agroshield: 'Muito mais rápido',
+    },
+    {
+      aspect: 'Transparência',
+      traditional: 'Processos opacos',
+      agroshield: 'Blockchain auditável',
     },
   ];
 
@@ -171,8 +176,8 @@ export default function ProblemSection() {
               <TrendingDown className="w-8 h-8 text-blue-600 mt-1" />
               <div>
                 <blockquote className="text-lg italic text-gray-800 mb-3">
-                  "Já tentei contratar seguro três vezes. Sempre desisti no meio do processo. 
-                  É muita burocracia, muito papel, e no final das contas, quando você precisa, 
+                  "Já tentei contratar seguro três vezes. Sempre desisti no meio do processo.
+                  É muita burocracia, muito papel, e no final das contas, quando você precisa,
                   demora uma eternidade para receber."
                 </blockquote>
                 <cite className="text-sm font-semibold text-gray-600">

@@ -1,3 +1,4 @@
+import TargetAudienceSection from '@/components/TargetAudienceSection';
 import BenefitsSection from '../components/BenefitsSection';
 import CTASection from '../components/CTASection';
 import FAQSection from '../components/FAQSection';
@@ -14,7 +15,9 @@ export default function AgroShieldLanding() {
       <Hero />
       <ProblemSection />
       <BenefitsSection />
+      <TargetAudienceSection />
       <HowItWorksSection />
+      {/*<DevelopmentSection />*/}
       <FAQSection />
       <CTASection />
       <Footer />

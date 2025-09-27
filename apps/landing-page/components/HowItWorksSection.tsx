@@ -1,75 +1,68 @@
-import {
-  ArrowRight,
-  Calculator,
-  CheckCircle,
-  Clock,
-  FileCheck,
-  Shield,
-  Smartphone,
-} from 'lucide-react';
+import { Bell, CheckCircle, Clock, Shield, Star, User } from 'lucide-react';
 
 export default function HowItWorksSection() {
   const steps = [
     {
       number: '01',
-      title: 'Cadastre sua propriedade',
-      description: 'Informe dados da sua fazenda, cultivo e localização',
-      time: '2 minutos',
-      icon: <Smartphone className="w-6 h-6 text-white" />,
+      title: 'Cadastre Seu Interesse',
+      description: 'Seja um dos primeiros a testar nossa plataforma',
+      icon: <User className="w-6 h-6" />,
+      time: 'Agora',
     },
     {
       number: '02',
-      title: 'Receba sua cotação',
-      description:
-        'Nosso sistema gera uma estimativa com base em dados climáticos históricos',
-      time: '1 minuto',
-      icon: <Calculator className="w-6 h-6 text-white" />,
+      title: 'Receba Atualizações',
+      description: 'Acompanhe o desenvolvimento e lançamento',
+      icon: <Bell className="w-6 h-6" />,
+      time: 'Durante desenvolvimento',
     },
     {
       number: '03',
-      title: 'Contrate sua apólice',
-      description:
-        'Finalize a contratação de forma digital com facilidade e segurança',
-      time: '2 minutos',
-      icon: <FileCheck className="w-6 h-6 text-white" />,
+      title: 'Acesso Prioritário',
+      description: 'Primeiros cadastrados terão condições especiais',
+      icon: <Star className="w-6 h-6" />,
+      time: 'No lançamento',
     },
     {
       number: '04',
-      title: 'Proteção ativa',
-      description:
-        'Acompanhe sua apólice e alertas climáticos em tempo real na plataforma',
-      time: '24/7',
-      icon: <Shield className="w-6 h-6 text-white" />,
+      title: 'Proteja Sua Lavoura',
+      description: 'Contrate e monitore sua cobertura online',
+      icon: <Shield className="w-6 h-6" />,
+      time: 'Após lançamento',
     },
   ];
 
   const processHighlights = [
     {
       icon: <Clock className="w-8 h-8 text-green-400" />,
-      title: 'Tempo Total',
-      value: '5 minutos',
-      description: 'Do cadastro à contratação',
+      title: 'Processo',
+      value: 'Simples',
+      description: 'Cadastro online rápido',
     },
     {
       icon: <CheckCircle className="w-8 h-8 text-blue-400" />,
-      title: 'Aprovação',
-      value: 'Instantânea',
-      description: 'Sem análise manual',
+      title: 'Acompanhamento',
+      value: 'Transparente',
+      description: 'Atualizações constantes',
     },
     {
       icon: <Shield className="w-8 h-8 text-purple-400" />,
-      title: 'Proteção',
-      value: 'Imediata',
-      description: 'Ativa após confirmação',
+      title: 'Tecnologia',
+      value: 'Inovadora',
+      description: 'Blockchain e automação',
     },
   ];
 
   return (
     <section
       id="como-funciona"
-      className="py-20 bg-gradient-to-r from-green-600 to-blue-600 text-white px-4"
+      className="relative py-20 bg-gradient-to-br from-green-600 via-blue-600 to-purple-700 text-white px-4 overflow-hidden"
     >
-      <div className="container mx-auto">
+      <div className="absolute inset-0 bg-black/20" />
+      <div className="absolute top-20 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse" />
+      <div className="absolute bottom-32 right-16 w-24 h-24 bg-green-300/20 rounded-full blur-lg animate-pulse delay-1000" />
+      <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-blue-300/20 rounded-full blur-md animate-pulse delay-500" />
+      <div className="container mx-auto relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-6">
             Como o AgroShield funciona
@@ -119,12 +112,6 @@ export default function HowItWorksSection() {
                   {step.time}
                 </div>
               </div>
-
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                  <ArrowRight className="w-8 h-8 text-white/50" />
-                </div>
-              )}
             </div>
           ))}
         </div>
@@ -132,54 +119,54 @@ export default function HowItWorksSection() {
         <div className="bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20 max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Durante o processo</h3>
+              <h3 className="text-2xl font-bold mb-4">O que você recebe</h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-green-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Análise de risco em tempo real usando dados meteorológicos
+                    Atualizações exclusivas sobre o desenvolvimento
                   </span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-green-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Cálculo de prêmio baseado no risco específico da sua região
+                    Convites para demonstrações da plataforma
                   </span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-green-300 mr-3 mt-0.5" />
-                  <span className="text-sm">
-                    Contrato inteligente gerado automaticamente
-                  </span>
+                  <span className="text-sm">Acesso antecipado</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-green-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Confirmação por blockchain para máxima segurança
+                    Condições especiais no lançamento oficial
                   </span>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold mb-4">Após a contratação</h3>
+              <h3 className="text-2xl font-bold mb-4">
+                Tecnologia em desenvolvimento
+              </h3>
               <ul className="space-y-3">
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Monitoramento climático automático da sua propriedade
+                    Análise automatizada de dados climáticos
                   </span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Dashboard para acompanhar sua apólice 24/7
+                    Contratos inteligentes em blockchain
                   </span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-300 mr-3 mt-0.5" />
                   <span className="text-sm">
-                    Indenização processada automaticamente quando necessário
+                    Interface simplificada para produtores
                   </span>
                 </li>
               </ul>

@@ -150,12 +150,12 @@ export default function TargetAudienceSection() {
             Se identifica com esse perfil? Junte-se a nós na construção do
             futuro do seguro rural.
           </p>
-          <a
-            href="#formulario"
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors inline-block"
+          <button
+            type="button"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors"
           >
             Quero Garantir Minha Vaga
-          </a>
+          </button>
         </div>
       </div>
     </section>
