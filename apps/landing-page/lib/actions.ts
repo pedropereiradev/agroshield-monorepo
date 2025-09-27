@@ -138,13 +138,13 @@ export async function createLead(formData: FormData) {
 
     const name = (formData.get('name') as string)?.trim();
     const email = (formData.get('email') as string)?.trim().toLowerCase();
-    const phone = (formData.get('phone') as string)?.trim() || null;
-    const location = (formData.get('location') as string)?.trim() || null;
+    const phone = (formData.get('phone') as string)?.trim() || undefined;
+    const location = (formData.get('location') as string)?.trim() || undefined;
     const profile = formData.get('profile') as string;
-    const area = (formData.get('area') as string)?.trim() || null;
+    const area = (formData.get('area') as string)?.trim() || undefined;
 
     const cropsData = formData.getAll('crops') as string[];
-    const crops = cropsData.length > 0 ? cropsData : null;
+    const crops = cropsData.length > 0 ? cropsData : undefined;
 
     validateInput({ name, email, phone, location, profile, area, crops });
 
