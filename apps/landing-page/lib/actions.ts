@@ -172,11 +172,14 @@ export async function createLead(formData: FormData) {
 
     const areaNumber = area ? Number.parseFloat(area) : null;
 
-    const cropsValue = crops ?? null;
+    const cropsValue =
+      crops && crops.length > 0
+        ? `{${crops.map((c) => `"${c}"`).join(',')}}`
+        : null;
 
     await sql`
       INSERT INTO leads (name, email, phone, location, profile, area, crops, created_at)
-      VALUES (${name}, ${email}, ${phone}, ${location}, ${profile}, ${areaNumber}, ${cropsValue}, NOW())
+      VALUES (${name}, ${email}, ${phone}, ${location}, ${profile}, ${areaNumber}, ${cropsValue}::text[], NOW())
     `;
 
     console.log('Lead created successfully:', {
