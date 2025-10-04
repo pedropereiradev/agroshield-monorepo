@@ -13,103 +13,93 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      category: 'Básico',
+      category: 'Sobre o Projeto',
       questions: [
         {
-          question: 'O que é o AgroShield e como funciona?',
+          question: 'O que é o AgroShield?',
           answer:
-            'O AgroShield é o primeiro seguro agrícola descentralizado do Brasil. Utilizamos contratos inteligentes na blockchain para automatizar todo o processo, desde a contratação até o pagamento das indenizações. Monitoramos condições climáticas em tempo real e, quando detectados eventos cobertos pela apólice, o pagamento é processado automaticamente.',
+            'O AgroShield é uma plataforma inovadora de seguro rural que combina blockchain, dados climáticos e contratos inteligentes para criar uma solução mais transparente, rápida e acessível para produtores rurais. Estamos desenvolvendo o futuro do seguro agrícola no Brasil.',
         },
         {
-          question: 'Quais culturas são cobertas?',
+          question: 'Por que vocês estão criando esta solução?',
           answer:
-            'Atualmente cobrimos soja e arroz, as duas principais culturas do agronegócio brasileiro. Cada cultura tem cobertura específica para os riscos mais relevantes: estiagem, excesso de chuva e ondas de calor.',
+            'O seguro rural tradicional tem processos lentos, burocráticos e muitas vezes inacessíveis para pequenos e médios produtores. Nossa missão é democratizar o acesso ao seguro rural através da tecnologia, tornando-o mais simples, transparente e eficiente.',
         },
         {
-          question: 'Como é calculado o preço da apólice?',
+          question: 'Qual é o diferencial da solução?',
           answer:
-            'O preço é calculado com base no risco específico da sua região usando dados climáticos históricos, tipo de cultura, área plantada e período de plantio. Nosso sistema analisa mais de 30 anos de dados meteorológicos para determinar o risco real da sua propriedade, resultando em preços até mais baixos que seguros tradicionais.',
+            'Combinamos três pilares: automação completa via blockchain, dados climáticos em tempo real de múltiplas fontes, e uma interface simples que qualquer produtor pode usar. Isso resulta em processos mais rápidos, custos menores e total transparência.',
         },
         {
-          question: 'Preciso entender blockchain para usar o AgroShield?',
+          question: 'Como a tecnologia blockchain ajuda no seguro rural?',
           answer:
-            'Não! Nossa interface foi desenvolvida pensando na facilidade de uso. Você interage com o sistema como qualquer aplicativo normal. Toda a complexidade da blockchain fica transparente para você, garantindo apenas os benefícios: segurança, transparência e pagamentos automáticos.',
+            'A blockchain garante transparência total, elimina intermediários desnecessários, automatiza pagamentos e cria um histórico imutável de todas as transações. Isso reduz custos, aumenta a confiança e acelera drasticamente os processos.',
         },
       ],
     },
+    // {
+    //   category: 'Programa Beta',
+    //   questions: [
+    //     {
+    //       question: 'Como funciona o programa beta?',
+    //       answer:
+    //         'Estamos selecionando produtores interessados em testar nossa plataforma antes do lançamento oficial. Os participantes beta terão acesso antecipado, poderão influenciar o desenvolvimento e receberão condições especiais no lançamento.',
+    //     },
+    //     {
+    //       question: 'Quem pode participar do beta?',
+    //       answer:
+    //         'Buscamos produtores rurais, cooperativas, consultores e técnicos agrícolas interessados em inovação. O ideal é ter afinidade com tecnologia e estar em regiões com boa disponibilidade de dados climáticos.',
+    //     },
+    //     {
+    //       question: 'Quais são os benefícios de ser um beta tester?',
+    //       answer:
+    //         'Participantes beta terão: acesso exclusivo à plataforma em desenvolvimento, influência direta nas funcionalidades, suporte direto da nossa equipe, condições especiais no lançamento oficial e a oportunidade de ser pioneiro na transformação do seguro rural.',
+    //     },
+    //     {
+    //       question: 'O programa beta é gratuito?',
+    //       answer:
+    //         'Sim! A participação no programa beta é completamente gratuita. É uma oportunidade de conhecer e testar nossa tecnologia sem qualquer custo ou compromisso.',
+    //     },
+    //   ],
+    // },
+    // {
+    //   category: 'Desenvolvimento',
+    //   questions: [
+    //     {
+    //       question: 'Quando a plataforma estará disponível?',
+    //       answer:
+    //         'Estamos planejando o lançamento da versão beta para o primeiro semestre de 2025, com lançamento oficial previsto para o segundo semestre. Participantes beta receberão atualizações regulares sobre o cronogamento.',
+    //     },
+    //     {
+    //       question: 'Em que estágio está o desenvolvimento?',
+    //       answer:
+    //         'Já temos os contratos inteligentes funcionais, a integração com dados climáticos operacional e a interface de usuário em desenvolvimento avançado. Estamos na fase de testes e refinamento antes do lançamento beta.',
+    //     },
+    //     {
+    //       question: 'Como posso acompanhar o progresso?',
+    //       answer:
+    //         'Cadastrando seu interesse, você receberá atualizações mensais por email sobre nosso progresso, demonstrações da plataforma e convites para eventos exclusivos. Também compartilhamos marcos importantes em nossas redes sociais.',
+    //     },
+    //   ],
+    // },
     {
-      category: 'Cobertura',
+      category: 'Tecnologia',
       questions: [
         {
-          question: 'Quais eventos climáticos são cobertos?',
+          question: 'Que tipo de dados climáticos vocês utilizam?',
           answer:
-            'Para SOJA: estiagem prolongada, excesso de chuva e ondas de calor. Para ARROZ: excesso de chuva na colheita, calor extremo e estiagem crítica. Todos os gatilhos são objetivos e baseados em dados meteorológicos.',
+            'Coletamos dados de múltiplas fontes: estações meteorológicas oficiais, dados satelitais, APIs de previsão do tempo e sensores regionais. Isso garante alta precisão e confiabilidade nas análises climáticas.',
         },
         {
-          question: 'Como funciona o monitoramento climático?',
+          question: 'A plataforma será segura?',
           answer:
-            'Utilizamos uma rede de estações meteorológicas automáticas, dados de satélites e APIs de múltiplas fontes meteorológicas para monitorar sua propriedade 24/7. Os dados são verificados por fontes independentes antes de acionar qualquer pagamento.',
+            'Segurança é nossa prioridade máxima. Utilizamos blockchain para garantir imutabilidade, criptografia avançada para proteger dados pessoais e seguimos todas as melhores práticas de segurança da informação.',
         },
         {
-          question: 'O que NÃO é coberto pela apólice?',
+          question: 'Preciso ser um expert em tecnologia para usar?',
           answer:
-            'Não cobrimos: pragas e doenças, problemas de solo, falhas de manejo, eventos anteriores à contratação, guerras ou atos terroristas. Nossa cobertura é específica para riscos climáticos paramétricos bem definidos.',
+            'Absolutamente não! Nossa interface é projetada para ser intuitiva e acessível. Se você consegue usar aplicativos comuns no seu celular, conseguirá usar nossa plataforma sem dificuldades.',
         },
-        {
-          question: 'Posso contratar para propriedades em qualquer região?',
-          answer:
-            'Atualmente atendemos as principais regiões produtoras de soja e arroz no Brasil: MT, MS, GO, RS, SC, PR, BA, TO, MA, PI. Verificamos a disponibilidade de dados meteorológicos confiáveis para cada localização antes da contratação.',
-        },
-      ],
-    },
-    {
-      category: 'Processo',
-      questions: [
-        {
-          question: 'Quanto tempo demora para contratar?',
-          answer:
-            'Todo o processo leva aproximadamente 5 minutos. A apólice é ativada imediatamente após a confirmação do pagamento.',
-        },
-        // {
-        //   question: 'Como recebo o pagamento da indenização?',
-        //   answer:
-        //     'Quando detectado um evento coberto, você recebe uma notificação por SMS/email. O pagamento é processado automaticamente via PIX em 24-48 horas. Todo o processo é transparente e auditável na blockchain.',
-        // },
-        // {
-        //   question: 'Posso cancelar minha apólice?',
-        //   answer:
-        //     'Sim, você pode cancelar até 7 dias após a contratação sem custos. Após esse período, o cancelamento segue as regras da SUSEP com devolução proporcional do prêmio.',
-        // },
-        // {
-        //   question: 'E se eu discordar de uma decisão?',
-        //   answer:
-        //     'Nosso sistema é baseado em dados objetivos, mas você pode contestar através do nosso suporte. Temos um painel de especialistas independentes para casos de disputa. Todos os dados climáticos usados são auditáveis na blockchain.',
-        // },
-      ],
-    },
-    {
-      category: 'Técnico',
-      questions: [
-        {
-          question: 'Por que usar blockchain? Quais as vantagens?',
-          answer:
-            'A blockchain garante: 1) Contratos imutáveis que não podem ser alterados unilateralmente, 2) Transparência total - você pode auditar todos os dados, 3) Pagamentos automáticos sem interferência humana, 4) Redução de custos ao eliminar intermediários, 5) Histórico permanente de todas as transações.',
-        },
-        // {
-        //   question: 'O AgroShield é regulamentado?',
-        //   answer:
-        //     'Sim, seguimos todas as regulamentações da SUSEP (Superintendência de Seguros Privados). Estamos registrados como segurador paramétrico e nossos contratos atendem à legislação brasileira de seguros.',
-        // },
-        // {
-        //   question: 'Como garantem a precisão dos dados climáticos?',
-        //   answer:
-        //     'Utilizamos múltiplas fontes: INMET, OpenWeather, dados satelitais da NASA e estações privadas. Cada evento é validado por pelo menos 3 fontes independentes. Temos parceria com o CPTEC/INPE para dados oficiais do governo.',
-        // },
-        // {
-        //   question: 'E se houver problemas técnicos na blockchain?',
-        //   answer:
-        //     'Utilizamos a blockchain Fuel, uma das mais robustas e rápidas disponíveis. Em caso de indisponibilidade técnica, temos sistemas de backup que garantem que nenhum pagamento seja perdido. Todos os contratos têm mecanismos de fallback automático.',
-        // },
       ],
     },
   ];
