@@ -41,46 +41,77 @@ function rateLimit(
 function validateInput(data: {
   name: string;
   email: string;
-  area: number;
-  crop: string;
-  location: string;
+  phone?: string;
+  location?: string;
+  profile: string;
+  area?: string;
+  crops?: string[];
 }) {
-  const { name, email, area, crop, location } = data;
+  const { name, email, phone, location, profile, area, crops } = data;
 
-  if (!name || !email || !area || !crop || !location) {
-    throw new Error('Todos os campos são obrigatórios');
+  if (!name || !email || !profile) {
+    throw new Error('Nome, email e perfil são obrigatórios');
   }
 
   if (name.length > 100) throw new Error('Nome muito longo');
   if (email.length > 255) throw new Error('Email muito longo');
-  if (location.length > 100) throw new Error('Localização muito longa');
+  if (location && location.length > 100)
+    throw new Error('Localização muito longa');
+  if (phone && phone.length > 20) throw new Error('Telefone muito longo');
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     throw new Error('Email inválido');
   }
 
-  if (area <= 0 || area > 1000000) {
-    throw new Error('Área deve ser entre 1 e 1.000.000 hectares');
+  if (phone?.trim()) {
+    const phoneRegex = /^[\d\s\-\(\)\+]{10,20}$/;
+    if (!phoneRegex.test(phone.replace(/\s/g, ''))) {
+      throw new Error('Telefone inválido');
+    }
   }
 
-  const validCrops = ['soja', 'arroz', 'ambos'];
-  if (!validCrops.includes(crop)) {
-    throw new Error('Cultura inválida');
+  const validProfiles = [
+    'produtor-pequeno',
+    'produtor-medio',
+    'produtor-grande',
+    'cooperativa',
+    'consultor',
+    'outro',
+  ];
+  if (!validProfiles.includes(profile)) {
+    throw new Error('Perfil inválido');
+  }
+
+  if (area?.trim()) {
+    const areaNumber = Number.parseFloat(area);
+    if (Number.isNaN(areaNumber) || areaNumber <= 0 || areaNumber > 1_000_000) {
+      throw new Error('Área deve ser um número entre 1 e 1.000.000 hectares');
+    }
+  }
+
+  if (crops && crops.length > 0) {
+    const validCrops = ['soja', 'arroz', 'outros'];
+    const invalidCrops = crops.filter((crop) => !validCrops.includes(crop));
+    if (invalidCrops.length > 0) {
+      throw new Error('Cultura inválida detectada');
+    }
   }
 
   const suspiciousPatterns = [
     /(.)\1{4,}/i, // Repeated characters (aaaaa)
     /^test|demo|fake|spam/i, // Common spam words
     /<script|javascript:|data:/i, // XSS attempts
-    /[^\w\s@.-]/g, // Unusual characters (allow only word chars, spaces, @, ., -)
+    /[^\w\s@.\-\(\)\+]/g, // Unusual characters (allow common chars + phone chars)
   ];
 
-  const textFields = [name, email, location];
+  const textFields = [name, email, location, phone].filter(Boolean);
   for (const field of textFields) {
-    for (const pattern of suspiciousPatterns) {
-      if (pattern.test(field)) {
-        throw new Error('Dados inválidos detectados');
+    if (field) {
+      for (const pattern of suspiciousPatterns) {
+        if (pattern.test(field)) {
+          throw new Error('Dados inválidos detectados');
+        }
       }
     }
   }
@@ -100,7 +131,6 @@ export async function createLead(formData: FormData) {
 
     const sql = neon(`${process.env.DATABASE_URL}`);
 
-    // Honeypot field to prevent spam
     const honeypot = formData.get('website') as string;
     if (honeypot) {
       throw new Error('Submissão inválida detectada.');
@@ -108,15 +138,19 @@ export async function createLead(formData: FormData) {
 
     const name = (formData.get('name') as string)?.trim();
     const email = (formData.get('email') as string)?.trim().toLowerCase();
-    const area = Number.parseInt(formData.get('area') as string);
-    const crop = formData.get('crop') as string;
-    const location = (formData.get('location') as string)?.trim();
+    const phone = (formData.get('phone') as string)?.trim() || undefined;
+    const location = (formData.get('location') as string)?.trim() || undefined;
+    const profile = formData.get('profile') as string;
+    const area = (formData.get('area') as string)?.trim() || undefined;
 
-    validateInput({ name, email, area, crop, location });
+    const cropsData = formData.getAll('crops') as string[];
+    const crops = cropsData.length > 0 ? cropsData : undefined;
+
+    validateInput({ name, email, phone, location, profile, area, crops });
 
     const existingLead = await sql`
-      SELECT id FROM leads 
-      WHERE email = ${email} 
+      SELECT id FROM leads
+      WHERE email = ${email}
       AND created_at > NOW() - INTERVAL '24 hours'
     `;
 
@@ -125,8 +159,8 @@ export async function createLead(formData: FormData) {
     }
 
     const suspiciousCheck = await sql`
-      SELECT COUNT(*) as count FROM leads 
-      WHERE (name = ${name} OR location = ${location}) 
+      SELECT COUNT(*) as count FROM leads
+      WHERE (name = ${name} ${location ? sql`OR location = ${location}` : sql``})
       AND created_at > NOW() - INTERVAL '1 hour'
     `;
 
@@ -136,17 +170,23 @@ export async function createLead(formData: FormData) {
       );
     }
 
+    const areaNumber = area ? Number.parseFloat(area) : null;
+
+    const cropsJson = crops ? JSON.stringify(crops) : null;
+
     await sql`
-      INSERT INTO leads (name, email, area, crop, location) 
-      VALUES (${name}, ${email}, ${area}, ${crop}, ${location})
+      INSERT INTO leads (name, email, phone, location, profile, area, crops, created_at)
+      VALUES (${name}, ${email}, ${phone}, ${location}, ${profile}, ${areaNumber}, ${cropsJson}, NOW())
     `;
 
     console.log('Lead created successfully:', {
       name,
       email: email.replace(/(.{2}).*(@.*)/, '$1***$2'),
-      area,
-      crop,
+      phone: phone ? phone.replace(/(.{2}).*(.{2})/, '$1***$2') : null,
       location,
+      profile,
+      area: areaNumber,
+      crops,
     });
 
     return { success: true };
