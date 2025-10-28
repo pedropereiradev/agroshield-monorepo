@@ -130,6 +130,7 @@ export default function CTASection() {
                       className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-colors"
                       required
                       disabled={isPending}
+                      maxLength={100}
                     />
                   </div>
                   <div className="relative">
@@ -141,6 +142,7 @@ export default function CTASection() {
                       className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-colors"
                       required
                       disabled={isPending}
+                      maxLength={255}
                     />
                   </div>
                 </div>
@@ -154,6 +156,9 @@ export default function CTASection() {
                       placeholder="WhatsApp (opcional)"
                       className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-colors"
                       disabled={isPending}
+                      maxLength={20}
+                      pattern="[\d\s\-\(\)\+]{10,20}"
+                      title="Telefone deve conter 10-20 dígitos, espaços, hífens, parênteses ou +"
                     />
                   </div>
                   <div className="relative">
@@ -164,6 +169,7 @@ export default function CTASection() {
                       placeholder="Cidade/Estado"
                       className="w-full pl-10 pr-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-colors"
                       disabled={isPending}
+                      maxLength={100}
                     />
                   </div>
                 </div>
@@ -198,11 +204,14 @@ export default function CTASection() {
                     </option>
                   </select>
                   <input
-                    type="text"
+                    type="number"
                     name="area"
                     placeholder="Área plantada (ha) - opcional"
                     className="px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/25 transition-colors"
                     disabled={isPending}
+                    min="1"
+                    max="1000000"
+                    step="1"
                   />
                 </div>
 

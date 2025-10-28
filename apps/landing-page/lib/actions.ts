@@ -102,7 +102,6 @@ function validateInput(data: {
     /(.)\1{4,}/i, // Repeated characters (aaaaa)
     /^test|demo|fake|spam/i, // Common spam words
     /<script|javascript:|data:/i, // XSS attempts
-    /[^\w\s@.\-\(\)\+]/g, // Unusual characters (allow common chars + phone chars)
   ];
 
   const textFields = [name, email, location, phone].filter(Boolean);
@@ -182,11 +181,9 @@ export async function createLead(formData: FormData) {
 
     const areaNumber = area ? Number.parseFloat(area) : null;
 
-    const cropsJson = crops ? JSON.stringify(crops) : null;
-
     await sql`
       INSERT INTO leads (name, email, phone, location, profile, area, crops, created_at)
-      VALUES (${name}, ${email}, ${phone || null}, ${location || null}, ${profile}, ${areaNumber}, ${cropsJson}, NOW())
+      VALUES (${name}, ${email}, ${phone || null}, ${location || null}, ${profile}, ${areaNumber}, ${crops || null}, NOW())
     `;
 
     console.log('Lead created successfully:', {
