@@ -129,7 +129,11 @@ export async function createLead(formData: FormData) {
       throw new Error('Muitas tentativas. Tente novamente em 15 minutos.');
     }
 
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL não configurada');
+    }
+
+    const sql = neon(process.env.DATABASE_URL);
 
     const honeypot = formData.get('website') as string;
     if (honeypot) {
@@ -158,11 +162,17 @@ export async function createLead(formData: FormData) {
       throw new Error('Este email já foi cadastrado recentemente.');
     }
 
-    const suspiciousCheck = await sql`
-      SELECT COUNT(*) as count FROM leads
-      WHERE (name = ${name} ${location ? sql`OR location = ${location}` : sql``})
-      AND created_at > NOW() - INTERVAL '1 hour'
-    `;
+    const suspiciousCheck = location
+      ? await sql`
+          SELECT COUNT(*) as count FROM leads
+          WHERE (name = ${name} OR location = ${location})
+          AND created_at > NOW() - INTERVAL '1 hour'
+        `
+      : await sql`
+          SELECT COUNT(*) as count FROM leads
+          WHERE name = ${name}
+          AND created_at > NOW() - INTERVAL '1 hour'
+        `;
 
     if (suspiciousCheck[0]?.count > 2) {
       throw new Error(
@@ -176,7 +186,7 @@ export async function createLead(formData: FormData) {
 
     await sql`
       INSERT INTO leads (name, email, phone, location, profile, area, crops, created_at)
-      VALUES (${name}, ${email}, ${phone}, ${location}, ${profile}, ${areaNumber}, ${cropsJson}, NOW())
+      VALUES (${name}, ${email}, ${phone || null}, ${location || null}, ${profile}, ${areaNumber}, ${cropsJson}, NOW())
     `;
 
     console.log('Lead created successfully:', {
