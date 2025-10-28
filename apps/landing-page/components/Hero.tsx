@@ -72,14 +72,14 @@ export default function Hero() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              type="button"
+            <a
+              href="#cadastro"
               className="group bg-green-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-green-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2 min-w-[280px] sm:min-w-[240px]"
             >
               <Shield className="w-5 h-5" />
               Quero Garantir Minha Vaga
               <ArrowDown className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
-            </button>
+            </a>
 
             {/*<button
               type="button"
