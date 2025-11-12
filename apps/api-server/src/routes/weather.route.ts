@@ -3,6 +3,7 @@ import WeatherController from '../controllers/weather.controller';
 import {
   ForecastRequestSchema,
   ForecastResponseSchema,
+  HourlyForecastResponseSchema,
   WeatherRequestSchema,
   WeatherResponseSchema,
 } from '../schemas/weather.schema';
@@ -35,6 +36,17 @@ export default class WeatherRoutes {
         },
       },
       this._controller.getForecast.bind(this._controller)
+    );
+
+    fastify.get(
+      '/hourly',
+      {
+        schema: {
+          querystring: WeatherRequestSchema,
+          response: { 200: HourlyForecastResponseSchema },
+        },
+      },
+      this._controller.getHourlyForecast.bind(this._controller)
     );
   }
 }

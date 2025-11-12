@@ -90,3 +90,21 @@ export const ForecastResponseSchema = {
     },
   },
 } as const;
+
+export const HourlyForecastResponseSchema = {
+  type: 'object',
+  properties: {
+    hourly: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          time: { type: 'string' },
+          temperature: { type: 'number' },
+          precipitation: { type: 'number' },
+          weatherCode: { type: 'integer' },
+        },
+      },
+    },
+  },
+} as const;

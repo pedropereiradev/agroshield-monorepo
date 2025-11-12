@@ -37,4 +37,17 @@ export default class WeatherController {
       reply.status(500).send({ error: err.message });
     }
   }
+
+  async getHourlyForecast(
+    request: FastifyRequest<{ Querystring: WeatherRequest }>,
+    reply: FastifyReply
+  ) {
+    try {
+      const result = await this._service.getHourlyForecast(request.query);
+      reply.send(result);
+    } catch (err: any) {
+      request.log.error(err);
+      reply.status(500).send({ error: err.message });
+    }
+  }
 }
