@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Location } from '@/hooks/useGeolocation';
-import { getCurrentWeather } from '@/services/weather/api';
+import { getCurrentWeather, getHourlyForecast } from '@/services/weather/api';
 import {
   Clock,
   Cloud,

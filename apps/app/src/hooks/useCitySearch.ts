@@ -77,7 +77,7 @@ export function formatCityDisplay(city: CityResult): string {
     parts.push(city.admin1);
   }
 
-  if (city.countryCode !== 'BR') {
+  if (city.countryCode !== 'BR' && city.country) {
     parts.push(city.country);
   }
 
