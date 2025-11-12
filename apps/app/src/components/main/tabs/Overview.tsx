@@ -1,3 +1,6 @@
+import { PortfolioMetrics } from '@/components/dashboard/PortfolioMetrics';
+import { WeatherForecast } from '@/components/dashboard/WeatherForecast';
+import { WeatherWidget } from '@/components/dashboard/WeatherWidget';
 import {
   Card,
   CardContent,
@@ -5,48 +8,70 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Construction, Shield, TrendingUp } from 'lucide-react';
+import {
+  type Location,
+  updateUserLocation,
+  useIPGeolocation,
+} from '@/hooks/useGeolocation';
+import { Shield } from 'lucide-react';
+import { useState } from 'react';
 
 export function Overview() {
+  const { location: ipLocation, isLoading: isLoadingLocation } =
+    useIPGeolocation();
+
+  const [currentLocation, setCurrentLocation] = useState<Location | null>(
+    ipLocation
+  );
+
+  if (ipLocation && !currentLocation) {
+    setCurrentLocation(ipLocation);
+  }
+
+  const handleLocationChange = (newLocation: Location) => {
+    setCurrentLocation(newLocation);
+    updateUserLocation(newLocation);
+  };
+
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="flex-shrink-0">
-        <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5" />
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          <Shield className="h-6 w-6" />
           Visão Geral
-        </CardTitle>
-        <CardDescription>
-          Dashboard com resumo das suas apólices e atividade recente
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 flex items-center justify-center">
-        <div className="text-center space-y-4 max-w-md">
-          <div className="flex justify-center">
-            <div className="p-4 bg-orange-100 rounded-full">
-              <Construction className="h-12 w-12 text-orange-600" />
+        </h2>
+        <p className="text-muted-foreground">
+          Dashboard com resumo das suas apólices e condições meteorológicas
+        </p>
+      </div>
+
+      <PortfolioMetrics />
+
+      {currentLocation && !isLoadingLocation ? (
+        <>
+          <WeatherWidget
+            location={currentLocation}
+            onLocationChange={handleLocationChange}
+          />
+
+          <WeatherForecast location={currentLocation} />
+        </>
+      ) : (
+        <Card className="col-span-full">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              Condições Meteorológicas
+            </CardTitle>
+            <CardDescription>Obtendo sua localização...</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-center py-8">
+              <div className="h-8 w-32 bg-muted animate-pulse rounded" />
             </div>
-          </div>
-          <div className="space-y-2">
-            <h3 className="text-xl font-semibold text-muted-foreground">
-              Em Construção
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Estamos trabalhando em um dashboard completo com estatísticas das suas apólices, 
-              resumo de coberturas e atividade recente.
-            </p>
-          </div>
-          <div className="flex justify-center gap-4 pt-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <TrendingUp className="h-4 w-4" />
-              Estatísticas
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Shield className="h-4 w-4" />
-              Resumo de Coberturas
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }
